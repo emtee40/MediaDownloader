@@ -50,13 +50,14 @@ public class MainWindow extends JFrame {
                     "<li>https://wwww.youtube.com/watch?v=<i>VIDEOID</i> (Just adds this video to the download list)</li>" +
                     "<li>https://www.youtube.com/user/<i>USERNAME</i> (Also add all videos from a channel)</li>" +
                     "</ul>" +
+                    "<b>For more information visit: <a href='http://r3d-soft.de/'>http://r3d-soft.de</a></b>" +
                     "</html>";
 
             JOptionPane.showMessageDialog(null, new JLabel(msg), "Help", JOptionPane.INFORMATION_MESSAGE);
         });
         menuItemAbout.addActionListener(e -> {
             String msg = "<html>" +
-                    "Thanks for using MediaDownloader - written by R3DST0RM.<br />" +
+                    "Thanks for using <b>MediaDownloader v0.4</b> - written by R3DST0RM.<br />" +
                     "This software uses ffmpeg as MP3 converter all licenses can be found here: bin/licenses/<br /><br />" +
                     "This software is free software (GNU General Public License v2) - Source Code available at request:<br /><br />" +
                     "E-Mail: <b>admin@r3d-soft.de</b><br />" +
@@ -105,6 +106,8 @@ public class MainWindow extends JFrame {
         tabpane.add("Instagram-Downloader",igPanel);
         tabpane.add("SoundCloud-Downloader", scPanel);
         tabpane.add("Vimeo-Downloader", vimPanel);
+        // Locked for a reason - doesn't seem to work properly!
+        //
         //tabpane.add("NowVideo-Downloader", nwPanel);
         tabpane.add("Shared.SX-Downloader", sxPanel);
         tabpane.add("StreamCloud.EU-Downloader", sceuPanel);
