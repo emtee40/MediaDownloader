@@ -1,7 +1,11 @@
+import javafx.application.Application;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -263,6 +267,53 @@ public class YouTubeDownloaderPanel extends JPanel {
         scrollBar = new JScrollPane();
         listModel = new DefaultListModel();
         listYTLinksGUI = new JList(listModel);
+        listYTLinksGUI.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(e.getClickCount() == 2){
+                    int index = listYTLinksGUI.locationToIndex(e.getPoint());
+
+                    if(index == -1) return; // index out of bounds -> means no items inside
+
+                    ListModel dlm = listYTLinksGUI.getModel();
+                    Object item = dlm.getElementAt(index);
+                    listYTLinksGUI.ensureIndexIsVisible(index);
+
+                    if(item.toString().contains("|") || item.toString().contains("%"))
+                        return; // Do nothing cause string is manipulated (may fix this!)
+
+                    // get YouTube Link!
+                    String url = new YouTubeDownloader(item.toString(), "", true).getVideoURL();
+                    /*SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            new YouTubeVideoPreview().initAndShowGUI(url);
+                        }
+                    }); */
+                    new YouTubeVideoPreview().initAndShowGUI(url);
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
         scrollBar.setViewportView(listYTLinksGUI);
 
         JPanel panelBottom = new JPanel(new GridLayout(0,3));
