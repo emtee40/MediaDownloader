@@ -103,6 +103,7 @@ public class YouTubeVideoPreview {
     private void initFX(JFXPanel fxPanel) {
         // This method is invoked on the JavaFX thread
         Scene scene = createScene();
+        fxPanel.setDoubleBuffered(true);
         fxPanel.setScene(scene);
     }
 
