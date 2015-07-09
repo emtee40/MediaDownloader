@@ -51,8 +51,6 @@ public class YouTubeVideoPreview {
             @Override
             public void run() {
                 initFX(fxPanel);
-
-                frame.pack();
             }
         });
     }
@@ -115,15 +113,6 @@ public class YouTubeVideoPreview {
         mediaPlayer.setAutoPlay(true);
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
 
-        //MediaView mediaView = new MediaView(mediaPlayer);
-        Group root = new Group();
-        Scene scene = new Scene(root, 800, 600);
-        //root.getChildren().add(mediaView);
-
-        mediaPlayer.setVolume(0.5);
-        scene.setFill(javafx.scene.paint.Color.BLACK);
-
-
         final MediaView mv = new MediaView(mediaPlayer);
 
         final DoubleProperty width = mv.fitWidthProperty();
@@ -132,6 +121,13 @@ public class YouTubeVideoPreview {
         width.bind(Bindings.selectDouble(mv.sceneProperty(), "width"));
         height.bind(Bindings.selectDouble(mv.sceneProperty(), "height"));
 
+        mediaPlayer.setVolume(0.5);
+
+        //MediaView mediaView = new MediaView(mediaPlayer);
+        Group root = new Group();
+        Scene scene = new Scene(root, 800, 600);
+        //root.getChildren().add(mediaView);
+        scene.setFill(javafx.scene.paint.Color.BLACK);
         mv.setPreserveRatio(true);
         root.getChildren().add(mv);
 
