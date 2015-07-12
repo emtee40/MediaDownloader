@@ -1,15 +1,11 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
- * Creation time: 03:05
- * Created by Dominik on 31.05.2015.
+ * Created by Dominik on 12.07.2015.
  */
-@SuppressWarnings("unchecked")
-public class SoundcloudDownloaderPanel extends JPanel {
-    private SoundcloudDownloader scDownloader;
+public class MixCloudDownloaderPanel extends JPanel {
+    private MixCloudDownloader mcDownloader;
     private SettingsManager settingsManager;
 
     private JTextField txtURL;
@@ -27,7 +23,7 @@ public class SoundcloudDownloaderPanel extends JPanel {
 
     private String listTitle;
 
-    public SoundcloudDownloaderPanel(){
+    public MixCloudDownloaderPanel(){
         settingsManager = new SettingsManager();
         initComponents();
         initFileChooser();
@@ -36,13 +32,13 @@ public class SoundcloudDownloaderPanel extends JPanel {
 
     private void initActionListeners() {
         btnAddToList.addActionListener(e -> {
-            // determine if real fb link
-            if(txtURL.getText().contains("soundcloud")) {
+            // determine if real mc link
+            if(txtURL.getText().contains("mixcloud")) {
                 listModel.addElement(txtURL.getText());
             }
             else {
-                JOptionPane.showMessageDialog(null, "No valid soundcloud link",
-                        "SoundCloudDownloader - Not a valid link", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "No valid mixcloud link",
+                        "MixCloudDownloader - Not a valid link", JOptionPane.ERROR_MESSAGE);
             }
             txtURL.setText("");
         });
@@ -67,14 +63,14 @@ public class SoundcloudDownloaderPanel extends JPanel {
         btnStartDownload.addActionListener(e -> {
             if(txtPath.getText().equals("")){
                 JOptionPane.showMessageDialog(null, "Please select a download path",
-                        "SoundCloudDownloader - Select a valid path", JOptionPane.ERROR_MESSAGE);
+                        "MixCloudDownloader - Select a valid path", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             if(listModel.size() <= 0) {
                 JOptionPane.showMessageDialog(null,
-                        "List is empty. Please add a soundcloud link in order to start the download process",
-                        "SoundCloudDownloader - List is empty", JOptionPane.ERROR_MESSAGE);
+                        "List is empty. Please add a mixcloud link in order to start the download process",
+                        "MixCloudDownloader - List is empty", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -84,15 +80,15 @@ public class SoundcloudDownloaderPanel extends JPanel {
                 public void run() {
                     for (int i = 0; i < listModel.size(); i++) {
                         String url = listModel.get(i).toString();
-                        scDownloader = new SoundcloudDownloader(url, txtPath.getText());
-                        String toDL = scDownloader.getAudioURL();
-                        long size = scDownloader.getDownloadSize(toDL);
+                        mcDownloader = new MixCloudDownloader(url, txtPath.getText());
+                        String toDL = mcDownloader.GetMediaURL();
+                        long size = mcDownloader.getDownloadSize(toDL);
                         listTitle = "Size: " + (size / 1024) + "KB | " + listModel.get(i).toString();
-                        scDownloader.DownloadFile(toDL, (int)size, i, SoundcloudDownloaderPanel.this);
+                        mcDownloader.DownloadFile(toDL, (int) size, i, MixCloudDownloaderPanel.this);
                     }
 
                     JOptionPane.showMessageDialog(null, "Downloaded all audio files to: " + txtPath.getText(),
-                            "SoundCloudDownloader - Job finished", JOptionPane.INFORMATION_MESSAGE);
+                            "MixCloudDownloader - Job finished", JOptionPane.INFORMATION_MESSAGE);
                     listModel.clear();
                     txtPath.setEditable(true);
                 }
@@ -114,7 +110,7 @@ public class SoundcloudDownloaderPanel extends JPanel {
 
     private void initComponents() {
         JPanel panelTop = new JPanel(new GridLayout(0,4));
-        JLabel lblURL = new JLabel("SoundCloud-Link:");
+        JLabel lblURL = new JLabel("MixCloud-Link:");
         txtURL = new JTextField("");
         btnAddToList = new JButton("Add to list");
         btnRemoveFromList = new JButton("Remove selected link");
@@ -148,4 +144,5 @@ public class SoundcloudDownloaderPanel extends JPanel {
     public void setElementPercentage(String s, int element) {
         listModel.setElementAt(s + " | " + listTitle, element);
     }
+
 }

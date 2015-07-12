@@ -25,6 +25,7 @@ public class MainWindow extends JFrame {
     private NowVideoDownloaderPanel nwPanel;
     private SharedSXDownloaderPanel sxPanel;
     private StreamCloudEUDownloaderPanel sceuPanel;
+    private MixCloudDownloaderPanel mcPanel;
 
     private SettingsManager settingsManager;
 
@@ -100,12 +101,14 @@ public class MainWindow extends JFrame {
         nwPanel = new NowVideoDownloaderPanel();
         sxPanel = new SharedSXDownloaderPanel();
         sceuPanel = new StreamCloudEUDownloaderPanel();
+        mcPanel = new MixCloudDownloaderPanel();
 
         tabpane.add("YouTube-Downloader",ytPanel);
         tabpane.add("Facebook-Downloader",fbPanel);
         tabpane.add("Instagram-Downloader",igPanel);
         tabpane.add("SoundCloud-Downloader", scPanel);
         tabpane.add("Vimeo-Downloader", vimPanel);
+        tabpane.add("MixCloud-Downloader", mcPanel);
         // Locked for a reason - doesn't seem to work properly!
         //
         //tabpane.add("NowVideo-Downloader", nwPanel);
