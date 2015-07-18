@@ -34,7 +34,8 @@ public class YouTubeVideoPreview {
         final JFXPanel fxPanel = new JFXPanel();
         frame.add(fxPanel, BorderLayout.CENTER);
         frame.add(ControlPanel(), BorderLayout.SOUTH);
-        frame.setSize(800, 600);
+        frame.setSize(720, 510);
+        frame.setResizable(false);
         frame.setVisible(true);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -130,6 +131,10 @@ public class YouTubeVideoPreview {
         //root.getChildren().add(mediaView);
         scene.setFill(javafx.scene.paint.Color.BLACK);
         mv.setPreserveRatio(true);
+        mv.setSmooth(true);
+        mv.resize(1920, 1080);
+
+
         root.getChildren().add(mv);
 
         return (scene);
