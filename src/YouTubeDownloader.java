@@ -104,9 +104,12 @@ public class YouTubeDownloader extends Downloader {
         ProcessBuilder pb;
         try {
             if (System.getProperty("os.name").contains("Windows")) {
-                pb = new ProcessBuilder(settingsManager.GetFFMPEGDir().replace("{wd}", System.getProperty("user.dir")) + "\\ffmpeg.exe", "-i", file, "-vn", "-ab", "360k", "-acodec", "libmp3lame", outputfile); //or other command....
+                pb = new ProcessBuilder(settingsManager.GetFFMPEGDir().replace("{wd}",
+                        System.getProperty("user.dir")) + "\\ffmpeg.exe", "-i",
+                        file, "-vn", "-ab", "360k", "-acodec", "libmp3lame", outputfile); //or other command....
             } else if (System.getProperty("os.name").contains("nux")) {
-                pb = new ProcessBuilder("ffmpeg", "-i", file, "-vn", "-ab", "360k", "-acodec", "libmp3lame", outputfile);
+                pb = new ProcessBuilder("ffmpeg", "-i", file, "-vn", "-ab", "360k",
+                        "-acodec", "libmp3lame", outputfile);
             } else
                 pb = null;
 
