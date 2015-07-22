@@ -35,7 +35,8 @@ public class YouTubeDownloader extends Downloader {
                 vidTitle = webObj.AnalyzeWithTag("meta[property=og:title]").get(0).attr("content");
             }
             else {
-                webObj = new JSoupAnalyze("http://ytapi.gitnol.com/embed/" + vidID);
+                webObj = new JSoupAnalyze("http://ytapi.gitnol.com/embed/" + vidID,
+                        "Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0");
                 vidTitle = webObj.AnalyzeWithTag("title").get(0).text();
             }
 
