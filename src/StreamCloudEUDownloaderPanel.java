@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 
+
 /**
  * Created by Dominik on 06.06.2015.
  */
@@ -48,7 +49,7 @@ public class StreamCloudEUDownloaderPanel extends JPanel {
                 public void run() {
                     StreamCloudEUDownloader sceDownloader = new StreamCloudEUDownloader(txtSCEURL.getText());
                     String filename = "";
-                    if(System.getProperty("os.name").contains("Windows"))
+                    if (System.getProperty("os.name").contains("Windows"))
                         filename = txtSavePath.getText() + "\\" + sceDownloader.getFilename();
                     else
                         filename = txtSavePath.getText() + "/" + sceDownloader.getFilename();
@@ -57,7 +58,7 @@ public class StreamCloudEUDownloaderPanel extends JPanel {
                     sceDownloader.DownloadFile(dlUrl, filename, StreamCloudEUDownloaderPanel.this,
                             sceDownloader.getDownloadSize(dlUrl));
 
-                    JOptionPane.showMessageDialog(null, "Download finished!",
+                    JOptionPane.showMessageDialog(StreamCloudEUDownloaderPanel.this, "Download finished!",
                             "StreamCloudEUDownloader - Job finished", JOptionPane.INFORMATION_MESSAGE);
 
                     txtSavePath.setEditable(true);
@@ -69,6 +70,11 @@ public class StreamCloudEUDownloaderPanel extends JPanel {
             t.start();
         });
     }
+
+
+
+
+
 
     private void initFileChooser() {
         //
