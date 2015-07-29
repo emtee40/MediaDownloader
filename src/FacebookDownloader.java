@@ -2,12 +2,17 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.select.Elements;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 /**
@@ -47,6 +52,7 @@ public class FacebookDownloader extends Downloader {
         }
 
         this.fbLink = fbLink;
+        this.url = fbLink;
     }
 
     public FacebookDownloader(){
@@ -114,6 +120,35 @@ public class FacebookDownloader extends Downloader {
             }catch (Exception ex){
                 return allPictures;
             }
+        }else if(url.contains("/videos/")){
+            JSoupAnalyze webObj = new JSoupAnalyze(url);
+
+            // pattern
+            //http(.*?).(mp4)(.*?)\\u002522
+            Pattern pattern = Pattern.compile("https(.*?).mp4(.*?)\\\\u002522");
+            String site = webObj.GetSiteText();
+            Matcher matcher = pattern.matcher(site);
+
+            List<String> result = new ArrayList<String>();
+
+            while(matcher.find()){
+                result.add(matcher.group());
+            }
+
+            String[] highest_res = new String[1];
+            String url = result.get(result.size() - 1);
+
+            try {
+                ScriptEngineManager factory = new ScriptEngineManager();
+                ScriptEngine engine = factory.getEngineByName("JavaScript");
+                url =  (String) engine.eval("unescape('" + url + "');");
+            } catch (ScriptException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+            highest_res[0] = url.replace("\\", "").replace("\"", "");
+            return highest_res;
         }
         else if(!isAlbum){
             String[] album_id = GetAlbumsFromProfile("https://graph.facebook.com/" + fbID + "/albums?access_token=CAAT0ftuZAxBABAINQnxJoqFmvzuMlpUmfKZB0dawalmb3f5XmL9U2zmi6LeIZB1x822JLs4Fq7BuX7B8RRghQMr9ZAElGAaQg27OPUFmiTDVVFzjpRNuKWM49QNWWxZCZAr76ljf2Okix74LU9YMQxMZC9b0uz6JdliBlFRkVKmQcM0RkODPETRbI8BbQILiQ4SkT7MPZBbciZB50VjaCefDr&fields=id");

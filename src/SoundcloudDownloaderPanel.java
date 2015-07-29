@@ -91,7 +91,7 @@ public class SoundcloudDownloaderPanel extends JPanel {
                         scDownloader.DownloadFile(toDL, (int)size, i, SoundcloudDownloaderPanel.this);
                     }
 
-                    JOptionPane.showMessageDialog(null, "Downloaded all audio files to: " + txtPath.getText(),
+                    JOptionPane.showMessageDialog(SoundcloudDownloaderPanel.this, "Downloaded all audio files to: " + txtPath.getText(),
                             "SoundCloudDownloader - Job finished", JOptionPane.INFORMATION_MESSAGE);
                     listModel.clear();
                     txtPath.setEditable(true);

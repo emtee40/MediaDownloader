@@ -59,7 +59,7 @@ public class SharedSXDownloaderPanel extends JPanel {
                     sxDownloader.DownloadFile(dlUrl, filename, SharedSXDownloaderPanel.this,
                             sxDownloader.getDownloadSize(dlUrl));
 
-                    JOptionPane.showMessageDialog(null, "Download finished!",
+                    JOptionPane.showMessageDialog(SharedSXDownloaderPanel.this, "Download finished!",
                             "SharedSXDownloader - Job finished", JOptionPane.INFORMATION_MESSAGE);
 
                     txtSavePath.setEditable(true);

@@ -112,7 +112,7 @@ public class FacebookDownloaderPanel extends JPanel {
                         fbDownloader.DownloadFile(url, size, i, FacebookDownloaderPanel.this, txtPath.getText());
                     }
 
-                    JOptionPane.showMessageDialog(null, "Downloaded all media files to: " + txtPath.getText(),
+                    JOptionPane.showMessageDialog(FacebookDownloaderPanel.this, "Downloaded all media files to: " + txtPath.getText(),
                             "FacebookDownloader - Job finished", JOptionPane.INFORMATION_MESSAGE);
                     listModel.clear();
                     txtPath.setEditable(true);

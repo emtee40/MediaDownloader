@@ -232,7 +232,7 @@ public class YouTubeDownloaderPanel extends JPanel {
                             "YouTubeDownloader - Error", JOptionPane.ERROR_MESSAGE);
                 }
 
-                JOptionPane.showMessageDialog(null, "Downloaded all videos to: " + txtPath.getText(),
+                JOptionPane.showMessageDialog(YouTubeDownloaderPanel.this, "Downloaded all videos to: " + txtPath.getText(),
                         "YouTubeDownloader - Job finished", JOptionPane.INFORMATION_MESSAGE);
                 listModel.clear();
                 txtPath.setEditable(true);

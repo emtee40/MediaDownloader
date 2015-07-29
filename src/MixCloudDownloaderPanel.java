@@ -87,7 +87,7 @@ public class MixCloudDownloaderPanel extends JPanel {
                         mcDownloader.DownloadFile(toDL, (int) size, i, MixCloudDownloaderPanel.this);
                     }
 
-                    JOptionPane.showMessageDialog(null, "Downloaded all audio files to: " + txtPath.getText(),
+                    JOptionPane.showMessageDialog(MixCloudDownloaderPanel.this, "Downloaded all audio files to: " + txtPath.getText(),
                             "MixCloudDownloader - Job finished", JOptionPane.INFORMATION_MESSAGE);
                     listModel.clear();
                     txtPath.setEditable(true);

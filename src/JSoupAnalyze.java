@@ -41,6 +41,10 @@ public class JSoupAnalyze {
         }
     }
 
+    public String GetSiteText(){
+        return site.html();
+    }
+
     public Elements AnalyzeWithTag(String analyzeTag){
         return site.select(analyzeTag);
     }

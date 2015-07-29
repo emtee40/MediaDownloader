@@ -193,7 +193,7 @@ public class VimeoDownloaderPanel extends JPanel {
                                 "YouTubeDownloader - Error", JOptionPane.ERROR_MESSAGE);
                     }
 
-                    JOptionPane.showMessageDialog(null, "Downloaded all media files to: " + txtPath.getText(),
+                    JOptionPane.showMessageDialog(VimeoDownloaderPanel.this, "Downloaded all media files to: " + txtPath.getText(),
                             "VimeoDownloader - Job finished", JOptionPane.INFORMATION_MESSAGE);
                     listModel.clear();
                     txtPath.setEditable(true);

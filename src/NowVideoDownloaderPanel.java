@@ -60,7 +60,7 @@ public class NowVideoDownloaderPanel extends JPanel{
                     nwDownloader.getDownloadSize(url);
                     nwDownloader.DownloadFile(url);
 
-                    JOptionPane.showMessageDialog(null, "Download finished!",
+                    JOptionPane.showMessageDialog(NowVideoDownloaderPanel.this, "Download finished!",
                             "NowVideoDownloader - Job finished", JOptionPane.INFORMATION_MESSAGE);
                 }
             });
