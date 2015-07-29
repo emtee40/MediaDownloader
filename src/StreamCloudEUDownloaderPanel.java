@@ -71,11 +71,6 @@ public class StreamCloudEUDownloaderPanel extends JPanel {
         });
     }
 
-
-
-
-
-
     private void initFileChooser() {
         //
         // Standard File Chooser settings
