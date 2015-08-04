@@ -19,7 +19,7 @@ public class FreshUI extends JFrame implements ActionListener {
     public SettingsManager settingsManager;
 
     private final String[] tableHeader = { "Download URL", "Hoster", "Progress (in %)",
-            "Remove GEMA", "Remove MP4", "Local Path" };
+            "Remove GEMA", "Remove MP4", "Convert to MP3", "Local Path" };
 
     private JMenuBar menuBar;
     private JMenu menuMenu;
@@ -102,6 +102,7 @@ public class FreshUI extends JFrame implements ActionListener {
         downloadTable = new JTable();
         dTableModel = new DefaultTableModel();
         dTableModel.setColumnIdentifiers(tableHeader);
+        downloadTable.getTableHeader().setReorderingAllowed(false);
         downloadTable.setModel(dTableModel);
 
         txtDownloadURL = new JTextField();
@@ -124,6 +125,9 @@ public class FreshUI extends JFrame implements ActionListener {
         // panel middle
         getContentPane().add(new JScrollPane(downloadTable), BorderLayout.CENTER);
         getContentPane().add(topPanel, BorderLayout.NORTH);
+
+        SettingsManagerPanel sMP = new SettingsManagerPanel(settingsManager, this);
+        getContentPane().add(sMP.getPanel(), BorderLayout.SOUTH);
     }
 
     public static void main(String[] args) {
@@ -185,7 +189,7 @@ public class FreshUI extends JFrame implements ActionListener {
             }
 
             // Start Downloading!
-            LinkHandler.StartDownloading();
+            LinkHandler.StartDownloading(this);
         }
     }
 

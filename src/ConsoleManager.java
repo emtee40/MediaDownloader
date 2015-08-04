@@ -117,7 +117,7 @@ public class ConsoleManager {
         int size = ytDl.getDownloadSize(vidUrl);
         System.out.println("Download Size: " + size);
         System.out.println("Downloading...");
-        ytDl.DownloadFile(vidUrl, size, 0, null);
+        //ytDl.DownloadFile(vidUrl, size, 0, null);
         TaskCompleted();
     }
 

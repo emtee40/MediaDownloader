@@ -3,6 +3,7 @@ import org.json.JSONObject;
 import org.jsoup.nodes.Element;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
@@ -44,6 +45,10 @@ public class InstagramDownloader extends Downloader{
             this.igLink = igLink.replace("user:", "");
 
         this.savePath = CheckSavePath(savePath);
+    }
+
+    public InstagramDownloader(String savePath){
+        this.savePath = savePath;
     }
 
     public String GetURLsAndPreview(){
@@ -139,6 +144,46 @@ public class InstagramDownloader extends Downloader{
         }
 
         JOptionPane.showMessageDialog(null, "Downloaded successfully all media files.", "InstagramDownloader - Job finished", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public void DownloadFile(String urls, int element, int fileSize, DefaultTableModel guiElements){
+        try {
+            savePath = CheckSavePath(savePath);
+
+            URL url = new URL(urls);
+            String[] URL_split = urls.split("/");
+
+            // skip existing files in order to keep is a crawler
+            if(isFileExisting(new File(savePath + URL_split[URL_split.length - 1]))){
+                guiElements.setValueAt(100 + "%", element, 2);
+                return;
+            }
+
+            InputStream in = new BufferedInputStream(url.openStream());
+
+            OutputStream out;
+            out = new BufferedOutputStream(new FileOutputStream(savePath + URL_split[URL_split.length - 1]));
+
+            double sum = 0;
+            int count;
+            byte data[] = new byte[1024];
+            // added a quick fix for downloading >= 0 instead of != -1
+            while ((count = in.read(data, 0, 1024)) >= 0) {
+                out.write(data, 0, count);
+                sum += count;
+
+                if (fileSize > 0) {
+                    guiElements.setValueAt(((int)(sum / fileSize * 100)) + "%", element, 2);
+                }
+            }
+
+
+            in.close();
+            out.close();
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
     }
 
     public String fetchUserID(String requestURL) {

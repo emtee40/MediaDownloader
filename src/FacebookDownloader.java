@@ -5,6 +5,7 @@ import org.jsoup.select.Elements;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import javax.swing.table.DefaultTableModel;
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
@@ -85,6 +86,44 @@ public class FacebookDownloader extends Downloader {
 
                 if (fileSize > 0 || guiElements != null) {
                     guiElements.setElementPercentage(((int)(sum / fileSize * 100)) + "%", element);
+                }
+            }
+
+
+            in.close();
+            out.close();
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
+    public void DownloadFile(String urls, long fileSize, int element, DefaultTableModel guiElements, String savePath){
+        try {
+            savePath = CheckSavePath(savePath);
+
+            URL url = new URL(urls);
+            String[] URL_split = urls.split("/");
+
+            InputStream in = new BufferedInputStream(url.openStream());
+
+            OutputStream out;
+            if(!URL_split[URL_split.length -1].contains("?"))
+                out = new BufferedOutputStream(new FileOutputStream(savePath + URL_split[URL_split.length - 1]));
+            else {
+                String[] URL_further = (URL_split[URL_split.length - 1]).split("\\?");
+                out = new BufferedOutputStream(new FileOutputStream(savePath + URL_further[0]));
+            }
+            double sum = 0;
+            int count;
+            byte data[] = new byte[1024];
+            // added a quick fix for downloading >= 0 instead of != -1
+            while ((count = in.read(data, 0, 1024)) >= 0) {
+                out.write(data, 0, count);
+                sum += count;
+
+                if (fileSize > 0 && guiElements != null) {
+                    guiElements.setValueAt(((int)(sum / fileSize * 100)) + "%", element, 2);
                 }
             }
 

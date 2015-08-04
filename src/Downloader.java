@@ -4,6 +4,7 @@ import org.json.JSONObject;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import javax.swing.table.DefaultTableModel;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
@@ -135,5 +136,33 @@ public abstract class Downloader {
             sb.append((char) cp);
         }
         return sb.toString();
+    }
+
+    public void DownloadFile(String dlUrl, String filename, int downloadSize, int i, DefaultTableModel dTableModel) {
+        try {
+            URL url = new URL(dlUrl);
+            InputStream in = new BufferedInputStream(url.openStream());
+            OutputStream out = new BufferedOutputStream(new FileOutputStream(filename + ".mp4"));
+
+            double sum = 0;
+            int count;
+            byte data[] = new byte[1024];
+            // added a quick fix for downloading >= 0 instead of != -1
+            while ((count = in.read(data, 0, 1024)) >= 0) {
+                out.write(data, 0, count);
+                sum += count;
+
+                if (downloadSize > 0 && dTableModel != null) {
+                    dTableModel.setValueAt(((int)(sum / downloadSize * 100)) + "%", i, 2);
+                }
+            }
+
+
+            in.close();
+            out.close();
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
     }
 }
