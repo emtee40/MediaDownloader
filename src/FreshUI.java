@@ -206,5 +206,5 @@ public class FreshUI extends JFrame implements ActionListener {
 }
 
 enum DownloadPage {
-    Auto_Detect, Facebook, Instagram, MixCloud, NowVideo, SharedSX, SoundCloud, StreamCloud, Vimeo, YouTube
+    Auto_Detect, Facebook, Instagram, MixCloud, NowVideo, SharedSX, SoundCloud, StreamCloud, Vimeo, YouTube, RE_Explorer
 }

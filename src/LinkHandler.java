@@ -11,6 +11,10 @@ public class LinkHandler {
     private static List<String> currentMp4Files = new ArrayList<>();
 
     public static void AddURLToTable(String URL, String hoster, FreshUI window){
+        if(DownloadPage.valueOf(hoster.toString()) == DownloadPage.RE_Explorer){
+            new REExplorer();
+        }
+
         if(hoster.toLowerCase().equals("facebook")){
             URL = URL.replace("photos_stream?tab=photos_stream", "");
             URL = URL.replace("photos_stream?tab=photos_albums", "");
