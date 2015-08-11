@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.*;
@@ -22,6 +24,8 @@ public class REExplorer extends JFrame {
     public DefaultListModel listOfFoundItems;
     private JList list;
     private SettingsManager man;
+
+    private JButton btnSaveCurrentPattern;
 
     private String[] objects;
 
@@ -53,7 +57,7 @@ public class REExplorer extends JFrame {
     private void InitBottomContainer(){
         JPanel bottomPanel = new JPanel(new GridLayout(0,2));
         txtSavePath = new JTextArea(man.GetStandardSavePath());
-        btnDownloadFiles = new JButton("Download files found!");
+        btnDownloadFiles = new JButton("Download all!");
         btnDownloadFiles.addActionListener(guiActionListener);
         bottomPanel.add(txtSavePath);
         bottomPanel.add(btnDownloadFiles);
@@ -62,10 +66,10 @@ public class REExplorer extends JFrame {
 
     private void InitMiddleContainer() {
         JPanel middlePanel = new JPanel(new BorderLayout());
-        patternCombo = new JComboBox(availablePatterns);
-        patternCombo.setEditable(true);
+        //patternCombo = new JComboBox(availablePatterns);
+        //patternCombo.setEditable(true);
         listOfFoundItems = new DefaultListModel<>();
-        middlePanel.add(patternCombo, BorderLayout.NORTH);
+        //middlePanel.add(patternCombo, BorderLayout.NORTH);
         list = new JList(listOfFoundItems);
         list.addMouseListener(new MouseListener() {
             @Override
@@ -113,7 +117,7 @@ public class REExplorer extends JFrame {
         setDefaultLookAndFeelDecorated(true);
         setSize(new Dimension(800,600));
         setLocationRelativeTo(null);
-        setTitle("R3DST0RMs Regular Expression - Explorer");
+        setTitle("MediaDownloader - REExplorer (c) R3DST0RM 2015");
         setVisible(true);
     }
 
@@ -124,12 +128,29 @@ public class REExplorer extends JFrame {
         txtURLLine.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         btnAnalyzeURL = new JButton("Analyze");
         btnAnalyzeURL.addActionListener(guiActionListener);
-        btnRemoveFromList = new JButton("Remove from list");
+        btnRemoveFromList = new JButton("Remove selected item from list");
         btnRemoveFromList.addActionListener(guiActionListener);
-        topPanel.add(new JLabel("Enter your URL to analyze: "));
         topPanel.add(txtURLLine);
         topPanel.add(btnAnalyzeURL);
         topPanel.add(btnRemoveFromList);
+
+        btnSaveCurrentPattern = new JButton("Save pattern");
+        btnSaveCurrentPattern.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    man.WriteRegexToFile(patternCombo.getSelectedItem().toString());
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
+            }
+        });
+        topPanel.add(new JLabel("Regular Expression:"));
+        patternCombo = new JComboBox(availablePatterns);
+        patternCombo.setEditable(true);
+        topPanel.add(patternCombo);
+        topPanel.add(btnSaveCurrentPattern);
+
         getContentPane().add(topPanel, BorderLayout.NORTH);
     }
 
@@ -158,7 +179,7 @@ public class REExplorer extends JFrame {
         try {
             for (int i = 0; i < listOfFoundItems.size(); i++) {
                 URL url = new URL(listOfFoundItems.get(i).toString().replace("&amp;", "&")); // DIRTY - Need to decode url right and encode it correctly again!
-                System.out.println("[DOWNLOADING]: " + listOfFoundItems.get(i));
+                //System.out.println("[DOWNLOADING]: " + listOfFoundItems.get(i));
                 String[] filename = listOfFoundItems.get(i).toString().split("/");
                 InputStream in = new BufferedInputStream(url.openStream());
                 OutputStream out = new BufferedOutputStream(new FileOutputStream(txtSavePath.getText() + filename[filename.length-1]));
@@ -170,8 +191,8 @@ public class REExplorer extends JFrame {
                 out.close();
             }
 
-            JOptionPane.showMessageDialog(null, "Finished downloading!",
-                    "R3DST0RMs Regular Expression Explorer - Finished Downloading", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Finished downloading!",
+                    "MediaDownloader - REExplorer - Finished Downloading", JOptionPane.INFORMATION_MESSAGE);
         }
         catch (Exception ex){
             ex.printStackTrace();
@@ -179,6 +200,11 @@ public class REExplorer extends JFrame {
     }
 
     public void removeFromList() {
-        listOfFoundItems.removeElementAt(list.getSelectedIndex());
+        if(list.getSelectedIndex() >= 0)
+            listOfFoundItems.removeElementAt(list.getSelectedIndex());
+        else {
+            JOptionPane.showMessageDialog(this, "There is currently no item in your list.",
+                    "MediaDownloader - REExplorer - Error!", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }
