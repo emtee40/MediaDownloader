@@ -14,6 +14,8 @@ public class SettingsManager {
     private String settingsFilePath;
     private String settingsFile;
 
+    private String regexFile;
+
     public SettingsManager(){
         settingsFilePath = System.getProperty("user.dir");
         osName = System.getProperty("os.name");
@@ -23,6 +25,12 @@ public class SettingsManager {
             settingsFile += "\\\\settings.ini";
         else if (osName.contains("nux"))
             settingsFile += "/settings.ini";
+
+        regexFile = settingsFilePath;
+        if(osName.contains("Windows"))
+            regexFile += "\\\\regex_temps.ini";
+        else if (osName.contains("nux"))
+            regexFile += "/regex_temps.ini";
     }
 
     public String GetStandardSavePath(){
@@ -146,6 +154,16 @@ public class SettingsManager {
         }catch (Exception ex){
             ex.printStackTrace();
             return false;
+        }
+    }
+
+    public void WriteRegexToFile(String regex){
+        File regex_template = new File(regexFile);
+
+        if(!regex_template.exists()){
+            // TODO: implement regex templates!
+        }else {
+
         }
     }
 }

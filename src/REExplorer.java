@@ -21,6 +21,7 @@ public class REExplorer extends JFrame {
     public JComboBox patternCombo;
     public DefaultListModel listOfFoundItems;
     private JList list;
+    private SettingsManager man;
 
     private String[] objects;
 
@@ -39,7 +40,8 @@ public class REExplorer extends JFrame {
                     "(#([-\\w~!$+|.,*:=]|%[a-f\\d]{2})*)?\\b" +
                     "(\\.(?i)(jpg|png|gif|bmp|webm|mp4|mp3|ogg|avi|flv))"};
 
-    public REExplorer() {
+    public REExplorer(SettingsManager manager) {
+        man = manager;
         guiActionListener = new REExplorerActionListener(this);
 
         InitTopContainer();
@@ -50,7 +52,7 @@ public class REExplorer extends JFrame {
 
     private void InitBottomContainer(){
         JPanel bottomPanel = new JPanel(new GridLayout(0,2));
-        txtSavePath = new JTextArea("C:\\Users\\Dominik\\Desktop\\");
+        txtSavePath = new JTextArea(man.GetStandardSavePath());
         btnDownloadFiles = new JButton("Download files found!");
         btnDownloadFiles.addActionListener(guiActionListener);
         bottomPanel.add(txtSavePath);

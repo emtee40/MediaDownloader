@@ -12,7 +12,7 @@ public class LinkHandler {
 
     public static void AddURLToTable(String URL, String hoster, FreshUI window){
         if(DownloadPage.valueOf(hoster.toString()) == DownloadPage.RE_Explorer){
-            new REExplorer();
+            new REExplorer(window.settingsManager);
         }
 
         if(hoster.toLowerCase().equals("facebook")){
@@ -154,12 +154,13 @@ public class LinkHandler {
                         FacebookDownloader fbDownloader = new FacebookDownloader();
                         int size = fbDownloader.getDownloadSize(url);
                         fbDownloader.DownloadFile(url, size, i, window.dTableModel,
-                                window.settingsManager.GetStandardSavePath());
+                                window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 1).toString());
 
                     } else if (hoster == DownloadPage.Instagram) {
                         String url = window.dTableModel.getValueAt(i, 0).toString();
                         InstagramDownloader instagramDownloader = new
-                                InstagramDownloader(window.settingsManager.GetStandardSavePath());
+                                InstagramDownloader(window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount()
+                                - 1).toString());
 
                         int size = instagramDownloader.getDownloadSize(url);
                         instagramDownloader.DownloadFile(url, i, size, window.dTableModel);
@@ -167,7 +168,7 @@ public class LinkHandler {
                     } else if (hoster == DownloadPage.MixCloud) {
                         String url = window.dTableModel.getValueAt(i, 0).toString();
                         MixCloudDownloader mcDownloader = new MixCloudDownloader(url,
-                                window.settingsManager.GetStandardSavePath());
+                                window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 1).toString());
 
                         String toDL = mcDownloader.GetMediaURL();
                         int size = mcDownloader.getDownloadSize(toDL);
@@ -175,7 +176,8 @@ public class LinkHandler {
 
                     } else if (hoster == DownloadPage.NowVideo) {
                         NowVideoDownloader nwDownloader = new NowVideoDownloader(window.dTableModel.getValueAt(i, 0)
-                                .toString(), window.settingsManager.GetStandardSavePath());
+                                .toString(), window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount()
+                                - 1).toString());
 
                         String url = nwDownloader.getVideoURL();
                         int size = nwDownloader.getDownloadSize(url);
@@ -184,7 +186,8 @@ public class LinkHandler {
                         if (System.getProperty("os.name").contains("Windows"))
                             seperator = "\\";
 
-                        nwDownloader.DownloadFile(url, window.settingsManager.GetStandardSavePath() + seperator
+                        nwDownloader.DownloadFile(url, window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount()
+                                - 1).toString() + seperator
                                 + "video_" + System.currentTimeMillis(), size, i, window.dTableModel);
                     } else if (hoster == DownloadPage.SharedSX) {
                         SharedSXDownloader sxDownloader = new SharedSXDownloader(window.dTableModel.
@@ -193,9 +196,11 @@ public class LinkHandler {
                         String filename;
 
                         if (System.getProperty("os.name").contains("Windows"))
-                            filename = window.settingsManager.GetStandardSavePath() + "\\" + sxDownloader.getFilename();
+                            filename = window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 1)
+                                    .toString() + "\\" + sxDownloader.getFilename();
                         else
-                            filename = window.settingsManager.GetStandardSavePath() + "/" + sxDownloader.getFilename();
+                            filename = window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 1)
+                                    .toString() + "/" + sxDownloader.getFilename();
 
                         String dlUrl = sxDownloader.getStreamURL();
 
@@ -205,7 +210,7 @@ public class LinkHandler {
                     } else if (hoster == DownloadPage.SoundCloud) {
                         String url = window.dTableModel.getValueAt(i, 0).toString();
                         SoundcloudDownloader scDownloader = new SoundcloudDownloader(url,
-                                window.settingsManager.GetStandardSavePath());
+                                window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 1).toString());
 
                         String toDL = scDownloader.getAudioURL();
                         int size = scDownloader.getDownloadSize(toDL);
@@ -218,9 +223,11 @@ public class LinkHandler {
                         String filename;
 
                         if (System.getProperty("os.name").contains("Windows"))
-                            filename = window.settingsManager.GetStandardSavePath() + "\\" + sceDownloader.getFilename();
+                            filename = window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 1)
+                                    .toString() + "\\" + sceDownloader.getFilename();
                         else
-                            filename = window.settingsManager.GetStandardSavePath() + "/" + sceDownloader.getFilename();
+                            filename = window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 1)
+                                    .toString() + "/" + sceDownloader.getFilename();
 
                         String dlUrl = sceDownloader.getStreamURL();
 
