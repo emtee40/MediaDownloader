@@ -25,6 +25,8 @@ public class SettingsManagerPanel extends JPanel {
     private JButton btnSelectStandardSave;
     private JFileChooser dirChooser;
     private JPanel panel;
+    private JLabel lblCheckMinSize;
+    private JCheckBox checkMinimumSize;
 
     public SettingsManagerPanel(SettingsManager man, FreshUI win){
         //lblSavePath = new JLabel("Standard save path:");
@@ -53,6 +55,8 @@ public class SettingsManagerPanel extends JPanel {
         checkRemoveMp4 = new JCheckBox("", man.GetRemoveVidFiles());
         lblRemoveGEMA = new JLabel("Remove GEMA");
         checkRemoveGEMA = new JCheckBox("", man.GetRemoveGEMA());
+        lblCheckMinSize = new JLabel("Allow window to get smaller than minimum size (restart needed!)");
+        checkMinimumSize = new JCheckBox("");
         //lblFFMPEGFile = new JLabel("FFMPEG-Directory");
         btnSelectFFMPEG = new JButton("Select FFMPEG-Directory");
         btnSelectFFMPEG.addActionListener(e -> {
@@ -89,6 +93,8 @@ public class SettingsManagerPanel extends JPanel {
                 out.println("removegema:" + checkRemoveGEMA.isSelected());
                 out.println("ffmpeg:" + txtFFMPEG.getText().replace(System.getProperty("user.dir"), "{wd}"));
                 out.println("removeMp4:" + checkRemoveMp4.isSelected());
+                out.println("removeMp4:" + checkRemoveMp4.isSelected());
+                out.println("minSize:" + checkMinimumSize.isSelected());
                 out.close();
                 JOptionPane.showMessageDialog(win, "Successfully saved settings!", "Success", JOptionPane.INFORMATION_MESSAGE);
             } catch (Exception ex) {
@@ -106,6 +112,8 @@ public class SettingsManagerPanel extends JPanel {
         panel.add(checkRemoveMp4);
         panel.add(lblRemoveGEMA);
         panel.add(checkRemoveGEMA);
+        panel.add(lblCheckMinSize);
+        panel.add(checkMinimumSize);
         //panel.add(lblFFMPEGFile);
         panel.add(btnSelectFFMPEG);
         panel.add(txtFFMPEG);

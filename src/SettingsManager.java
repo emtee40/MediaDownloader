@@ -157,6 +157,25 @@ public class SettingsManager {
         }
     }
 
+    public boolean GetMinimumSize(){
+        try{
+            File settings = new File(settingsFile);
+            if(!settings.exists())
+                return true;
+
+            // new read lines
+            BufferedReader br = new BufferedReader(new FileReader(settings));
+            String line;
+            while((line = br.readLine()) != null) {
+                if (line.contains("minSize"))
+                    return Boolean.valueOf(line.replace("minSize:", ""));
+            }
+            throw new IndexOutOfBoundsException("ERROR in settings.ini pls contact: admin@r3d-soft.de");
+        }catch (Exception ex){
+            ex.printStackTrace();
+            return false;
+        }
+    }
     public void WriteRegexToFile(String regex){
         File regex_template = new File(regexFile);
 
@@ -185,6 +204,8 @@ class SettingsManagerWindow extends JDialog{
     private JButton btnSelectFFMPEG;
     private JButton btnSelectStandardSave;
     private JFileChooser dirChooser;
+    private JLabel lblCheckMinSize;
+    private JCheckBox checkMinimumSize;
 
     public SettingsManagerWindow(SettingsManager man, FreshUI win){
         setTitle("Change settings");
@@ -215,6 +236,8 @@ class SettingsManagerWindow extends JDialog{
         checkRemoveMp4 = new JCheckBox("", man.GetRemoveVidFiles());
         lblRemoveGEMA = new JLabel("Remove GEMA");
         checkRemoveGEMA = new JCheckBox("", man.GetRemoveGEMA());
+        lblCheckMinSize = new JLabel("Allow window to get smaller than minimum size");
+        checkMinimumSize = new JCheckBox("");
         //lblFFMPEGFile = new JLabel("FFMPEG-Directory");
         btnSelectFFMPEG = new JButton("Select FFMPEG-Directory");
         btnSelectFFMPEG.addActionListener(e -> {
@@ -251,6 +274,7 @@ class SettingsManagerWindow extends JDialog{
                 out.println("removegema:" + checkRemoveGEMA.isSelected());
                 out.println("ffmpeg:" + txtFFMPEG.getText().replace(System.getProperty("user.dir"), "{wd}"));
                 out.println("removeMp4:" + checkRemoveMp4.isSelected());
+                out.println("minSize:" + checkMinimumSize.isSelected());
                 out.close();
                 JOptionPane.showMessageDialog(null, "Successfully saved settings! Changes will apply on application restart...", "Success", JOptionPane.INFORMATION_MESSAGE);
                 dispose();
@@ -269,6 +293,8 @@ class SettingsManagerWindow extends JDialog{
         panel.add(checkRemoveMp4);
         panel.add(lblRemoveGEMA);
         panel.add(checkRemoveGEMA);
+        panel.add(lblCheckMinSize);
+        panel.add(checkMinimumSize);
         //panel.add(lblFFMPEGFile);
         panel.add(btnSelectFFMPEG);
         panel.add(txtFFMPEG);

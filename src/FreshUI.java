@@ -34,6 +34,9 @@ public class FreshUI extends JFrame implements ActionListener {
         InitGUIComponents();
         InitActionListeners();
         InitWindowStandards();
+
+        if(!settingsManager.GetMinimumSize())
+            setMinimumSize(getSize());
     }
 
     private void InitActionListeners() {
