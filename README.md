@@ -40,7 +40,7 @@ Download videos/movies
 
 Download video/movies
 
-## Shortcuts:
+## Shortcuts (outdated - will be updated when new major update is pushed!):
 #####YouTube-URL:
 * enter user:{USERNAME} to crawl all videos available on this channel
 
