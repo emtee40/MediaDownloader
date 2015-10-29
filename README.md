@@ -4,6 +4,8 @@ MediaDownloader is a cross-platform java app which allows you to download files 
 
 There is also a Regular-Expression AddOn which allows you to search the website for example: URLs of any type.
 
+Check out an online version of my YouTube and SoundCloud Downloader: http://r3d-soft.de
+
 # Usage:
 
 ####Whats supported to download?
