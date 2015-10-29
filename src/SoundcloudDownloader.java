@@ -44,7 +44,7 @@ public class SoundcloudDownloader extends Downloader{
             //Connection.Response res = Jsoup.
             //       connect(baseURI + trackID + "/streams?client_id=" + clientID)
             //       .ignoreContentType(true).followRedirects(false).execute();
-            //cookies = res.cookies();
+            //cookies = res.cookies(); 
             //return res.header("location");
 
 
