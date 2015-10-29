@@ -21,7 +21,7 @@ public class MixCloudDownloader extends Downloader {
     }
 
     public String GetMediaURL(){
-        webObj = new JSoupAnalyze(this.mixcloudURL);
+        webObj = new JSoupAnalyze(this.mixcloudURL, "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
         previewURL = webObj.AnalyzeWithTag("span[class=play-button play-button-cloudcast-page]")
                 .attr("m-preview");
 
@@ -73,7 +73,7 @@ public class MixCloudDownloader extends Downloader {
                 sum += count;
 
                 if (fileSize > 0 && guiElements != null) {
-                    guiElements.setValueAt(((int)(sum / fileSize * 100)) + "%", element, 0);
+                    guiElements.setValueAt(((int)(sum / fileSize * 100)) + "%", element, 2);
                 }
             }
 
