@@ -36,9 +36,9 @@ public class YouTubeDownloader extends Downloader {
                 vidTitle = webObj.AnalyzeWithTag("meta[property=og:title]").get(0).attr("content");
             }
             else {
-                webObj = new JSoupAnalyze("http://ytapi.gitnol.com/embed/" + vidID,
+                webObj = new JSoupAnalyze("http://video.genyoutube.com/" + vidID,
                         "Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0");
-                vidTitle = webObj.AnalyzeWithTag("title").get(0).text();
+                vidTitle = webObj.AnalyzeWithTag("title").get(0).text().replace("Download ", "").replace(" - GenYoutube.com", "");
             }
 
             // get video title as file name
@@ -88,8 +88,13 @@ public class YouTubeDownloader extends Downloader {
 
         }
         else {
-            Elements vidSources = webObj.AnalyzeWithTag("source");
-            String url = vidSources.get(vidSources.size() - 1).attr("src");
+            // 720p vids - always try to get the highest resolution to download for better quality
+            Elements vidSources = webObj.AnalyzeWithTag("a[data-itag=22]");
+            if(vidSources.size() == 0) {
+                // 360p vids
+                vidSources = webObj.AnalyzeWithTag("a[data-itag=18]");
+            }
+            String url = vidSources.get(0).attr("href");
             // check if url is correct
             if(url.contains("http"))
                 return url;

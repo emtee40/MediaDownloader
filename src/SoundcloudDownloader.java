@@ -1,5 +1,4 @@
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
+import org.json.JSONObject;
 
 import javax.swing.table.DefaultTableModel;
 import java.io.*;
@@ -13,8 +12,8 @@ public class SoundcloudDownloader extends Downloader{
     private JSoupAnalyze webObj;
     private SettingsManager settingsManager;
 
-    private String baseURI = "https://api.soundcloud.com/tracks/";
-    private String clientID = "b45b1aa10f1ac2941910a7f0d10f8e28";
+    private String baseURI = "https://api.soundcloud.com/i1/tracks/";
+    private String clientID = "02gUJC0hH2ct1EGOcYXQIzRFU91c72Ea";
     private String trackID;
 
     private String savePath;
@@ -41,12 +40,18 @@ public class SoundcloudDownloader extends Downloader{
 
     public String getAudioURL(){
         try {
-            Connection.Response res = Jsoup.
-                    connect(baseURI + trackID + "/stream?client_id=" + clientID)
-                    .ignoreContentType(true).followRedirects(false).execute();
+            // Outdated version to get SoundCloud Songs
+            //Connection.Response res = Jsoup.
+            //       connect(baseURI + trackID + "/streams?client_id=" + clientID)
+            //       .ignoreContentType(true).followRedirects(false).execute();
             //cookies = res.cookies();
+            //return res.header("location");
 
-            return res.header("location");
+
+            // Get Url from JSON since SoundCloud did changes to the api
+            JSONObject obj = readJsonFromUrl(baseURI + trackID + "/streams?client_id=" + clientID);
+            return obj.getString("http_mp3_128_url");
+
         }catch (Exception ex){
             ex.printStackTrace();
             return "null";
