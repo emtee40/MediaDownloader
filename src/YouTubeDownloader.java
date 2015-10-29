@@ -88,7 +88,7 @@ public class YouTubeDownloader extends Downloader {
 
         }
         else {
-            // 720p vids - always try to get the highest resolution to download for better quality
+            // 720p vids - always try to get the highest resolution to download for better quality!!
             Elements vidSources = webObj.AnalyzeWithTag("a[data-itag=22]");
             if(vidSources.size() == 0) {
                 // 360p vids

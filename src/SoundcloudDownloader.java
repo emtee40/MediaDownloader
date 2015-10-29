@@ -40,11 +40,11 @@ public class SoundcloudDownloader extends Downloader{
 
     public String getAudioURL(){
         try {
-            // Outdated version to get SoundCloud Songs
+            // Outdated version to get SoundCloud Songs Fixed
             //Connection.Response res = Jsoup.
             //       connect(baseURI + trackID + "/streams?client_id=" + clientID)
             //       .ignoreContentType(true).followRedirects(false).execute();
-            //cookies = res.cookies(); 
+            //cookies = res.cookies();
             //return res.header("location");
 
 
