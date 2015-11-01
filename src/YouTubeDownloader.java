@@ -163,7 +163,12 @@ public class YouTubeDownloader extends Downloader {
     }
 
     public void DownloadFile(String urls, int fileSize, int element, DefaultTableModel guiElements){
-        try {
+        if(guiElements != null)
+            LinkHandler.AddMp4ToList(savePath + vidTitle + ".mp4");
+
+        super.DownloadFile(urls, savePath + vidTitle + ".mp4", fileSize, element, guiElements);
+        // Deprecated code block
+        /*try {
             URL url = new URL(urls);
             InputStream in = new BufferedInputStream(url.openStream());
             OutputStream out = new BufferedOutputStream(new FileOutputStream(savePath + vidTitle + ".mp4"));
@@ -190,6 +195,6 @@ public class YouTubeDownloader extends Downloader {
         }
         catch (Exception ex){
             ex.printStackTrace();
-        }
+        } */
     }
 }
