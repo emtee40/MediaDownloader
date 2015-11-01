@@ -6,6 +6,7 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import javax.swing.table.DefaultTableModel;
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
@@ -138,6 +139,7 @@ public abstract class Downloader {
         return sb.toString();
     }
 
+    /*
     public void DownloadFile(String dlUrl, String filename, int downloadSize, int i, DefaultTableModel dTableModel) {
         try {
             URL url = new URL(dlUrl);
@@ -163,6 +165,63 @@ public abstract class Downloader {
         }
         catch (Exception ex){
             ex.printStackTrace();
+        }
+    } */
+
+    public void DownloadFile(String dlUrl, String filename, int downloadSize, int i, DefaultTableModel dTableModel) {
+        try {
+            HttpURLConnection connection = (HttpURLConnection)new URL(dlUrl).openConnection();
+            File outputFileCache = new File(filename);
+            long downloadedSize = 0;
+            long fileLength = 0;
+            BufferedInputStream input = null;
+            RandomAccessFile output = null;
+
+            if (outputFileCache.exists()) {
+                connection.setAllowUserInteraction(true);
+                connection.setRequestProperty("Range", "bytes=" + outputFileCache.length() + "-");
+            }
+
+            connection.setConnectTimeout(14000);
+            connection.setReadTimeout(20000);
+            connection.connect();
+
+            if (connection.getResponseCode() / 100 != 2)
+                System.err.println("Unknown response code!");
+            else {
+                String connectionField = connection.getHeaderField("content-range");
+
+                if (connectionField != null) {
+                    String[] connectionRanges = connectionField.substring("bytes=".length()).split("-");
+                    downloadedSize = Long.valueOf(connectionRanges[0]);
+                }
+
+                if (connectionField == null && outputFileCache.exists())
+                    outputFileCache.delete();
+
+                fileLength = connection.getContentLength() + downloadedSize;
+                input = new BufferedInputStream(connection.getInputStream());
+                output = new RandomAccessFile(outputFileCache, "rw");
+                output.seek(downloadedSize);
+
+                byte data[] = new byte[1024];
+                int count = 0;
+                int __progress = 0;
+
+                while ((count = input.read(data, 0, 1024)) != -1
+                        && __progress != 100) {
+                    downloadedSize += count;
+                    output.write(data, 0, count);
+                    __progress = (int) ((downloadedSize * 100) / fileLength);
+
+                    dTableModel.setValueAt(__progress + "%", i, 2);
+                }
+
+                output.close();
+                input.close();
+            }
+        }catch (Exception ex){
+            System.err.println(ex.getMessage() + " Error occured while downloading!");
         }
     }
 }

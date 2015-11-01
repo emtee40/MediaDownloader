@@ -87,7 +87,9 @@ public class SoundcloudDownloader extends Downloader{
     }
 
     public void DownloadFile(String urls, int fileSize, int element, DefaultTableModel guiElements){
-        try {
+        super.DownloadFile(urls, savePath + this.audioName + ".mp3", fileSize, element, guiElements);
+
+       /* try {
             URL url = new URL(urls);
             InputStream in = new BufferedInputStream(url.openStream());
             OutputStream out = new BufferedOutputStream(new FileOutputStream(savePath + this.audioName + ".mp3"));
@@ -111,6 +113,6 @@ public class SoundcloudDownloader extends Downloader{
         }
         catch (Exception ex){
             ex.printStackTrace();
-        }
+        } */
     }
 }
