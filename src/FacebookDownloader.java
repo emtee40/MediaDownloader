@@ -99,6 +99,16 @@ public class FacebookDownloader extends Downloader {
     }
 
     public void DownloadFile(String urls, long fileSize, int element, DefaultTableModel guiElements, String savePath){
+        savePath = CheckSavePath(savePath);
+        String[] URL_split = urls.split("/");
+
+        if(!URL_split[URL_split.length -1].contains("?"))
+            super.DownloadFile(urls, savePath + URL_split[URL_split.length - 1], (int)fileSize, element, guiElements);
+        else {
+            String[] URL_further = (URL_split[URL_split.length - 1]).split("\\?");
+            super.DownloadFile(urls, savePath + URL_further[0], (int)fileSize, element, guiElements);
+        }
+        /* Deprecated block
         try {
             savePath = CheckSavePath(savePath);
 
@@ -133,7 +143,7 @@ public class FacebookDownloader extends Downloader {
         }
         catch (Exception ex){
             ex.printStackTrace();
-        }
+        }*/
     }
 
     public String[] GetDownloadLinks(){

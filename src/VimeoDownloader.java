@@ -44,6 +44,7 @@ public class VimeoDownloader extends Downloader {
         }
     }
 
+    // Deprecated
     public void DownloadFile(String urls, int fileSize, int element, VimeoDownloaderPanel guiElements){
         try {
             URL url = new URL(urls);
@@ -76,6 +77,11 @@ public class VimeoDownloader extends Downloader {
     }
 
     public void DownloadFile(String urls, int fileSize, int element, DefaultTableModel guiElements){
+        if(guiElements != null)
+            LinkHandler.AddMp4ToList(savePath + this.fileTitle + ".mp4");
+        super.DownloadFile(urls, savePath + this.fileTitle + ".mp4", fileSize, element, guiElements);
+
+        /* Deprecated Block
         try {
             URL url = new URL(urls);
             InputStream in = new BufferedInputStream(url.openStream());
@@ -103,7 +109,7 @@ public class VimeoDownloader extends Downloader {
         }
         catch (Exception ex){
             ex.printStackTrace();
-        }
+        } */
     }
 
     public void StartConvert() {

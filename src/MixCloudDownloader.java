@@ -58,6 +58,10 @@ public class MixCloudDownloader extends Downloader {
     }
 
     public void DownloadFile(String urls, int fileSize, int element, DefaultTableModel guiElements){
+        String[] splitted = urls.split("/");
+        super.DownloadFile(urls, savePath + splitted[splitted.length -1], fileSize, element, guiElements);
+
+        /* Deprecated block
         try {
             URL url = new URL(urls);
             InputStream in = new BufferedInputStream(url.openStream());
@@ -83,6 +87,6 @@ public class MixCloudDownloader extends Downloader {
         }
         catch (Exception ex){
             ex.printStackTrace();
-        }
+        } */
     }
 }
