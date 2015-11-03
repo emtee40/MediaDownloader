@@ -14,7 +14,7 @@ public class FreshUI extends JFrame implements ActionListener {
     public DefaultTableModel dTableModel;
     public JComboBox<DownloadPage> tlDownloadDomain;
     private JButton btnAddToList;
-    private JButton btnDownload;
+    public JButton btnDownload;
     private JTextField txtDownloadURL;
     public SettingsManager settingsManager;
 
@@ -52,7 +52,7 @@ public class FreshUI extends JFrame implements ActionListener {
                     "<b>For more information visit: <a href='http://r3d-soft.de/'>http://r3d-soft.de</a></b>" +
                     "</html>";
 
-            JOptionPane.showMessageDialog(null, new JLabel(msg), "Help", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, new JLabel(msg), "Help", JOptionPane.INFORMATION_MESSAGE);
         });
         menuItemAbout.addActionListener(e -> {
             String msg = "<html>" +
@@ -63,7 +63,7 @@ public class FreshUI extends JFrame implements ActionListener {
                     "Website: <b>http://r3d-soft.de</b>" +
                     "</html>";
 
-            JOptionPane.showMessageDialog(null, new JLabel(msg), "Help", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, new JLabel(msg), "Help", JOptionPane.INFORMATION_MESSAGE);
         });
         menuItemSettingsWindow.addActionListener(e -> settingsManager.ShowSettingsWindow(this));
     }

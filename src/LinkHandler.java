@@ -149,6 +149,9 @@ public class LinkHandler {
             @Override
             public void run() {
                 try {
+                    window.btnDownload.setEnabled(false);
+                    window.btnDownload.setText("Download all!");
+
                     for (int i = 0; i < window.dTableModel.getRowCount(); i++) {
                         // Retrieve which hoster we have
                         DownloadPage hoster = DownloadPage.valueOf(window.dTableModel.getValueAt(i, 1).toString());
@@ -462,6 +465,9 @@ public class LinkHandler {
                     // JOB Finished Display
                     JOptionPane.showMessageDialog(window, "Downloaded every URL, you entered, successfully. When you dispose this message the download list will be cleared.",
                             "MediaDownloader - Job finished", JOptionPane.INFORMATION_MESSAGE);
+                    window.btnDownload.setEnabled(true);
+                    window.btnDownload.setText("Download all!");
+
 
                     for (int j = window.dTableModel.getRowCount() - 1; j > -1; j--) {
                         window.dTableModel.removeRow(j);
@@ -475,9 +481,12 @@ public class LinkHandler {
                                 StartDownloading(window);
                             }
                         }
+                        window.btnDownload.setEnabled(true);
+                        window.btnDownload.setText("Continue download!");
+
                         JOptionPane.showMessageDialog(window, "There was a problem with your internet connection.\n" +
                                         "I tried to continue the download for myself,\nbut your internet connection was " +
-                                        "longer away than 40 seconds so please hit 'Download all' and continue",
+                                        "longer away than 40 seconds so please hit 'Continue download' and continue",
                                 "MediaDownloader - Internet connection failure", JOptionPane.ERROR_MESSAGE);
                     }catch (Exception e){
                         e.getMessage();
