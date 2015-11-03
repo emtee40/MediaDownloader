@@ -2,11 +2,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
-import javax.swing.*;
-import java.io.*;
-import java.net.InetAddress;
-import java.net.URL;
-
 /**
  * Creation time: 15:16
  * Created by Dominik on 04.06.2015.
@@ -74,40 +69,5 @@ public class NowVideoDownloader extends Downloader {
     public int getDownloadSize(String urls) {
         size = super.getDownloadSize(urls);
         return size;
-    }
-
-    public void DownloadFile(String urls){
-        downloadWindow = new NowVideoDownloadWindow(urls);
-
-        try {
-            URL url = new URL(urls);
-            InputStream in = new BufferedInputStream(url.openStream());
-
-            OutputStream out;
-            // need to get a filename
-            out = new BufferedOutputStream(new FileOutputStream(savePath));
-
-            double sum = 0;
-            int count;
-            byte data[] = new byte[1024];
-            // added a quick fix for downloading >= 0 instead of != -1
-            while ((count = in.read(data, 0, 1024)) >= 0) {
-                out.write(data, 0, count);
-                sum += count;
-
-                if (size > 0) {
-                    downloadWindow.setElementPercentage(((int)(sum / size * 100)));
-                }
-            }
-            in.close();
-            out.close();
-
-            downloadWindow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        }
-        catch (Exception ex){
-            System.out.println(urls);
-            JOptionPane.showMessageDialog(null, ex.getStackTrace(), "Error!", JOptionPane.ERROR_MESSAGE);
-            downloadWindow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        }
     }
 }

@@ -1,8 +1,6 @@
 import org.json.JSONObject;
 
 import javax.swing.table.DefaultTableModel;
-import java.io.*;
-import java.net.URL;
 
 /**
  * Creation time: 03:05
@@ -58,62 +56,7 @@ public class SoundcloudDownloader extends Downloader{
         }
     }
 
-    public void DownloadFile(String urls, int fileSize, int element, SoundcloudDownloaderPanel guiElements){
-        try {
-            URL url = new URL(urls);
-            InputStream in = new BufferedInputStream(url.openStream());
-            OutputStream out = new BufferedOutputStream(new FileOutputStream(savePath + this.audioName + ".mp3"));
-
-            double sum = 0;
-            int count;
-            byte data[] = new byte[1024];
-            // added a quick fix for downloading >= 0 instead of != -1
-            while ((count = in.read(data, 0, 1024)) >= 0) {
-                out.write(data, 0, count);
-                sum += count;
-
-                if (fileSize > 0 && guiElements != null) {
-                    guiElements.setElementPercentage(((int)(sum / fileSize * 100)) + "%", element);
-                }
-            }
-
-
-            in.close();
-            out.close();
-        }
-        catch (Exception ex){
-            ex.printStackTrace();
-        }
-    }
-
     public void DownloadFile(String urls, int fileSize, int element, DefaultTableModel guiElements){
         super.DownloadFile(urls, savePath + this.audioName + ".mp3", fileSize, element, guiElements);
-
-        // Deprecated code block
-       /* try {
-            URL url = new URL(urls);
-            InputStream in = new BufferedInputStream(url.openStream());
-            OutputStream out = new BufferedOutputStream(new FileOutputStream(savePath + this.audioName + ".mp3"));
-
-            double sum = 0;
-            int count;
-            byte data[] = new byte[1024];
-            // added a quick fix for downloading >= 0 instead of != -1
-            while ((count = in.read(data, 0, 1024)) >= 0) {
-                out.write(data, 0, count);
-                sum += count;
-
-                if (fileSize > 0 && guiElements != null) {
-                    guiElements.setValueAt(((int)(sum / fileSize * 100)) + "%", element, 2);
-                }
-            }
-
-
-            in.close();
-            out.close();
-        }
-        catch (Exception ex){
-            ex.printStackTrace();
-        } */
     }
 }

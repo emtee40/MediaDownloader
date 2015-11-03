@@ -33,5 +33,7 @@ public class REExplorerActionListener implements ActionListener {
         if(e.getSource() == currGUI.btnRemoveFromList){
             currGUI.removeFromList();
         }
+
+
     }
 }
