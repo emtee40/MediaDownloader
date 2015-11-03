@@ -186,9 +186,15 @@ public abstract class Downloader {
             connection.setReadTimeout(20000);
             connection.connect();
 
-            if (connection.getResponseCode() / 100 != 2)
+            // If response code is 416 the download is most likely already finished.
+            if (connection.getResponseCode() == 416) {
+                System.out.println("Response Code 416");
+                dTableModel.setValueAt("100%", i, 2);
+            }
+            else if (connection.getResponseCode() / 100 != 2) {
                 System.err.println("Unknown response code!");
-            else {
+            }
+            else { // Continue with download
                 String connectionField = connection.getHeaderField("content-range");
 
                 if (connectionField != null) {
