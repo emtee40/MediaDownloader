@@ -1,5 +1,8 @@
 import javax.swing.*;
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -145,326 +148,357 @@ public class LinkHandler {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
-                for (int i = 0; i < window.dTableModel.getRowCount(); i++) {
-                    // Retrieve which hoster we have
-                    DownloadPage hoster = DownloadPage.valueOf(window.dTableModel.getValueAt(i, 1).toString());
+                try {
+                    for (int i = 0; i < window.dTableModel.getRowCount(); i++) {
+                        // Retrieve which hoster we have
+                        DownloadPage hoster = DownloadPage.valueOf(window.dTableModel.getValueAt(i, 1).toString());
 
-                    if (hoster == DownloadPage.Facebook) {
-                        String url = window.dTableModel.getValueAt(i, 0).toString();
-                        FacebookDownloader fbDownloader = new FacebookDownloader();
-                        int size = fbDownloader.getDownloadSize(url);
-                        fbDownloader.DownloadFile(url, size, i, window.dTableModel,
-                                window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 1).toString());
+                        if (hoster == DownloadPage.Facebook) {
+                            String url = window.dTableModel.getValueAt(i, 0).toString();
+                            FacebookDownloader fbDownloader = new FacebookDownloader();
+                            int size = fbDownloader.getDownloadSize(url);
+                            fbDownloader.DownloadFile(url, size, i, window.dTableModel,
+                                    window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 1).toString());
 
-                    } else if (hoster == DownloadPage.Instagram) {
-                        String url = window.dTableModel.getValueAt(i, 0).toString();
-                        InstagramDownloader instagramDownloader = new
-                                InstagramDownloader(window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount()
-                                - 1).toString());
+                        } else if (hoster == DownloadPage.Instagram) {
+                            String url = window.dTableModel.getValueAt(i, 0).toString();
+                            InstagramDownloader instagramDownloader = new
+                                    InstagramDownloader(window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount()
+                                    - 1).toString());
 
-                        int size = instagramDownloader.getDownloadSize(url);
-                        instagramDownloader.DownloadFile(url, i, size, window.dTableModel);
+                            int size = instagramDownloader.getDownloadSize(url);
+                            instagramDownloader.DownloadFile(url, i, size, window.dTableModel);
 
-                    } else if (hoster == DownloadPage.MixCloud) {
-                        String url = window.dTableModel.getValueAt(i, 0).toString();
-                        MixCloudDownloader mcDownloader = new MixCloudDownloader(url,
-                                window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 1).toString());
+                        } else if (hoster == DownloadPage.MixCloud) {
+                            String url = window.dTableModel.getValueAt(i, 0).toString();
+                            MixCloudDownloader mcDownloader = new MixCloudDownloader(url,
+                                    window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 1).toString());
 
-                        String toDL = mcDownloader.GetMediaURL();
-                        int size = mcDownloader.getDownloadSize(toDL);
-                        mcDownloader.DownloadFile(toDL, size, i, window.dTableModel);
+                            String toDL = mcDownloader.GetMediaURL();
+                            int size = mcDownloader.getDownloadSize(toDL);
+                            mcDownloader.DownloadFile(toDL, size, i, window.dTableModel);
 
-                    } else if (hoster == DownloadPage.NowVideo) {
-                        NowVideoDownloader nwDownloader = new NowVideoDownloader(window.dTableModel.getValueAt(i, 0)
-                                .toString(), window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount()
-                                - 1).toString());
+                        } else if (hoster == DownloadPage.NowVideo) {
+                            NowVideoDownloader nwDownloader = new NowVideoDownloader(window.dTableModel.getValueAt(i, 0)
+                                    .toString(), window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount()
+                                    - 1).toString());
 
-                        String url = nwDownloader.getVideoURL();
-                        int size = nwDownloader.getDownloadSize(url);
+                            String url = nwDownloader.getVideoURL();
+                            int size = nwDownloader.getDownloadSize(url);
 
-                        String seperator = "/";
-                        if (System.getProperty("os.name").contains("Windows"))
-                            seperator = "\\";
+                            String seperator = "/";
+                            if (System.getProperty("os.name").contains("Windows"))
+                                seperator = "\\";
 
-                        nwDownloader.DownloadFile(url, window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount()
-                                - 1).toString() + seperator
-                                + "video_" + System.currentTimeMillis() + ".mp4", size, i, window.dTableModel);
-                    } else if (hoster == DownloadPage.SharedSX) {
-                        SharedSXDownloader sxDownloader = new SharedSXDownloader(window.dTableModel.
-                                getValueAt(i, 0).toString());
+                            nwDownloader.DownloadFile(url, window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount()
+                                    - 1).toString() + seperator
+                                    + "video_" + System.currentTimeMillis() + ".mp4", size, i, window.dTableModel);
+                        } else if (hoster == DownloadPage.SharedSX) {
+                            SharedSXDownloader sxDownloader = new SharedSXDownloader(window.dTableModel.
+                                    getValueAt(i, 0).toString());
 
-                        String filename;
+                            String filename;
 
-                        if (System.getProperty("os.name").contains("Windows"))
-                            filename = window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 1)
-                                    .toString() + "\\" + sxDownloader.getFilename();
-                        else
-                            filename = window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 1)
-                                    .toString() + "/" + sxDownloader.getFilename();
+                            if (System.getProperty("os.name").contains("Windows"))
+                                filename = window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 1)
+                                        .toString() + "\\" + sxDownloader.getFilename();
+                            else
+                                filename = window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 1)
+                                        .toString() + "/" + sxDownloader.getFilename();
 
-                        String dlUrl = sxDownloader.getStreamURL();
+                            String dlUrl = sxDownloader.getStreamURL();
 
-                        sxDownloader.DownloadFile(dlUrl, filename, sxDownloader.getDownloadSize(dlUrl),
-                                i, window.dTableModel);
+                            sxDownloader.DownloadFile(dlUrl, filename, sxDownloader.getDownloadSize(dlUrl),
+                                    i, window.dTableModel);
 
-                    } else if (hoster == DownloadPage.SoundCloud) {
-                        String url = window.dTableModel.getValueAt(i, 0).toString();
-                        SoundcloudDownloader scDownloader = new SoundcloudDownloader(url,
-                                window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 1).toString());
+                        } else if (hoster == DownloadPage.SoundCloud) {
+                            String url = window.dTableModel.getValueAt(i, 0).toString();
+                            SoundcloudDownloader scDownloader = new SoundcloudDownloader(url,
+                                    window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 1).toString());
 
-                        String toDL = scDownloader.getAudioURL();
-                        int size = scDownloader.getDownloadSize(toDL);
-                        scDownloader.DownloadFile(toDL, size, i, window.dTableModel);
+                            String toDL = scDownloader.getAudioURL();
+                            int size = scDownloader.getDownloadSize(toDL);
+                            scDownloader.DownloadFile(toDL, size, i, window.dTableModel);
 
-                    } else if (hoster == DownloadPage.StreamCloud) {
-                        StreamCloudEUDownloader sceDownloader = new StreamCloudEUDownloader(window.dTableModel.
-                                getValueAt(i, 0).toString());
+                        } else if (hoster == DownloadPage.StreamCloud) {
+                            StreamCloudEUDownloader sceDownloader = new StreamCloudEUDownloader(window.dTableModel.
+                                    getValueAt(i, 0).toString());
 
-                        String filename;
+                            String filename;
 
-                        if (System.getProperty("os.name").contains("Windows"))
-                            filename = window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 1)
-                                    .toString() + "\\" + sceDownloader.getFilename();
-                        else
-                            filename = window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 1)
-                                    .toString() + "/" + sceDownloader.getFilename();
+                            if (System.getProperty("os.name").contains("Windows"))
+                                filename = window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 1)
+                                        .toString() + "\\" + sceDownloader.getFilename();
+                            else
+                                filename = window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 1)
+                                        .toString() + "/" + sceDownloader.getFilename();
 
-                        String dlUrl = sceDownloader.getStreamURL();
+                            String dlUrl = sceDownloader.getStreamURL();
 
-                        sceDownloader.DownloadFile(dlUrl, filename, sceDownloader.getDownloadSize(dlUrl),
-                                i, window.dTableModel);
+                            sceDownloader.DownloadFile(dlUrl, filename, sceDownloader.getDownloadSize(dlUrl),
+                                    i, window.dTableModel);
 
-                    } else if (hoster == DownloadPage.Vimeo) {
-                        String vimURL = window.dTableModel.getValueAt(i, 0).toString();
-                        String savePath = window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 1).toString();
-                        VimeoDownloader vimDL = new VimeoDownloader(vimURL, savePath);
-                        String vidURL = vimDL.getFileUrl();
-                        int size = vimDL.getDownloadSize(vidURL);
-                        vimDL.DownloadFile(vidURL, size, i, window.dTableModel);
+                        } else if (hoster == DownloadPage.Vimeo) {
+                            String vimURL = window.dTableModel.getValueAt(i, 0).toString();
+                            String savePath = window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 1).toString();
+                            VimeoDownloader vimDL = new VimeoDownloader(vimURL, savePath);
+                            String vidURL = vimDL.getFileUrl();
+                            int size = vimDL.getDownloadSize(vidURL);
+                            vimDL.DownloadFile(vidURL, size, i, window.dTableModel);
 
-                        if (window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 2).toString().equals("true"))
-                            vimDL.StartConvert();
+                            if (window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 2).toString().equals("true"))
+                                vimDL.StartConvert();
 
-                        // remove mp4 files downloaded
+                            // remove mp4 files downloaded
 
-                        boolean shallRemoved = Boolean.valueOf(window.dTableModel.getValueAt(i,
-                                window.dTableModel.getColumnCount() - 3).toString());
+                            boolean shallRemoved = Boolean.valueOf(window.dTableModel.getValueAt(i,
+                                    window.dTableModel.getColumnCount() - 3).toString());
 
-                        if (System.getProperty("os.name").contains("Windows")) {
-                            if (shallRemoved) {
-                                String line;
-                                String pidInfo = "";
-                                try {
-                                    boolean isRunning = true;
-                                    while (isRunning) {
-                                        Process p = Runtime.getRuntime().exec(System.getenv("windir") + "\\system32\\" + "tasklist.exe");
+                            if (System.getProperty("os.name").contains("Windows")) {
+                                if (shallRemoved) {
+                                    String line;
+                                    String pidInfo = "";
+                                    try {
+                                        boolean isRunning = true;
+                                        while (isRunning) {
+                                            Process p = Runtime.getRuntime().exec(System.getenv("windir") + "\\system32\\" + "tasklist.exe");
 
-                                        BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                                            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
-                                        while ((line = input.readLine()) != null) {
-                                            pidInfo += line;
-                                        }
-
-                                        input.close();
-
-                                        if (!pidInfo.contains("ffmpeg")) {
-                                            isRunning = false;
-                                            // now remove all mp4 files contained
-                                            for (int j = 0; j < currentMp4Files.size(); j++) {
-                                                try {
-                                                    File delFile = new File(currentMp4Files.get(j));
-                                                    if (delFile.exists())
-                                                        delFile.delete();
-
-                                                } catch (Exception ex) {
-                                                    ex.printStackTrace();
-                                                }
+                                            while ((line = input.readLine()) != null) {
+                                                pidInfo += line;
                                             }
-                                            currentMp4Files.clear();
-                                        }
 
-                                        pidInfo = "";
-                                        line = "";
-                                    }
-                                } catch (Exception ex) {
-                                    JOptionPane.showMessageDialog(null, "Error while checking for mp4 files. " +
-                                                    "Please contact: admin@r3d-soft.de in order to fix this error!" +
-                                                    " Error message: " + ex.getMessage(),
-                                            "VimeoDownloaderEngine - Error", JOptionPane.ERROR_MESSAGE);
-                                }
-                            }
-                        } else if (System.getProperty("os.name").contains("nux")) {
-                            if (shallRemoved) {
-                                String lines = "";
-                                try {
-                                    boolean isRunning = true;
-                                    while (isRunning) {
-                                        // Execute command
-                                        String command = "ps aux";
-                                        Process child = Runtime.getRuntime().exec(command);
+                                            input.close();
 
-                                        // Get the input stream and read from it
-                                        InputStream in = child.getInputStream();
-                                        int c;
-                                        while ((c = in.read()) != -1) {
-                                            lines += c;
-                                        }
-                                        in.close();
+                                            if (!pidInfo.contains("ffmpeg")) {
+                                                isRunning = false;
+                                                // now remove all mp4 files contained
+                                                for (int j = 0; j < currentMp4Files.size(); j++) {
+                                                    try {
+                                                        File delFile = new File(currentMp4Files.get(j));
+                                                        if (delFile.exists())
+                                                            delFile.delete();
 
-                                        if (!lines.contains("ffmpeg")) {
-                                            isRunning = false;
-                                            // now remove all mp4 files contained
-                                            for (int j = 0; j < currentMp4Files.size(); j++) {
-                                                try {
-                                                    File delFile = new File(currentMp4Files.get(j));
-                                                    if (delFile.exists())
-                                                        delFile.delete();
-
-                                                } catch (Exception ex) {
-                                                    ex.printStackTrace();
+                                                    } catch (Exception ex) {
+                                                        ex.printStackTrace();
+                                                    }
                                                 }
+                                                currentMp4Files.clear();
                                             }
-                                            currentMp4Files.clear();
+
+                                            pidInfo = "";
+                                            line = "";
                                         }
+                                    } catch (Exception ex) {
+                                        JOptionPane.showMessageDialog(null, "Error while checking for mp4 files. " +
+                                                        "Please contact: admin@r3d-soft.de in order to fix this error!" +
+                                                        " Error message: " + ex.getMessage(),
+                                                "VimeoDownloaderEngine - Error", JOptionPane.ERROR_MESSAGE);
                                     }
-
-                                } catch (IOException ex) {
-                                    JOptionPane.showMessageDialog(null, "Error while checking for mp4 files. " +
-                                                    "Please contact: admin@r3d-soft.de in order to fix this error!" +
-                                                    " Error message: " + ex.getMessage(),
-                                            "VimeoDownloaderEngine - Error", JOptionPane.ERROR_MESSAGE);
                                 }
-                            }
-                        } else {
-                            //
-                            JOptionPane.showMessageDialog(null, "Error determine OS in order to delete mp4 files." +
-                                            "Please contact: admin@r3d-soft.de in order to fix this error!" +
-                                            " Error message: Unkown OS!",
-                                    "VimeoDownloaderEngine - Error", JOptionPane.ERROR_MESSAGE);
-                        }
+                            } else if (System.getProperty("os.name").contains("nux")) {
+                                if (shallRemoved) {
+                                    String lines = "";
+                                    try {
+                                        boolean isRunning = true;
+                                        while (isRunning) {
+                                            // Execute command
+                                            String command = "ps aux";
+                                            Process child = Runtime.getRuntime().exec(command);
 
-                    } else if (hoster == DownloadPage.YouTube) {
-                        String ytURL = window.dTableModel.getValueAt(i, 0).toString();
-                        String savePath = window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 1).toString();
-                        boolean isGema = Boolean.valueOf(window.dTableModel.
-                                getValueAt(i, window.dTableModel.getColumnCount() - 4).toString());
-                        YouTubeDownloader ytDL = new YouTubeDownloader(ytURL, savePath, isGema);
-                        String vidURL = ytDL.getVideoURL();
-                        int size = ytDL.getDownloadSize(vidURL);
-                        ytDL.DownloadFile(vidURL, size, i, window.dTableModel);
+                                            // Get the input stream and read from it
+                                            InputStream in = child.getInputStream();
+                                            int c;
+                                            while ((c = in.read()) != -1) {
+                                                lines += c;
+                                            }
+                                            in.close();
 
-                        if (window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 2).toString().equals("true"))
-                            ytDL.StartConvert();
+                                            if (!lines.contains("ffmpeg")) {
+                                                isRunning = false;
+                                                // now remove all mp4 files contained
+                                                for (int j = 0; j < currentMp4Files.size(); j++) {
+                                                    try {
+                                                        File delFile = new File(currentMp4Files.get(j));
+                                                        if (delFile.exists())
+                                                            delFile.delete();
 
-                        // remove mp4 files downloaded
-
-                        boolean shallRemoved = Boolean.valueOf(window.dTableModel.getValueAt(i,
-                                window.dTableModel.getColumnCount() - 3).toString());
-
-                        if (System.getProperty("os.name").contains("Windows")) {
-                            if (shallRemoved) {
-                                String line;
-                                String pidInfo = "";
-                                try {
-                                    boolean isRunning = true;
-                                    while (isRunning) {
-                                        Process p = Runtime.getRuntime().exec(System.getenv("windir") + "\\system32\\" + "tasklist.exe");
-
-                                        BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-
-                                        while ((line = input.readLine()) != null) {
-                                            pidInfo += line;
-                                        }
-
-                                        input.close();
-
-                                        if (!pidInfo.contains("ffmpeg")) {
-                                            isRunning = false;
-                                            // now remove all mp4 files contained
-                                            for (int j = 0; j < currentMp4Files.size(); j++) {
-                                                try {
-                                                    File delFile = new File(currentMp4Files.get(j));
-                                                    if (delFile.exists())
-                                                        delFile.delete();
-
-                                                } catch (Exception ex) {
-                                                    ex.printStackTrace();
+                                                    } catch (Exception ex) {
+                                                        ex.printStackTrace();
+                                                    }
                                                 }
+                                                currentMp4Files.clear();
                                             }
-                                            currentMp4Files.clear();
                                         }
 
-                                        pidInfo = "";
-                                        line = "";
+                                    } catch (IOException ex) {
+                                        JOptionPane.showMessageDialog(null, "Error while checking for mp4 files. " +
+                                                        "Please contact: admin@r3d-soft.de in order to fix this error!" +
+                                                        " Error message: " + ex.getMessage(),
+                                                "VimeoDownloaderEngine - Error", JOptionPane.ERROR_MESSAGE);
                                     }
-                                } catch (Exception ex) {
-                                    JOptionPane.showMessageDialog(null, "Error while checking for mp4 files. " +
-                                                    "Please contact: admin@r3d-soft.de in order to fix this error!" +
-                                                    " Error message: " + ex.getMessage(),
-                                            "YouTubeDownloaderEngine - Error", JOptionPane.ERROR_MESSAGE);
                                 }
+                            } else {
+                                //
+                                JOptionPane.showMessageDialog(null, "Error determine OS in order to delete mp4 files." +
+                                                "Please contact: admin@r3d-soft.de in order to fix this error!" +
+                                                " Error message: Unkown OS!",
+                                        "VimeoDownloaderEngine - Error", JOptionPane.ERROR_MESSAGE);
                             }
-                        } else if (System.getProperty("os.name").contains("nux")) {
-                            if (shallRemoved) {
-                                String lines = "";
-                                try {
-                                    boolean isRunning = true;
-                                    while (isRunning) {
-                                        // Execute command
-                                        String command = "ps aux";
-                                        Process child = Runtime.getRuntime().exec(command);
 
-                                        // Get the input stream and read from it
-                                        InputStream in = child.getInputStream();
-                                        int c;
-                                        while ((c = in.read()) != -1) {
-                                            lines += c;
-                                        }
-                                        in.close();
+                        } else if (hoster == DownloadPage.YouTube) {
+                            String ytURL = window.dTableModel.getValueAt(i, 0).toString();
+                            String savePath = window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 1).toString();
+                            boolean isGema = Boolean.valueOf(window.dTableModel.
+                                    getValueAt(i, window.dTableModel.getColumnCount() - 4).toString());
+                            YouTubeDownloader ytDL = new YouTubeDownloader(ytURL, savePath, isGema);
+                            String vidURL = ytDL.getVideoURL();
+                            int size = ytDL.getDownloadSize(vidURL);
+                            ytDL.DownloadFile(vidURL, size, i, window.dTableModel);
 
-                                        if (!lines.contains("ffmpeg")) {
-                                            isRunning = false;
-                                            // now remove all mp4 files contained
-                                            for (int j = 0; j < currentMp4Files.size(); j++) {
-                                                try {
-                                                    File delFile = new File(currentMp4Files.get(j));
-                                                    if (delFile.exists())
-                                                        delFile.delete();
+                            if (window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 2).toString().equals("true"))
+                                ytDL.StartConvert();
 
-                                                } catch (Exception ex) {
-                                                    ex.printStackTrace();
+                            // remove mp4 files downloaded
+
+                            boolean shallRemoved = Boolean.valueOf(window.dTableModel.getValueAt(i,
+                                    window.dTableModel.getColumnCount() - 3).toString());
+
+                            if (System.getProperty("os.name").contains("Windows")) {
+                                if (shallRemoved) {
+                                    String line;
+                                    String pidInfo = "";
+                                    try {
+                                        boolean isRunning = true;
+                                        while (isRunning) {
+                                            Process p = Runtime.getRuntime().exec(System.getenv("windir") + "\\system32\\" + "tasklist.exe");
+
+                                            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+                                            while ((line = input.readLine()) != null) {
+                                                pidInfo += line;
+                                            }
+
+                                            input.close();
+
+                                            if (!pidInfo.contains("ffmpeg")) {
+                                                isRunning = false;
+                                                // now remove all mp4 files contained
+                                                for (int j = 0; j < currentMp4Files.size(); j++) {
+                                                    try {
+                                                        File delFile = new File(currentMp4Files.get(j));
+                                                        if (delFile.exists())
+                                                            delFile.delete();
+
+                                                    } catch (Exception ex) {
+                                                        ex.printStackTrace();
+                                                    }
                                                 }
+                                                currentMp4Files.clear();
                                             }
-                                            currentMp4Files.clear();
-                                        }
-                                    }
 
-                                } catch (IOException ex) {
-                                    JOptionPane.showMessageDialog(null, "Error while checking for mp4 files. " +
-                                                    "Please contact: admin@r3d-soft.de in order to fix this error!" +
-                                                    " Error message: " + ex.getMessage(),
-                                            "YouTubeDownloaderEngine - Error", JOptionPane.ERROR_MESSAGE);
+                                            pidInfo = "";
+                                            line = "";
+                                        }
+                                    } catch (Exception ex) {
+                                        JOptionPane.showMessageDialog(null, "Error while checking for mp4 files. " +
+                                                        "Please contact: admin@r3d-soft.de in order to fix this error!" +
+                                                        " Error message: " + ex.getMessage(),
+                                                "YouTubeDownloaderEngine - Error", JOptionPane.ERROR_MESSAGE);
+                                    }
                                 }
+                            } else if (System.getProperty("os.name").contains("nux")) {
+                                if (shallRemoved) {
+                                    String lines = "";
+                                    try {
+                                        boolean isRunning = true;
+                                        while (isRunning) {
+                                            // Execute command
+                                            String command = "ps aux";
+                                            Process child = Runtime.getRuntime().exec(command);
+
+                                            // Get the input stream and read from it
+                                            InputStream in = child.getInputStream();
+                                            int c;
+                                            while ((c = in.read()) != -1) {
+                                                lines += c;
+                                            }
+                                            in.close();
+
+                                            if (!lines.contains("ffmpeg")) {
+                                                isRunning = false;
+                                                // now remove all mp4 files contained
+                                                for (int j = 0; j < currentMp4Files.size(); j++) {
+                                                    try {
+                                                        File delFile = new File(currentMp4Files.get(j));
+                                                        if (delFile.exists())
+                                                            delFile.delete();
+
+                                                    } catch (Exception ex) {
+                                                        ex.printStackTrace();
+                                                    }
+                                                }
+                                                currentMp4Files.clear();
+                                            }
+                                        }
+
+                                    } catch (IOException ex) {
+                                        JOptionPane.showMessageDialog(null, "Error while checking for mp4 files. " +
+                                                        "Please contact: admin@r3d-soft.de in order to fix this error!" +
+                                                        " Error message: " + ex.getMessage(),
+                                                "YouTubeDownloaderEngine - Error", JOptionPane.ERROR_MESSAGE);
+                                    }
+                                }
+                            } else {
+                                //
+                                JOptionPane.showMessageDialog(null, "Error determine OS in order to delete mp4 files." +
+                                                "Please contact: admin@r3d-soft.de in order to fix this error!" +
+                                                " Error message: Unkown OS!",
+                                        "YouTubeDownloaderEngine - Error", JOptionPane.ERROR_MESSAGE);
                             }
-                        } else {
-                            //
-                            JOptionPane.showMessageDialog(null, "Error determine OS in order to delete mp4 files." +
-                                            "Please contact: admin@r3d-soft.de in order to fix this error!" +
-                                            " Error message: Unkown OS!",
-                                    "YouTubeDownloaderEngine - Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
-                }
-                // JOB Finished Display
-                JOptionPane.showMessageDialog(window, "Downloaded every URL, you entered, successfully. When you dispose this message the download list will be cleared.",
-                        "MediaDownloader - Job finished", JOptionPane.INFORMATION_MESSAGE);
+                    // JOB Finished Display
+                    JOptionPane.showMessageDialog(window, "Downloaded every URL, you entered, successfully. When you dispose this message the download list will be cleared.",
+                            "MediaDownloader - Job finished", JOptionPane.INFORMATION_MESSAGE);
 
-                for (int j = window.dTableModel.getRowCount() - 1; j > -1; j--) {
-                    window.dTableModel.removeRow(j);
+                    for (int j = window.dTableModel.getRowCount() - 1; j > -1; j--) {
+                        window.dTableModel.removeRow(j);
+                    }
+                }catch (Exception ex){
+                    // Job failed due to a reconnect
+                    try{
+                        for (int i = 0; i < 4; i++) {
+                            Thread.sleep(10*1000);
+                            if(netIsAvailable() && i <= 3){
+                                StartDownloading(window);
+                            }
+                        }
+                        JOptionPane.showMessageDialog(window, "There was a problem with your internet connection.\n" +
+                                        "I tried to continue the download for myself,\nbut your internet connection was " +
+                                        "longer away than 40 seconds so please hit 'Download all' and continue",
+                                "MediaDownloader - Internet connection failure", JOptionPane.ERROR_MESSAGE);
+                    }catch (Exception e){
+                        e.getMessage();
+                    }
                 }
             }
         });
         t.start();
+    }
+
+    private static boolean netIsAvailable() {
+        try {
+            final URL url = new URL("http://www.google.com");
+            final URLConnection conn = url.openConnection();
+            conn.connect();
+            return true;
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     private static void AddToTableModel(FreshUI window, Object url, Object hoster, Object progress,

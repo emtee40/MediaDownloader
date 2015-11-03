@@ -129,7 +129,7 @@ public class YouTubeDownloader extends Downloader {
         }
     }
 
-    public void DownloadFile(String urls, int fileSize, int element, DefaultTableModel guiElements){
+    public void DownloadFile(String urls, int fileSize, int element, DefaultTableModel guiElements) throws Exception{
         if(guiElements != null)
             LinkHandler.AddMp4ToList(savePath + vidTitle + ".mp4");
 

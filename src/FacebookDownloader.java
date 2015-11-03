@@ -58,7 +58,7 @@ public class FacebookDownloader extends Downloader {
         super();
     }
 
-    public void DownloadFile(String urls, long fileSize, int element, DefaultTableModel guiElements, String savePath){
+    public void DownloadFile(String urls, long fileSize, int element, DefaultTableModel guiElements, String savePath) throws Exception{
         savePath = CheckSavePath(savePath);
         String[] URL_split = urls.split("/");
 

@@ -139,7 +139,7 @@ public abstract class Downloader {
         return sb.toString();
     }
 
-    /*
+    /* Old code block
     public void DownloadFile(String dlUrl, String filename, int downloadSize, int i, DefaultTableModel dTableModel) {
         try {
             URL url = new URL(dlUrl);
@@ -168,7 +168,7 @@ public abstract class Downloader {
         }
     } */
 
-    public void DownloadFile(String dlUrl, String filename, int downloadSize, int i, DefaultTableModel dTableModel) {
+    public void DownloadFile(String dlUrl, String filename, int downloadSize, int i, DefaultTableModel dTableModel) throws Exception{
         try {
             HttpURLConnection connection = (HttpURLConnection)new URL(dlUrl).openConnection();
             File outputFileCache = new File(filename);

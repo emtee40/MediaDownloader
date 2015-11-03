@@ -88,7 +88,7 @@ public class StreamCloudEUDownloader extends Downloader {
         return this.filename;
     }
 
-    public void DownloadFile(String dlUrl, String filename, int downloadSize, int i, DefaultTableModel dTableModel) {
+    public void DownloadFile(String dlUrl, String filename, int downloadSize, int i, DefaultTableModel dTableModel) throws Exception{
         try {
             URL url = new URL(dlUrl);
             URLConnection hc = url.openConnection();
@@ -99,7 +99,11 @@ public class StreamCloudEUDownloader extends Downloader {
 
             super.DownloadFile(hc, filename, downloadSize, i, dTableModel);
         }catch (Exception ex){
-            System.err.println("Error while parsing download link from StreamCloudDownloader to Engine!");
+            if(ex instanceof java.net.SocketTimeoutException){
+                throw new java.net.SocketTimeoutException("Socket timeout!");
+            }
+            else
+                System.err.println("Error while parsing download link from StreamCloudDownloader to Engine!");
         }
     }
 }

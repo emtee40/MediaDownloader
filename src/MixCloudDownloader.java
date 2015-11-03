@@ -26,7 +26,7 @@ public class MixCloudDownloader extends Downloader {
         return previewURL.replace("previews", replacePreview).replace(".mp3", replacePreviewMP3);
     }
 
-    public void DownloadFile(String urls, int fileSize, int element, DefaultTableModel guiElements){
+    public void DownloadFile(String urls, int fileSize, int element, DefaultTableModel guiElements) throws Exception{
         String[] splitted = urls.split("/");
         super.DownloadFile(urls, savePath + splitted[splitted.length -1], fileSize, element, guiElements);
     }

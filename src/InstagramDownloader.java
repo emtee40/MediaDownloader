@@ -146,7 +146,7 @@ public class InstagramDownloader extends Downloader{
         JOptionPane.showMessageDialog(null, "Downloaded successfully all media files.", "InstagramDownloader - Job finished", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public void DownloadFile(String urls, int element, int fileSize, DefaultTableModel guiElements){
+    public void DownloadFile(String urls, int element, int fileSize, DefaultTableModel guiElements) throws Exception{
         savePath = CheckSavePath(savePath);
         String[] URL_split = urls.split("/");
         super.DownloadFile(urls, savePath + URL_split[URL_split.length - 1], element,fileSize, guiElements);

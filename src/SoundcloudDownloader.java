@@ -56,7 +56,7 @@ public class SoundcloudDownloader extends Downloader{
         }
     }
 
-    public void DownloadFile(String urls, int fileSize, int element, DefaultTableModel guiElements){
+    public void DownloadFile(String urls, int fileSize, int element, DefaultTableModel guiElements) throws Exception{
         super.DownloadFile(urls, savePath + this.audioName + ".mp3", fileSize, element, guiElements);
     }
 }

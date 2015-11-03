@@ -69,7 +69,7 @@ public class SharedSXDownloader extends Downloader {
         return this.dataname;
     }
 
-    public void DownloadFile(String dlUrl, String filename, int downloadSize, int i, DefaultTableModel dTableModel) {
+    public void DownloadFile(String dlUrl, String filename, int downloadSize, int i, DefaultTableModel dTableModel) throws Exception{
         try {
             URL url = new URL(dlUrl);
             URLConnection hc = url.openConnection();
