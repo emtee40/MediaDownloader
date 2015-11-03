@@ -188,7 +188,7 @@ public class LinkHandler {
 
                         nwDownloader.DownloadFile(url, window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount()
                                 - 1).toString() + seperator
-                                + "video_" + System.currentTimeMillis(), size, i, window.dTableModel);
+                                + "video_" + System.currentTimeMillis() + ".mp4", size, i, window.dTableModel);
                     } else if (hoster == DownloadPage.SharedSX) {
                         SharedSXDownloader sxDownloader = new SharedSXDownloader(window.dTableModel.
                                 getValueAt(i, 0).toString());

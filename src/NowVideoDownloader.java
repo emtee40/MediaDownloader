@@ -31,8 +31,10 @@ public class NowVideoDownloader extends Downloader {
             videoID = idSplit[idSplit.length - 1];
         }
 
-        webObj = new JSoupAnalyze(this.nowVideoURL, "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0");
-        Elements scriptTags = webObj.AnalyzeWithTag("script");
+        Document site = JSoupAnalyze.performFakeSubmit(this.nowVideoURL, "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0");
+        //webObj = new JSoupAnalyze(this.nowVideoURL, "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0");
+        //Elements scriptTags = webObj.AnalyzeWithTag("script");
+        Elements scriptTags = site.select("script");
         String[] scriptSplit = null;
 
         for (int i = 0; i < scriptTags.size(); i++) {

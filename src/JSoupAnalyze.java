@@ -48,4 +48,22 @@ public class JSoupAnalyze {
     public Elements AnalyzeWithTag(String analyzeTag){
         return site.select(analyzeTag);
     }
+
+    public static Document performFakeSubmit(String webURL, String userAgent) {
+        try {
+            // set to infinite time out ... may be its better
+            Document fake = Jsoup.connect(webURL).timeout(0).userAgent(userAgent).get();
+            String stepkey = "";
+            Elements elements = fake.select("input[name=stepkey]");
+            for (int i = 0; i < elements.size(); i++) {
+                stepkey = elements.attr("value");
+            }
+            // should only be one!
+            Document site = Jsoup.connect(webURL).timeout(0).userAgent(userAgent).data("stepkey", stepkey).data("submit", "submit").post();
+            return site;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
