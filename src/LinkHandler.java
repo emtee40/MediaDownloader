@@ -90,8 +90,8 @@ public class LinkHandler {
             {
                 // now add all videos from a channel if it is a channel
                 String username = URL.replace("youtube.com/", "")
-                        .replace("https://", "").replace("http://", "").replace("wwww.", "")
-                        .replace("youtube.com/user/", "");
+                        .replace("https://", "").replace("http://", "").replace("www.", "")
+                        .replace("user/", "").replace("/", "");
 
                 YouTubeGetChannelVideos channelVideos = new YouTubeGetChannelVideos(username);
                 String[] list = channelVideos.GetVideoList();
