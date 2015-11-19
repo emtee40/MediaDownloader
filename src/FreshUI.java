@@ -135,13 +135,20 @@ public class FreshUI extends JFrame implements ActionListener {
 
     public static void main(String[] args) {
         try {
-            UIManager.setLookAndFeel(
-                    UIManager.getSystemLookAndFeelClassName());
+            if(args.length <= 0) {
+                UIManager.setLookAndFeel(
+                        UIManager.getSystemLookAndFeelClassName());
 
-            new FreshUI(); // get a fancy window
+                new FreshUI(); // get a fancy window
+            }else{
+                ConsoleManager manager = new ConsoleManager(args, true);
+                manager.run();
+            }
         } catch (UnsupportedLookAndFeelException | ClassNotFoundException | IllegalAccessException | InstantiationException e) {
             // handle exception - start with java native ui
             new FreshUI();
+        } catch (Exception ex){
+            ex.printStackTrace();
         }
     }
 

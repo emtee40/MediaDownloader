@@ -60,7 +60,7 @@ public class ConsoleManager {
         command = readCmd.readLine();
     }
 
-    public void run() {
+    public void run() throws Exception {
         System.out.println("Your command: " + command);
         String[] cmdParams = command.split(" ");
 
@@ -111,13 +111,13 @@ public class ConsoleManager {
 
     }
 
-    private void StartYouTube() {
+    private void StartYouTube() throws Exception {
         YouTubeDownloader ytDl = new YouTubeDownloader(dlUrl, filePath, true);
         String vidUrl = ytDl.getVideoURL();
         int size = ytDl.getDownloadSize(vidUrl);
         System.out.println("Download Size: " + size);
         System.out.println("Downloading...");
-        //ytDl.DownloadFile(vidUrl, size, 0, null);
+        ytDl.DownloadFile(vidUrl, size, 0, null);
         TaskCompleted();
     }
 

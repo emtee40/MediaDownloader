@@ -27,8 +27,13 @@ public class YouTubeDownloader extends Downloader {
 
             // get link
             this.vidUrl = ytLink;
-            this.vidID = (ytLink.split("="))[1]; // first splitted is the vid id for sure
-
+            if(!ytLink.contains("youtu.be"))
+                this.vidID = (ytLink.split("="))[1]; // first splitted is the vid id for sure
+            else{
+                // found smth like youtu.be/
+                String[] id = ytLink.split("/");
+                this.vidID = id[id.length - 1]; // last item is the id
+            }
             if(!isGemaUnblockerChecked) {
                 webObj = new JSoupAnalyze(vidUrl);
                 vidTitle = webObj.AnalyzeWithTag("meta[property=og:title]").get(0).attr("content");

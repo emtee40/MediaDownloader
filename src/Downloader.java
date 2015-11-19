@@ -220,7 +220,8 @@ public abstract class Downloader {
                     output.write(data, 0, count);
                     __progress = (int) ((downloadedSize * 100) / fileLength);
 
-                    dTableModel.setValueAt(__progress + "%", i, 2);
+                    if(dTableModel != null)
+                        dTableModel.setValueAt(__progress + "%", i, 2);
                 }
 
                 output.close();
