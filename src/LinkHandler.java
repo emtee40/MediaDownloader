@@ -83,6 +83,16 @@ public class LinkHandler {
                     window.settingsManager.GetStandardSavePath(), window.settingsManager.GetConvertToMP3());
 
         }
+        else if(hoster.toLowerCase().equals("vine")){
+            VineDownloader vine = new VineDownloader(URL);
+            String seperator = (System.getProperty("os.name").contains("Windows")) ? "\\" : "/";
+            String[] list = vine.GetVines();
+            for (int i = 0; i < list.length; i++) {
+                AddToTableModel(window, list[i], window.tlDownloadDomain.getSelectedItem().toString(),
+                        0, window.settingsManager.GetRemoveGEMA(), window.settingsManager.GetRemoveVidFiles(),
+                        window.settingsManager.GetStandardSavePath() + seperator + vine.GetUID() + seperator, window.settingsManager.GetConvertToMP3());
+            }
+        }
         else if(hoster.toLowerCase().equals("youtube")) {
             // if not a correct youtube name assume that text is a youtube username
             if(URL.contains("youtube.com/") && !URL.contains("youtube.com/watch?v=")
@@ -241,7 +251,14 @@ public class LinkHandler {
                             sceDownloader.DownloadFile(dlUrl, filename, sceDownloader.getDownloadSize(dlUrl),
                                     i, window.dTableModel);
 
-                        } else if (hoster == DownloadPage.Vimeo) {
+                        } else if (hoster == DownloadPage.Vine) {
+                            VineDownloader vinDL = new VineDownloader("");
+                            String vineURL = window.dTableModel.getValueAt(i, 0).toString();
+                            String savePath = window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 1).toString();
+                            int size = vinDL.getDownloadSize(vineURL);
+                            vinDL.DownloadFile(savePath, vineURL, i, size, window.dTableModel);
+
+                        }else if (hoster == DownloadPage.Vimeo) {
                             String vimURL = window.dTableModel.getValueAt(i, 0).toString();
                             String savePath = window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 1).toString();
                             VimeoDownloader vimDL = new VimeoDownloader(vimURL, savePath);

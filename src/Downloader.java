@@ -130,6 +130,23 @@ public abstract class Downloader {
         }
     }
 
+    public JSONObject readJSONFromVine(String url) throws  JSONException {
+
+
+        try {
+            URL vineurl = new URL(url);
+            URLConnection uc = vineurl.openConnection();
+            uc.setRequestProperty("x-vine-client", "vinewww/2.0");
+
+            InputStream is = uc.getInputStream();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+            String jsonText = readAll(rd);
+            return new JSONObject(jsonText);
+        }catch (Exception ex){
+            return null;
+        }
+    }
+
     private String readAll(Reader rd) throws IOException {
         StringBuilder sb = new StringBuilder();
         int cp;
