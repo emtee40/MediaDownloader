@@ -149,7 +149,7 @@ public class InstagramDownloader extends Downloader{
     public void DownloadFile(String urls, int element, int fileSize, DefaultTableModel guiElements) throws Exception{
         savePath = CheckSavePath(savePath);
         String[] URL_split = urls.split("/");
-        super.DownloadFile(urls, savePath + URL_split[URL_split.length - 1], element,fileSize, guiElements);
+        super.DownloadFile(urls, savePath + URL_split[URL_split.length - 1], fileSize, element, guiElements);
     }
 
     public String fetchUserID(String requestURL) {
