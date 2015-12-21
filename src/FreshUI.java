@@ -162,7 +162,7 @@ public class FreshUI extends JFrame implements ActionListener {
                 try {
                     URL detectDomain = new URL(txtDownloadURL.getText());
                     int index = getDownloadPage(detectDomain.getHost());
-                    if(index != -1) {
+                    if (index != -1) {
                         tlDownloadDomain.setSelectedIndex(index);
                         // add to list with auto detect host!
                         LinkHandler.AddURLToTable(txtDownloadURL.getText(),
@@ -170,12 +170,13 @@ public class FreshUI extends JFrame implements ActionListener {
 
                         tlDownloadDomain.setSelectedIndex(0);
                         txtDownloadURL.setText("");
-                    } else
+                    } else {
                         JOptionPane.showMessageDialog(FreshUI.this, "No supported hoster found. I'll open up the RegEx-Engine " +
                                         "for you!",
                                 "URL unsupported", JOptionPane.ERROR_MESSAGE);
                         new REExplorer(settingsManager, txtDownloadURL.getText());
                         txtDownloadURL.setText("");
+                    }
                 }catch (Exception ex){
                     System.err.println("Malformed url try again");
                     JOptionPane.showMessageDialog(FreshUI.this, "Malformed URL detected. " +

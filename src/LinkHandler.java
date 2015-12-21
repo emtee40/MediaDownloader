@@ -66,11 +66,11 @@ public class LinkHandler {
                 System.out.println("Found userID: " + userID);
                 insta.setSavePath(window.settingsManager.GetStandardSavePath() + "/" + userID);
                 String[] urls = insta.fetchAllImageURLs(userID, "");
-
+                String seperator = (System.getProperty("os.name").contains("Windows")) ? "\\" : "/";
                 for (int i = 0; i < urls.length; i++) {
                     AddToTableModel(window, urls[i], window.tlDownloadDomain.getSelectedItem().toString(),
                             0, window.settingsManager.GetRemoveGEMA(), window.settingsManager.GetRemoveVidFiles(),
-                            window.settingsManager.GetStandardSavePath(), window.settingsManager.GetConvertToMP3());
+                            window.settingsManager.GetStandardSavePath() + seperator + userID, window.settingsManager.GetConvertToMP3());
                 }
             }
         }
