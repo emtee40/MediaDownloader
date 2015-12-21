@@ -171,9 +171,11 @@ public class FreshUI extends JFrame implements ActionListener {
                         tlDownloadDomain.setSelectedIndex(0);
                         txtDownloadURL.setText("");
                     } else
-                        JOptionPane.showMessageDialog(FreshUI.this, "No supported hoster found please enter a " +
-                                        "supported URL.",
-                                "Error - Unsupported URL", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(FreshUI.this, "No supported hoster found. I'll open up the RegEx-Engine " +
+                                        "for you!",
+                                "URL unsupported", JOptionPane.ERROR_MESSAGE);
+                        new REExplorer(settingsManager, txtDownloadURL.getText());
+                        txtDownloadURL.setText("");
                 }catch (Exception ex){
                     System.err.println("Malformed url try again");
                     JOptionPane.showMessageDialog(FreshUI.this, "Malformed URL detected. " +

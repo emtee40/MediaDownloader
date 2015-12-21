@@ -34,6 +34,13 @@ public class REExplorerActionListener implements ActionListener {
             currGUI.removeFromList();
         }
 
+        if(e.getSource() == currGUI.btnGetWebsiteSource){
+            String website = currGUI.getURL();
+            REWebsiteConnection webHTML = new REWebsiteConnection(website);
+            webHTML.CreateConnection();
 
+            String webCode = webHTML.GetContent();
+            new REDownloadWindow(webCode.replace(">", ">\n"), currGUI.getSettingsManager().GetStandardSavePath());
+        }
     }
 }

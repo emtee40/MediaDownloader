@@ -40,7 +40,7 @@ public class VineDownloader extends Downloader {
 
     private String[] URLsFromJSON(String anchor, int i){
         try{
-            String url = "";
+            String url;
 
             if(anchor == "")
                 url = baseURL + vineUserID;

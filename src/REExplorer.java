@@ -14,11 +14,12 @@ import java.util.List;
  */
 public class REExplorer extends JFrame {
     private REExplorerActionListener guiActionListener;
-    private JTextArea txtURLLine;
-    private JTextArea txtSavePath;
+    private JTextField txtURLLine;
+    private JTextField txtSavePath;
     public JButton btnAnalyzeURL;
     public JButton btnDownloadFiles;
     public JButton btnRemoveFromList;
+    public JButton btnGetWebsiteSource;
     //public JTextArea patternCombo;
     public JComboBox patternCombo;
     public DefaultListModel listOfFoundItems;
@@ -54,9 +55,21 @@ public class REExplorer extends JFrame {
         InitGUI();
     }
 
+    public REExplorer(SettingsManager manager, String url){
+        man = manager;
+        guiActionListener = new REExplorerActionListener(this);
+
+        InitTopContainer();
+        InitBottomContainer();
+        InitMiddleContainer();
+        InitGUI();
+
+        txtURLLine.setText(url);
+    }
+
     private void InitBottomContainer(){
         JPanel bottomPanel = new JPanel(new GridLayout(0,2));
-        txtSavePath = new JTextArea(man.GetStandardSavePath());
+        txtSavePath = new JTextField(man.GetStandardSavePath());
         btnDownloadFiles = new JButton("Download all!");
         btnDownloadFiles.addActionListener(guiActionListener);
         bottomPanel.add(txtSavePath);
@@ -124,15 +137,19 @@ public class REExplorer extends JFrame {
     private void InitTopContainer(){
         JPanel topPanel = new JPanel(new GridLayout(0,3));
         topPanel.setBorder(BorderFactory.createTitledBorder("URL to analyze"));
-        txtURLLine = new JTextArea("http://example.com");
-        txtURLLine.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        //topPanel.add(new JLabel("URL to analyze:"));
+        txtURLLine = new JTextField("http://example.com");
+        //txtURLLine.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         btnAnalyzeURL = new JButton("Analyze");
         btnAnalyzeURL.addActionListener(guiActionListener);
         btnRemoveFromList = new JButton("Remove selected item from list");
         btnRemoveFromList.addActionListener(guiActionListener);
+        btnGetWebsiteSource = new JButton("View website source");
+        btnGetWebsiteSource.addActionListener(guiActionListener);
         topPanel.add(txtURLLine);
         topPanel.add(btnAnalyzeURL);
-        topPanel.add(btnRemoveFromList);
+        topPanel.add(btnGetWebsiteSource);
+
 
         btnSaveCurrentPattern = new JButton("Save pattern");
         btnSaveCurrentPattern.addActionListener(new ActionListener() {
@@ -150,6 +167,9 @@ public class REExplorer extends JFrame {
         patternCombo.setEditable(true);
         topPanel.add(patternCombo);
         topPanel.add(btnSaveCurrentPattern);
+        topPanel.add(new JLabel(""));
+        topPanel.add(new JLabel(""));
+        topPanel.add(btnRemoveFromList);
 
         getContentPane().add(topPanel, BorderLayout.NORTH);
     }
@@ -206,5 +226,9 @@ public class REExplorer extends JFrame {
             JOptionPane.showMessageDialog(this, "There is currently no item in your list.",
                     "MediaDownloader - REExplorer - Error!", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    public SettingsManager getSettingsManager() {
+        return man;
     }
 }
