@@ -101,7 +101,6 @@ public class SettingsManagerPanel extends JPanel {
                 out.println("removegema:" + checkRemoveGEMA.isSelected());
                 out.println("ffmpeg:" + txtFFMPEG.getText().replace(System.getProperty("user.dir"), "{wd}"));
                 out.println("removeMp4:" + checkRemoveMp4.isSelected());
-                out.println("removeMp4:" + checkRemoveMp4.isSelected());
                 out.println("minSize:" + checkMinimumSize.isSelected());
                 out.close();
                 //JOptionPane.showMessageDialog(win, "Successfully updated settings!", "Success", JOptionPane.INFORMATION_MESSAGE);
