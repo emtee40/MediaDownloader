@@ -2,17 +2,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Creation time: 20:15
  * Created by Dominik on 04.08.2015.
  */
 public class SettingsManagerPanel extends JPanel {
-    private JLabel lblSavePath;
+    private JLabel lblUpdated;
     private JLabel lblConvertToMp3;
     private JLabel lblRemoveGEMA;
     private JLabel lblRemoveMp4;
-    private JLabel lblFFMPEGFile;
     private JTextField txtSavePath;
     private JTextField txtFFMPEG;
     private JCheckBox checkConvertToMp3;
@@ -30,6 +31,7 @@ public class SettingsManagerPanel extends JPanel {
 
     public SettingsManagerPanel(SettingsManager man, FreshUI win){
         //lblSavePath = new JLabel("Standard save path:");
+        lblUpdated = new JLabel("");
         btnSelectStandardSave = new JButton("Select standard save path:");
         btnSelectStandardSave.addActionListener(e -> {
             String path = "";
@@ -47,16 +49,21 @@ public class SettingsManagerPanel extends JPanel {
                 path = path.replace("\\", "\\\\");
 
             txtSavePath.setText(path);
+            btnSave.doClick();
         });
         txtSavePath = new JTextField(man.GetStandardSavePath());
         lblConvertToMp3 = new JLabel("Convert to mp3");
         checkConvertToMp3 = new JCheckBox("", man.GetConvertToMP3());
+        checkConvertToMp3.addActionListener(e -> btnSave.doClick());
         lblRemoveMp4 = new JLabel("Remove video files after mp3 created");
         checkRemoveMp4 = new JCheckBox("", man.GetRemoveVidFiles());
+        checkRemoveMp4.addActionListener(e -> btnSave.doClick());
         lblRemoveGEMA = new JLabel("Remove GEMA");
         checkRemoveGEMA = new JCheckBox("", man.GetRemoveGEMA());
+        checkRemoveGEMA.addActionListener(e -> btnSave.doClick());
         lblCheckMinSize = new JLabel("Allow window to get smaller than minimum size (restart needed!)");
         checkMinimumSize = new JCheckBox("");
+        checkMinimumSize.addActionListener(e -> btnSave.doClick());
         //lblFFMPEGFile = new JLabel("FFMPEG-Directory");
         btnSelectFFMPEG = new JButton("Select FFMPEG-Directory");
         btnSelectFFMPEG.addActionListener(e -> {
@@ -75,6 +82,7 @@ public class SettingsManagerPanel extends JPanel {
                 path = path.replace("\\", "\\\\");
 
             txtFFMPEG.setText(path);
+            btnSave.doClick();
         });
         txtFFMPEG = new JTextField(man.GetFFMPEGDir().replace("{wd}", System.getProperty("user.dir")));
 
@@ -96,7 +104,9 @@ public class SettingsManagerPanel extends JPanel {
                 out.println("removeMp4:" + checkRemoveMp4.isSelected());
                 out.println("minSize:" + checkMinimumSize.isSelected());
                 out.close();
-                JOptionPane.showMessageDialog(win, "Successfully saved settings!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                //JOptionPane.showMessageDialog(win, "Successfully updated settings!", "Success", JOptionPane.INFORMATION_MESSAGE);
+
+                lblUpdated.setText("Updated settings! Last change: " + new SimpleDateFormat("HH:mm:ss").format(new Date()));
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -117,8 +127,9 @@ public class SettingsManagerPanel extends JPanel {
         //panel.add(lblFFMPEGFile);
         panel.add(btnSelectFFMPEG);
         panel.add(txtFFMPEG);
-        panel.add(btnCancel);
-        panel.add(btnSave);
+        panel.add(lblUpdated);
+        //panel.add(btnCancel);
+        //panel.add(btnSave);
 
         settingsFile = man.GetSettingsFile();
     }
