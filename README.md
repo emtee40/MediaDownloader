@@ -16,6 +16,17 @@ Currently there Version 1.0b (Fresh-UI) available for download at: http://downlo
 This version was released on December 26th, 2015
 
 # Usage (version 1.0b):
+The usage is pretty simple. Just start the program. A GUI will pop up.
+
+Make sure the settings on the bottom fits your needs just as the ffmpeg path (will be correct if you download the .rar file from my website) - Remove GEMA will allow people in Germany to download GEMA blocked videos/songs (any other settings I guess are self-explanatory - if not mail me at: admin[at]r3d-soft[dot]de)
+
+And now you can start pasting your url you want to download from. For example https://www.youtube.com/watch?v=_mVW8tgGY_w
+
+Just copy that url where it says "Download URL:"
+
+After that click the button "Add to list" the URL will be analyze and then it will be added to the download queue
+
+You can paste as many links in it as you can. When you're ready to download just hit the download button: "Download all!"
 
 ####Whats supported to download?
 
@@ -54,6 +65,10 @@ Download video/movies
 #####Vine
 
 Crawls complete vine profiles
+
+#####REExplorer
+
+Allows you to search a website using regular-expressions - this allows you to download almost from every website (It is only recommended to advanced users who have a understand of regular expressions)
 
 ## Shortcuts (version 1.0b):
 #####YouTube-URL:
