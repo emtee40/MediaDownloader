@@ -12,6 +12,7 @@ import java.util.List;
  */
 public class LinkHandler {
     private static List<String> currentMp4Files = new ArrayList<>();
+    private static String seperator = (System.getProperty("os.name").contains("Windows")) ? "\\" : "/";
 
     public static void AddURLToTable(String URL, String hoster, FreshUI window){
         if(DownloadPage.valueOf(hoster.toString()) == DownloadPage.RE_Explorer){
@@ -66,7 +67,6 @@ public class LinkHandler {
                 System.out.println("Found userID: " + userID);
                 insta.setSavePath(window.settingsManager.GetStandardSavePath() + "/" + userID);
                 String[] urls = insta.fetchAllImageURLs(userID, "");
-                String seperator = (System.getProperty("os.name").contains("Windows")) ? "\\" : "/";
                 for (int i = 0; i < urls.length; i++) {
                     AddToTableModel(window, urls[i], window.tlDownloadDomain.getSelectedItem().toString(),
                             0, window.settingsManager.GetRemoveGEMA(), window.settingsManager.GetRemoveVidFiles(),
@@ -80,12 +80,11 @@ public class LinkHandler {
 
             AddToTableModel(window, URL, window.tlDownloadDomain.getSelectedItem().toString(),
                     0, window.settingsManager.GetRemoveGEMA(), window.settingsManager.GetRemoveVidFiles(),
-                    window.settingsManager.GetStandardSavePath(), window.settingsManager.GetConvertToMP3());
+                    window.settingsManager.GetStandardSavePath() + seperator, window.settingsManager.GetConvertToMP3());
 
         }
         else if(hoster.toLowerCase().equals("vine")){
             VineDownloader vine = new VineDownloader(URL);
-            String seperator = (System.getProperty("os.name").contains("Windows")) ? "\\" : "/";
             String[] list = vine.GetVines();
             for (int i = 0; i < list.length; i++) {
                 AddToTableModel(window, list[i], window.tlDownloadDomain.getSelectedItem().toString(),
@@ -126,10 +125,6 @@ public class LinkHandler {
                 YouTubeRetrievePlaylist retrievePlaylist = new YouTubeRetrievePlaylist(URL);
                 String[] elements = retrievePlaylist.getAllVideosFromPlaylist("");
                 for (int i = 0; i < elements.length; i++) {
-                    String seperator = "/";
-
-                    if(System.getProperty("os.name").contains("Windows"))
-                        seperator = "\\\\";
 
                     AddToTableModel(window, elements[i], window.tlDownloadDomain.getSelectedItem().toString(),
                             0, window.settingsManager.GetRemoveGEMA(), window.settingsManager.GetRemoveVidFiles(),
@@ -198,10 +193,6 @@ public class LinkHandler {
 
                             String url = nwDownloader.getVideoURL();
                             int size = nwDownloader.getDownloadSize(url);
-
-                            String seperator = "/";
-                            if (System.getProperty("os.name").contains("Windows"))
-                                seperator = "\\";
 
                             nwDownloader.DownloadFile(url, window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount()
                                     - 1).toString() + seperator
