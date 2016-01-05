@@ -17,6 +17,7 @@ public class FreshUI extends JFrame implements ActionListener {
     public JButton btnDownload;
     private JTextField txtDownloadURL;
     public SettingsManager settingsManager;
+    private DLCManager dlcManager;
 
     private final String[] tableHeader = { "Download URL", "Hoster", "Progress (in %)",
             "Remove GEMA", "Remove MP4", "Convert to MP3", "Local Path" };
@@ -25,6 +26,8 @@ public class FreshUI extends JFrame implements ActionListener {
     private JMenu menuMenu;
     private JMenu menuSettings;
     private JMenu menuHelp;
+    private JMenuItem menuItemExport;
+    private JMenuItem menuItemImport;
     private JMenuItem menuItemExit;
     private JMenuItem menuItemSettingsWindow;
     private JMenuItem menuItemHelp;
@@ -40,6 +43,14 @@ public class FreshUI extends JFrame implements ActionListener {
     }
 
     private void InitActionListeners() {
+        menuItemImport.addActionListener(e -> {
+            dlcManager = new DLCManager(this);
+            dlcManager.ImportDLC();
+        });
+        menuItemExport.addActionListener(e -> {
+            dlcManager = new DLCManager(this);
+            dlcManager.ExportDLC();
+        });
         menuItemExit.addActionListener(e -> System.exit(0));
         menuItemHelp.addActionListener(e -> {
             String msg = "<html>This tool allows you to download various files from many social/video platforms (eg. YouTube)." +
@@ -83,11 +94,15 @@ public class FreshUI extends JFrame implements ActionListener {
         menuSettings = new JMenu("Settings");
         menuHelp = new JMenu("Help");
 
+        menuItemExport = new JMenuItem("Export to DLC");
+        menuItemImport = new JMenuItem("Import from DLC");
         menuItemExit = new JMenuItem("Exit");
         menuItemSettingsWindow = new JMenuItem("Settings");
         menuItemHelp = new JMenuItem("Help - Usage");
         menuItemAbout = new JMenuItem("? - About this tool");
 
+        menuMenu.add(menuItemImport);
+        menuMenu.add(menuItemExport);
         menuMenu.add(menuItemExit);
         menuSettings.add(menuItemSettingsWindow);
         menuHelp.add(menuItemHelp);
