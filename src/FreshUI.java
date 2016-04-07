@@ -3,6 +3,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.net.URL;
 
 /**
@@ -167,6 +168,24 @@ public class FreshUI extends JFrame implements ActionListener {
 
         SettingsManagerPanel sMP = new SettingsManagerPanel(settingsManager, this);
         getContentPane().add(sMP.getPanel(), BorderLayout.SOUTH);
+
+        // implement to remove by pressing del
+        InputMap im = downloadTable.getInputMap(JTable.WHEN_FOCUSED);
+        ActionMap am = downloadTable.getActionMap();
+
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "DeleteRow");
+        am.put("DeleteRow", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Delete row");
+                int row = downloadTable.getSelectedRow();
+
+                if (row > -1) {
+                    DefaultTableModel model = (DefaultTableModel) downloadTable.getModel();
+                    model.removeRow(row);
+                }
+            }
+        });
     }
 
     public static void main(String[] args) {
