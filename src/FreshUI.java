@@ -13,9 +13,9 @@ public class FreshUI extends JFrame implements ActionListener {
     private JTable downloadTable;
     public DefaultTableModel dTableModel;
     public JComboBox<DownloadPage> tlDownloadDomain;
-    private JButton btnAddToList;
+    public JButton btnAddToList;
     public JButton btnDownload;
-    private JTextField txtDownloadURL;
+    public JTextField txtDownloadURL;
     public SettingsManager settingsManager;
     private DLCManager dlcManager;
 
@@ -240,7 +240,7 @@ public class FreshUI extends JFrame implements ActionListener {
         }
     }
 
-    private int getDownloadPage(String toDetect){
+    public int getDownloadPage(String toDetect){
         DownloadPage[] pages = DownloadPage.values();
 
         for (int i = 0; i < pages.length; i++) {
