@@ -19,6 +19,8 @@ public class FreshUI extends JFrame implements ActionListener {
     public SettingsManager settingsManager;
     private DLCManager dlcManager;
 
+    private final String VERSION_STRING = "1.1b";
+
     private final String[] tableHeader = { "Download URL", "Hoster", "Progress (in %)",
             "Remove GEMA", "Remove MP4", "Convert to MP3", "Local Path" };
 
@@ -34,12 +36,31 @@ public class FreshUI extends JFrame implements ActionListener {
     private JMenuItem menuItemAbout;
 
     public FreshUI(){
+        CheckForUpdate();
         InitGUIComponents();
         InitActionListeners();
         InitWindowStandards();
 
         if(!settingsManager.GetMinimumSize())
             setMinimumSize(getSize());
+    }
+
+    private void CheckForUpdate() {
+        JSoupAnalyze webObj = new JSoupAnalyze("http://download.r3d-soft.de");
+        String version = webObj.AnalyzeWithTag("a[class=btn btn-lg btn-outline]").text();
+        version = version.replace("Download MediaDownloader v", "");
+        String versionNumber = (version.split(" "))[0];
+        if(versionNumber != VERSION_STRING){
+            // Update available!
+            String msg = "<html>" +
+                    "A new software version is available at <a href='http://download.r3d-soft.de'>download.r3d-soft.de</a><br />" +
+                    "Please download the new update to ensure every downloader works correctly<br />" +
+                    "New version: " + versionNumber + "<br />" +
+                    "Your version: " + VERSION_STRING + "<br />" +
+                    "</html>";
+
+            JOptionPane.showMessageDialog(this, new JLabel(msg), "Update available", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     private void InitActionListeners() {
@@ -67,7 +88,7 @@ public class FreshUI extends JFrame implements ActionListener {
         });
         menuItemAbout.addActionListener(e -> {
             String msg = "<html>" +
-                    "Thanks for using <b>MediaDownloader v1.0b</b> - written by R3DST0RM.<br />" +
+                    "Thanks for using <b>MediaDownloader v" + VERSION_STRING + "</b> - written by R3DST0RM.<br />" +
                     "This software uses ffmpeg as MP3 converter all licenses can be found here: bin/licenses/<br /><br />" +
                     "This software is free software (GNU General Public License v2) - Source Code available at request:<br /><br />" +
                     "E-Mail: <b>admin@r3d-soft.de</b><br />" +
@@ -83,7 +104,7 @@ public class FreshUI extends JFrame implements ActionListener {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         pack();
         setLocationRelativeTo(null);
-        setTitle("MediaDownloader v1.0b (Fresh-UI)");
+        setTitle("MediaDownloader v" + VERSION_STRING + "(Fresh-UI)");
         setVisible(true);
     }
 
@@ -151,9 +172,7 @@ public class FreshUI extends JFrame implements ActionListener {
     public static void main(String[] args) {
         try {
             if(args.length <= 0) {
-                UIManager.setLookAndFeel(
-                        UIManager.getSystemLookAndFeelClassName());
-
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                 new FreshUI(); // get a fancy window
             }else{
                 ConsoleManager manager = new ConsoleManager(args, true);
