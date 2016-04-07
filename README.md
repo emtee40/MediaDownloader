@@ -10,6 +10,20 @@ You have a favourite song on SoundClound and there is no download button or sour
 
 Just check out my online version of the SoundCloud Downloader: http://soundcloud.r3d-soft.de
 
+## Upcoming version (1.1b)
+The upcoming version is 1.1b (Fresh-UI) which will include new features as well as a few tweaks and improvements. Here is a list:
+
+New features:
+
+* Added the option to save and load a DLC (Note: These DLCs are not equivalent to JDownloaders DLCs!! They are a simple plain text file separated per new-line)
+* You are now able to delete a url from the table by pressing DEL on your keyboard
+* A version checker is included, this features checks if your version is still up-to-date by checking the stable(!) release on http://download.r3d-soft.de (There is no beta release channel until now!)
+
+Fixed issues:
+
+* Fixed issues with Instagram (since they changed off their API a bit)
+* Fixed issues with MixCloud (since they changed their website)
+
 ## Current stable(!) version
 Currently there Version 1.0b (Fresh-UI) available for download at: http://download.r3d-soft.de
 
