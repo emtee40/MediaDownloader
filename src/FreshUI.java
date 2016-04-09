@@ -226,7 +226,7 @@ public class FreshUI extends JFrame implements ActionListener {
                     } else {
                         JOptionPane.showMessageDialog(FreshUI.this, "No supported hoster found. I'll open up the RegEx-Engine " +
                                         "for you!",
-                                "URL unsupported", JOptionPane.ERROR_MESSAGE);
+                                "URL unsupported", JOptionPane.INFORMATION_MESSAGE);
                         new REExplorer(settingsManager, txtDownloadURL.getText());
                         txtDownloadURL.setText("");
                     }

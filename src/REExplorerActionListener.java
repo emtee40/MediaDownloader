@@ -20,14 +20,25 @@ public class REExplorerActionListener implements ActionListener {
         if(e.getSource() == currGUI.btnAnalyzeURL){
             analyzeURL = currGUI.getURL();
             REWebsiteConnection webHTML = new REWebsiteConnection(analyzeURL);
-            webHTML.CreateConnection();
+
+            if(currGUI.getUsername().equals("")) {
+                webHTML.CreateConnection();
+            }else {
+                char[] password = currGUI.getPassword();
+                webHTML.CreateConnection(currGUI.getUsername(), String.valueOf(password));
+            }
 
             REEngine regEx = new REEngine(webHTML.GetContent(), currGUI.getSelectedPattern());
             currGUI.setResultURLs(regEx.GetMatches());
         }
 
         if(e.getSource() == currGUI.btnDownloadFiles){
-            currGUI.downloadAllFiles();
+            if(currGUI.getUsername().equals("")) {
+                currGUI.downloadAllFiles();
+            }else {
+                char[] password = currGUI.getPassword();
+                currGUI.downloadAllFiles(currGUI.getUsername(), String.valueOf(password));
+            }
         }
 
         if(e.getSource() == currGUI.btnRemoveFromList){
@@ -37,7 +48,13 @@ public class REExplorerActionListener implements ActionListener {
         if(e.getSource() == currGUI.btnGetWebsiteSource){
             String website = currGUI.getURL();
             REWebsiteConnection webHTML = new REWebsiteConnection(website);
-            webHTML.CreateConnection();
+
+            if(currGUI.getUsername().equals("")) {
+                webHTML.CreateConnection();
+            }else {
+                char[] password = currGUI.getPassword();
+                webHTML.CreateConnection(currGUI.getUsername(), String.valueOf(password));
+            }
 
             String webCode = webHTML.GetContent();
             new REDownloadWindow(webCode.replace(">", ">\n"), currGUI.getSettingsManager().GetStandardSavePath());

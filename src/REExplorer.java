@@ -6,6 +6,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.*;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 
 /**
@@ -14,8 +15,12 @@ import java.util.List;
  */
 public class REExplorer extends JFrame {
     private REExplorerActionListener guiActionListener;
+
     private JTextField txtURLLine;
     private JTextField txtSavePath;
+    private JTextField txtUsername;
+    private JPasswordField txtPassword;
+
     public JButton btnAnalyzeURL;
     public JButton btnDownloadFiles;
     public JButton btnRemoveFromList;
@@ -146,6 +151,14 @@ public class REExplorer extends JFrame {
         btnRemoveFromList.addActionListener(guiActionListener);
         btnGetWebsiteSource = new JButton("View website source");
         btnGetWebsiteSource.addActionListener(guiActionListener);
+
+        // username password in order to access password protected sites (.htaccess)
+        txtUsername = new JTextField();
+        txtPassword = new JPasswordField();
+        topPanel.add(new JLabel("Username, Password"));
+        topPanel.add(txtUsername);
+        topPanel.add(txtPassword);
+
         topPanel.add(txtURLLine);
         topPanel.add(btnAnalyzeURL);
         topPanel.add(btnGetWebsiteSource);
@@ -219,6 +232,38 @@ public class REExplorer extends JFrame {
         }
     }
 
+    public void downloadAllFiles(String username, String password) {
+        if (listOfFoundItems.size() <= 0) return;
+
+        try {
+            for (int i = 0; i < listOfFoundItems.size(); i++) {
+                URL url = new URL(listOfFoundItems.get(i).toString().replace("&amp;", "&"));
+                URLConnection connection = url.openConnection();
+
+                String userpass = username + ":" + password;
+                String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes());
+
+                connection.setRequestProperty ("Authorization", basicAuth);
+                String[] filename = listOfFoundItems.get(i).toString().split("/");
+
+                InputStream in = new BufferedInputStream(connection.getInputStream());
+                OutputStream out = new BufferedOutputStream(new FileOutputStream(txtSavePath.getText() + filename[filename.length-1]));
+
+                for ( int j; (j = in.read()) != -1; ) {
+                    out.write(j);
+                }
+                in.close();
+                out.close();
+            }
+
+            JOptionPane.showMessageDialog(this, "Finished downloading!",
+                    "MediaDownloader - REExplorer - Finished Downloading", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
     public void removeFromList() {
         if(list.getSelectedIndex() >= 0)
             listOfFoundItems.removeElementAt(list.getSelectedIndex());
@@ -230,5 +275,13 @@ public class REExplorer extends JFrame {
 
     public SettingsManager getSettingsManager() {
         return man;
+    }
+
+    public String getUsername(){
+        return txtUsername.getText();
+    }
+
+    public char[] getPassword(){
+        return txtPassword.getPassword();
     }
 }
