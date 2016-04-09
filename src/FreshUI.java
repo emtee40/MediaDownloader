@@ -19,6 +19,7 @@ public class FreshUI extends JFrame implements ActionListener {
     public JTextField txtDownloadURL;
     public SettingsManager settingsManager;
     private DLCManager dlcManager;
+    private CrawlerFrame cwFrame;
 
     private final String VERSION_STRING = "1.1b";
 
@@ -27,11 +28,13 @@ public class FreshUI extends JFrame implements ActionListener {
 
     private JMenuBar menuBar;
     private JMenu menuMenu;
+    private JMenu menuSpecial;
     private JMenu menuSettings;
     private JMenu menuHelp;
     private JMenuItem menuItemExport;
     private JMenuItem menuItemImport;
     private JMenuItem menuItemExit;
+    private JMenuItem menuItemCrawler;
     private JMenuItem menuItemSettingsWindow;
     private JMenuItem menuItemHelp;
     private JMenuItem menuItemAbout;
@@ -99,6 +102,10 @@ public class FreshUI extends JFrame implements ActionListener {
             JOptionPane.showMessageDialog(this, new JLabel(msg), "Help", JOptionPane.INFORMATION_MESSAGE);
         });
         menuItemSettingsWindow.addActionListener(e -> settingsManager.ShowSettingsWindow(this));
+        menuItemCrawler.addActionListener(e -> {
+            cwFrame = new CrawlerFrame(this);
+            cwFrame.showWindow();
+        });
     }
 
     private void InitWindowStandards() {
@@ -113,12 +120,14 @@ public class FreshUI extends JFrame implements ActionListener {
         // add menubar
         menuBar = new JMenuBar();
         menuMenu = new JMenu("Menu");
+        menuSpecial = new JMenu("Tools");
         menuSettings = new JMenu("Settings");
         menuHelp = new JMenu("Help");
 
         menuItemExport = new JMenuItem("Export to DLC");
         menuItemImport = new JMenuItem("Import from DLC");
         menuItemExit = new JMenuItem("Exit");
+        menuItemCrawler = new JMenuItem("Crawler");
         menuItemSettingsWindow = new JMenuItem("Settings");
         menuItemHelp = new JMenuItem("Help - Usage");
         menuItemAbout = new JMenuItem("? - About this tool");
@@ -126,11 +135,13 @@ public class FreshUI extends JFrame implements ActionListener {
         menuMenu.add(menuItemImport);
         menuMenu.add(menuItemExport);
         menuMenu.add(menuItemExit);
+        menuSpecial.add(menuItemCrawler);
         menuSettings.add(menuItemSettingsWindow);
         menuHelp.add(menuItemHelp);
         menuHelp.add(menuItemAbout);
 
         menuBar.add(menuMenu);
+        menuBar.add(menuSpecial);
         menuBar.add(menuSettings);
         menuBar.add(menuHelp);
 
