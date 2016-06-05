@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.PrintStream;
 import java.net.URL;
 
 /**
@@ -20,6 +21,7 @@ public class FreshUI extends JFrame implements ActionListener {
     public SettingsManager settingsManager;
     private DLCManager dlcManager;
     private CrawlerFrame cwFrame;
+    private DevConsole devConsole;
 
     private final String VERSION_STRING = "1.1b";
 
@@ -35,6 +37,7 @@ public class FreshUI extends JFrame implements ActionListener {
     private JMenuItem menuItemImport;
     private JMenuItem menuItemExit;
     private JMenuItem menuItemCrawler;
+    private JMenuItem menuItemDevConsole;
     private JMenuItem menuItemSettingsWindow;
     private JMenuItem menuItemHelp;
     private JMenuItem menuItemAbout;
@@ -47,6 +50,9 @@ public class FreshUI extends JFrame implements ActionListener {
 
         if(!settingsManager.GetMinimumSize())
             setMinimumSize(getSize());
+
+        // init dev console but do not show it
+        devConsole = new DevConsole(this);
     }
 
     private void CheckForUpdate() {
@@ -106,6 +112,11 @@ public class FreshUI extends JFrame implements ActionListener {
             cwFrame = new CrawlerFrame(this);
             cwFrame.showWindow();
         });
+        menuItemDevConsole.addActionListener(e -> {
+            System.setOut(new PrintStream(devConsole.getStream()));
+            System.setErr(new PrintStream(devConsole.getStream()));
+            devConsole.showConsole();
+        });
     }
 
     private void InitWindowStandards() {
@@ -128,6 +139,7 @@ public class FreshUI extends JFrame implements ActionListener {
         menuItemImport = new JMenuItem("Import from DLC");
         menuItemExit = new JMenuItem("Exit");
         menuItemCrawler = new JMenuItem("Crawler");
+        menuItemDevConsole = new JMenuItem("Dev Console");
         menuItemSettingsWindow = new JMenuItem("Settings");
         menuItemHelp = new JMenuItem("Help - Usage");
         menuItemAbout = new JMenuItem("? - About this tool");
@@ -136,6 +148,7 @@ public class FreshUI extends JFrame implements ActionListener {
         menuMenu.add(menuItemExport);
         menuMenu.add(menuItemExit);
         menuSpecial.add(menuItemCrawler);
+        menuSpecial.add(menuItemDevConsole);
         menuSettings.add(menuItemSettingsWindow);
         menuHelp.add(menuItemHelp);
         menuHelp.add(menuItemAbout);
