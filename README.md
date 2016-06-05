@@ -21,7 +21,7 @@ New features:
 
 Fixed issues:
 
-* Fixed issues with Instagram (since they changed off their API a bit)
+* Fixed issues with Instagram (since they changed their API a bit)
 * Fixed issues with MixCloud (since they changed their website)
 
 ## Current stable(!) version
