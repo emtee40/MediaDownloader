@@ -1,28 +1,31 @@
 # MediaDownloader
 
-MediaDownloader is a cross-platform java app which allows you to download files from YouTube, Facebook, Instagram, StreamCloud, SoundCloud and much more sites (way more will be added in the future).
+MediaDownloader is a cross-platform java app which allows you to download files from many well known websites such as YouTube, Facebook, Instagram and SoundCloud (way more will be added in the future).
 
-There is also a Regular-Expression AddOn which allows you to search the website for example: URLs of any type.
+A newly added feature is the Regular-Expression AddOn which allows you to search any website by filtering HTML-Tags or pre-defined URLs.
 
-Check out an online version of my YouTube Downloader (also unlocks GEMA blocked videos in Germany): http://youtube.r3d-soft.de
+There are currently two downloaders as online version available:
 
-You have a favourite song on SoundClound and there is no download button or source where you can buy it?
+YouTube Downloader (no MP3 conversion - unblocks GEMA music videos and much more): http://youtube.r3d-soft.de
 
-Just check out my online version of the SoundCloud Downloader: http://soundcloud.r3d-soft.de
+SoundCloud Downloader, download songs where the download button is disabled: http://soundcloud.r3d-soft.de
 
 ## Upcoming version (1.1b)
 The upcoming version is 1.1b (Fresh-UI) which will include new features as well as a few tweaks and improvements. Here is a list:
 
 New features:
 
+* Index-Of Downloader is now included
 * Added the option to save and load a DLC (Note: These DLCs are not equivalent to JDownloaders DLCs!! They are a simple plain text file separated per new-line)
 * You are now able to delete a url from the table by pressing DEL on your keyboard
 * A version checker is included, this features checks if your version is still up-to-date by checking the stable(!) release on http://download.r3d-soft.de (There is no beta release channel until now!)
+* Code clean up / renewed code base
 
 Fixed issues:
 
 * Fixed issues with Instagram (since they changed their API a bit)
 * Fixed issues with MixCloud (since they changed their website)
+* Overall verified downloaders
 
 ## Current stable(!) version
 Currently there Version 1.0b (Fresh-UI) available for download at: http://download.r3d-soft.de
@@ -82,7 +85,7 @@ Crawls complete vine profiles
 
 #####REExplorer
 
-Allows you to search a website using regular-expressions - this allows you to download almost from every website (It is only recommended to advanced users who have a understand of regular expressions)
+Allows you to search a website using regular-expressions - this allows you to download almost from every website (Reg-Ex knowledge needed)
 
 ## Shortcuts (version 1.0b):
 #####YouTube-URL:
