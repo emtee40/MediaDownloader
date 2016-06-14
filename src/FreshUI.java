@@ -2,10 +2,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.font.OpenType;
+import java.io.PrintStream;
 import java.net.URL;
-import java.net.UnknownHostException;
-import javax.imageio.ImageIO;
 
 /**
  * Creation time: 00:36
@@ -21,6 +19,7 @@ public class FreshUI extends MainFrameBase implements ActionListener {
     public SettingsManager settingsManager;
     private DLCManager dlcManager;
     private CrawlerFrame cwFrame;
+    private DevConsole devConsole;
 
     private final String[] tableHeader = {"Download URL", "Hoster", "Progress (in %)",
             "Remove GEMA", "Remove MP4", "Convert to MP3", "Local Path"};
@@ -34,6 +33,7 @@ public class FreshUI extends MainFrameBase implements ActionListener {
     private JMenuItem menuItemImport;
     private JMenuItem menuItemExit;
     private JMenuItem menuItemCrawler;
+    private JMenuItem menuItemDevConsole;
     private JMenuItem menuItemSettingsWindow;
     private JMenuItem menuItemHelp;
     private JMenuItem menuItemAbout;
@@ -56,6 +56,9 @@ public class FreshUI extends MainFrameBase implements ActionListener {
 
         if (!settingsManager.GetMinimumSize())
             setMinimumSize(getSize());
+
+        // init dev console but do not show it
+        devConsole = new DevConsole(this);
     }
 
     private void CheckForUpdate() throws NullPointerException {
@@ -122,6 +125,12 @@ public class FreshUI extends MainFrameBase implements ActionListener {
             cwFrame.showWindow();
         });
 
+        menuItemDevConsole.addActionListener(e -> {
+            System.setOut(new PrintStream(devConsole.getStream()));
+            System.setErr(new PrintStream(devConsole.getStream()));
+            devConsole.showConsole();
+        });
+
         // Write settings to ini file on disk on application exit
         this.addWindowListener(new WindowAdapter() {
             @Override
@@ -153,6 +162,7 @@ public class FreshUI extends MainFrameBase implements ActionListener {
         menuItemImport = new JMenuItem("Import from DLC");
         menuItemExit = new JMenuItem("Exit");
         menuItemCrawler = new JMenuItem("Crawler");
+        menuItemDevConsole = new JMenuItem("Dev Console");
         menuItemSettingsWindow = new JMenuItem("Settings");
         menuItemHelp = new JMenuItem("Help - Usage");
         menuItemAbout = new JMenuItem("? - About this tool");
@@ -161,6 +171,7 @@ public class FreshUI extends MainFrameBase implements ActionListener {
         menuMenu.add(menuItemExport);
         menuMenu.add(menuItemExit);
         menuSpecial.add(menuItemCrawler);
+        menuSpecial.add(menuItemDevConsole);
         menuSettings.add(menuItemSettingsWindow);
         menuHelp.add(menuItemHelp);
         menuHelp.add(menuItemAbout);
