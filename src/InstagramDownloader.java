@@ -15,7 +15,7 @@ import java.util.stream.Stream;
  * Creation time: 03:05
  * Created by Dominik on 22.04.2015.
  */
-public class InstagramDownloader extends Downloader{
+public class InstagramDownloader extends Downloader {
     private String igLink;
     private String savePath;
     private String img_Title;
@@ -29,7 +29,7 @@ public class InstagramDownloader extends Downloader{
     private JSoupAnalyze webObj;
     private InstagramDownloadWindow downloadWindow;
 
-    public InstagramDownloader(String igLink, String savePath, boolean isPreviewWanted){
+    public InstagramDownloader(String igLink, String savePath, boolean isPreviewWanted) {
         super();
         this.igLink = igLink;
         this.savePath = savePath;
@@ -37,9 +37,9 @@ public class InstagramDownloader extends Downloader{
     }
 
     // constructor for crawling instagram profile
-    public InstagramDownloader(String igLink, String savePath){
+    public InstagramDownloader(String igLink, String savePath) {
         super();
-        if(igLink.contains("userID:"))
+        if (igLink.contains("userID:"))
             this.usrID = igLink.replace("userID:", "");
         else
             this.igLink = igLink.replace("user:", "");
@@ -47,11 +47,11 @@ public class InstagramDownloader extends Downloader{
         this.savePath = CheckSavePath(savePath);
     }
 
-    public InstagramDownloader(String savePath){
+    public InstagramDownloader(String savePath) {
         this.savePath = savePath;
     }
 
-    public String GetURLsAndPreview(){
+    public String GetURLsAndPreview() {
         try {
             webObj = new JSoupAnalyze(igLink);
             Element videos = webObj.AnalyzeWithTag("meta[property=og:video]").first();
@@ -62,33 +62,30 @@ public class InstagramDownloader extends Downloader{
                 if (isPreviewWanted) {
                     imgPreview = new ImagePreviewWindow(images.attr("content"), descr.attr("content"));
                     return videos.attr("content");
-                }
-                else
+                } else
                     return videos.attr("content");
 
             } else if (images != null) { // found images
-                if(isPreviewWanted){
+                if (isPreviewWanted) {
                     imgPreview = new ImagePreviewWindow(images.attr("content"), descr.attr("content"));
                     return images.attr("content");
-                }
-                else
+                } else
                     return images.attr("content");
             } else
                 return "";
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             return "";
         }
     }
 
-    public void DownloadFile(String urls, int element, int fileSize){
+    public void DownloadFile(String urls, int element, int fileSize) {
         boolean showProgress = true;
 
-        if(urls.equals(""))
+        if (urls.equals(""))
             return;
 
-        if(downloadWindow == null)
+        if (downloadWindow == null)
             showProgress = false;
 
         try {
@@ -98,7 +95,7 @@ public class InstagramDownloader extends Downloader{
             String[] URL_split = urls.split("/");
 
             // skip existing files in order to keep is a crawler
-            if(skipExistingFiles && isFileExisting(new File(savePath + URL_split[URL_split.length - 1])) && showProgress){
+            if (skipExistingFiles && isFileExisting(new File(savePath + URL_split[URL_split.length - 1])) && showProgress) {
                 downloadWindow.setElementPercentage(100 + "%", element);
                 return;
             }
@@ -117,26 +114,25 @@ public class InstagramDownloader extends Downloader{
                 sum += count;
 
                 if (fileSize > 0 && showProgress) {
-                    downloadWindow.setElementPercentage(((int)(sum / fileSize * 100)) + "%", element);
+                    downloadWindow.setElementPercentage(((int) (sum / fileSize * 100)) + "%", element);
                 }
             }
 
 
             in.close();
             out.close();
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    public void DownloadFile(String[] urls){
+    public void DownloadFile(String[] urls) {
         for (int i = 0; i < urls.length; i++) {
             DownloadFile(urls[i], i, getDownloadSize(urls[i]));
-            if(downloadWindow != null)
-                downloadWindow.SetOverallProgress("[" + (i+1) + "/" + urls.length + "]");
+            if (downloadWindow != null)
+                downloadWindow.SetOverallProgress("[" + (i + 1) + "/" + urls.length + "]");
 
-            if(downloadWindow.isClosed() || downloadWindow == null){
+            if (downloadWindow.isClosed() || downloadWindow == null) {
                 JOptionPane.showMessageDialog(null, "Stopping download, due to download window closed ...",
                         "InstagramDownloader - Download aborted!", JOptionPane.WARNING_MESSAGE);
                 return;
@@ -146,14 +142,14 @@ public class InstagramDownloader extends Downloader{
         JOptionPane.showMessageDialog(null, "Downloaded successfully all media files.", "InstagramDownloader - Job finished", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public void DownloadFile(String urls, int element, int fileSize, DefaultTableModel guiElements) throws Exception{
+    public void DownloadFile(String urls, int element, int fileSize, DefaultTableModel guiElements) throws Exception {
         savePath = CheckSavePath(savePath);
         String[] URL_split = urls.split("/");
         super.DownloadFile(urls, savePath + (URL_split[URL_split.length - 1].split("\\?"))[0], fileSize, element, guiElements);
     }
 
     public String fetchUserID(String requestURL) {
-        if(usrID != null)
+        if (usrID != null)
             return usrID;
 
         try {
@@ -161,21 +157,21 @@ public class InstagramDownloader extends Downloader{
             JSONObject obj = readJsonFromUrl(requestURL);
             String userID = obj.getJSONArray("data").getJSONObject(0).getString("id");
             return userID;
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             return "Error occured while crawling";
         }
     }
 
     public String[] fetchAllImageURLs(String userID, String newURL) {
-        if(newURL.equals(""))
+        if (newURL.equals(""))
             newURL = "https://api.instagram.com/v1/users/" + userID + "/media/recent?client_id=21ae9c8b9ebd4183adf0d0602ead7f05";
-        try{
+        try {
             JSONObject obj = readJsonFromUrl(newURL);
             String nextPage = "";
-            try{
+            try {
                 nextPage = obj.getJSONObject("pagination").getString("next_url");
-            }catch (Exception ex){
+            } catch (Exception ex) {
                 System.err.println("No next page");
             }
 
@@ -186,8 +182,7 @@ public class InstagramDownloader extends Downloader{
                 try {
                     itemlist.add(arr.getJSONObject(i).getJSONObject("images").getJSONObject("standard_resolution").getString("url"));
                     itemlist.add(arr.getJSONObject(i).getJSONObject("videos").getJSONObject("standard_resolution").getString("url"));
-                }
-                catch (Exception ex){
+                } catch (Exception ex) {
                     // ignore this case
                 }
             }
@@ -197,12 +192,12 @@ public class InstagramDownloader extends Downloader{
                 items[i] = itemlist.get(i);
             }
 
-            if(nextPage.equals(""))
+            if (nextPage.equals(""))
                 return items;
             else
                 return Stream.concat(Arrays.stream(items), Arrays.stream(fetchAllImageURLs(userID, nextPage)))
                         .toArray(String[]::new);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             return null;
         }

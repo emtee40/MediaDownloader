@@ -19,14 +19,14 @@ public class NowVideoDownloader extends Downloader {
     private String savePath;
     private NowVideoDownloadWindow downloadWindow;
 
-    public NowVideoDownloader(String nowVideoURL, String savePath){
+    public NowVideoDownloader(String nowVideoURL, String savePath) {
         this.nowVideoURL = nowVideoURL;
         this.savePath = savePath;
 
-        if(this.nowVideoURL.contains("embed")){
+        if (this.nowVideoURL.contains("embed")) {
             String[] idSplit = this.nowVideoURL.split("=");
             videoID = idSplit[idSplit.length - 1];
-        }else{
+        } else {
             String[] idSplit = this.nowVideoURL.split("/");
             videoID = idSplit[idSplit.length - 1];
         }
@@ -38,17 +38,17 @@ public class NowVideoDownloader extends Downloader {
         String[] scriptSplit = null;
 
         for (int i = 0; i < scriptTags.size(); i++) {
-            if(scriptTags.get(i).data().contains(keyPartToFind)) {
+            if (scriptTags.get(i).data().contains(keyPartToFind)) {
                 scriptSplit = scriptTags.get(i).data().split("\n");
                 break;
             }
         }
 
-        if(scriptSplit == null)
+        if (scriptSplit == null)
             throw new NullPointerException("no script tag found!");
 
         for (int i = 0; i < scriptSplit.length; i++) {
-            if(scriptSplit[i].contains(keyPartToFind)) {
+            if (scriptSplit[i].contains(keyPartToFind)) {
                 String trimmed = scriptSplit[i];
                 key = trimmed.replace("var fkzd=", "").replace("\"", "").replace(";", "").trim();
             }

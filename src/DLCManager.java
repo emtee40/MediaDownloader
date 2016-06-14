@@ -12,28 +12,28 @@ import java.util.List;
 public class DLCManager {
     private FreshUI freshUI;
 
-    public DLCManager(FreshUI freshUI){
+    public DLCManager(FreshUI freshUI) {
         this.freshUI = freshUI;
     }
 
-    public void ExportDLC(){
+    public void ExportDLC() {
         ExportDialog exDia = new ExportDialog(freshUI);
         String path = exDia.askSave();
-        if(writeLinksToFile(path)){
+        if (writeLinksToFile(path)) {
             JOptionPane.showMessageDialog(freshUI, "Successfully exported current download list",
                     "Download list exported", JOptionPane.INFORMATION_MESSAGE);
-        }else{
+        } else {
             // Print error
             JOptionPane.showMessageDialog(freshUI, "Couldn't write DLC to disk please try again.",
                     "Error while saving", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    public void ImportDLC(){
+    public void ImportDLC() {
         ImportDialog imDia = new ImportDialog(freshUI);
         String[] urlsToAdd = imDia.askLoad();
 
-        if(urlsToAdd == null)
+        if (urlsToAdd == null)
             return;
 
         for (int i = 0; i < urlsToAdd.length; i++) {
@@ -41,17 +41,17 @@ public class DLCManager {
                 // simulate an insertion of the specific url
                 freshUI.txtDownloadURL.setText(urlsToAdd[i]);
                 freshUI.btnAddToList.doClick();
-            }catch (Exception e){
+            } catch (Exception e) {
                 // in general there should be no error in doing it
                 e.printStackTrace();
             }
         }
     }
 
-    private boolean writeLinksToFile(String filePath){
+    private boolean writeLinksToFile(String filePath) {
         try {
             // prevent from saving an empty set of download links
-            if(freshUI.dTableModel.getRowCount() <= 0)
+            if (freshUI.dTableModel.getRowCount() <= 0)
                 return false;
 
             File dlc = new File(filePath);
@@ -63,7 +63,7 @@ public class DLCManager {
 
             // everything was fine
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             System.err.println("Error while saving DLC");
             return false;
         }
@@ -73,16 +73,15 @@ public class DLCManager {
 class ImportDialog extends JDialog {
     private FreshUI freshUI;
 
-    public ImportDialog(FreshUI freshUI){
+    public ImportDialog(FreshUI freshUI) {
         this.freshUI = freshUI;
     }
 
-    public String[] askLoad(){
+    public String[] askLoad() {
         JFileChooser chooser = new JFileChooser();
         int retVal = chooser.showOpenDialog(freshUI);
 
-        if(retVal == JFileChooser.APPROVE_OPTION)
-        {
+        if (retVal == JFileChooser.APPROVE_OPTION) {
             String fileName = chooser.getSelectedFile().getAbsolutePath();
             File file = new File(fileName);
 
@@ -109,7 +108,7 @@ class ImportDialog extends JDialog {
                         "Error while opening", JOptionPane.ERROR_MESSAGE);
                 return null;
             }
-        }else {
+        } else {
             return null;
         }
     }
@@ -118,11 +117,11 @@ class ImportDialog extends JDialog {
 class ExportDialog extends JDialog {
     private FreshUI freshUI;
 
-    public ExportDialog(FreshUI freshUI){
+    public ExportDialog(FreshUI freshUI) {
         this.freshUI = freshUI;
     }
 
-    public String askSave(){
+    public String askSave() {
         JFileChooser chooser = new JFileChooser();
         chooser.showSaveDialog(freshUI);
 

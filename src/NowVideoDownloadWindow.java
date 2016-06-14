@@ -9,7 +9,7 @@ public class NowVideoDownloadWindow extends JDialog {
     private JProgressBar progressBar;
     private String url;
 
-    public NowVideoDownloadWindow(String url){
+    public NowVideoDownloadWindow(String url) {
         this.url = url;
         setTitle("NowVideo - Download Progress");
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);

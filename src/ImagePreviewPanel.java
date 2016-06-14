@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 
-public class ImagePreviewPanel extends JPanel{
+public class ImagePreviewPanel extends JPanel {
     private BufferedImage image;
 
     public ImagePreviewPanel(String previewURL) {

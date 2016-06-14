@@ -14,7 +14,7 @@ public class REEngine {
     private Pattern pattern;
     private Matcher matcher;
 
-    public REEngine(String searchText){
+    public REEngine(String searchText) {
         this.searchText = searchText;
         this.PATTERN = "\\b(((ht|f)tp(s?)\\:\\/\\/|~\\/|\\/)|www.)" +
                 "(\\w+:\\w+@)?(([-\\w]+\\.)+(com|org|net|gov" +
@@ -30,16 +30,16 @@ public class REEngine {
         pattern = pattern.compile(PATTERN);
     }
 
-    public REEngine(String searchText, String PATTERN){
+    public REEngine(String searchText, String PATTERN) {
         this.searchText = searchText;
         this.PATTERN = PATTERN;
         pattern = pattern.compile(PATTERN);
     }
 
-    public List<String> GetMatches(){
+    public List<String> GetMatches() {
         List<String> result = new ArrayList<String>();
         matcher = pattern.matcher(searchText);
-        while(matcher.find()){
+        while (matcher.find()) {
             result.add(matcher.group());
         }
         return result;

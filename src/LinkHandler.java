@@ -12,51 +12,47 @@ import java.util.List;
  */
 public class LinkHandler {
     private static List<String> currentMp4Files = new ArrayList<>();
-    private static String seperator = (System.getProperty("os.name").contains("Windows")) ? "\\" : "/";
 
-    public static void AddURLToTable(String URL, String hoster, FreshUI window){
-        if(DownloadPage.valueOf(hoster.toString()) == DownloadPage.RE_Explorer){
+    public static void AddURLToTable(String URL, String hoster, FreshUI window) {
+        if (DownloadPage.valueOf(hoster.toString()) == DownloadPage.RE_Explorer) {
             new REExplorer(window.settingsManager);
         }
 
-        if(hoster.toLowerCase().equals("facebook")){
+        if (hoster.toLowerCase().equals("facebook")) {
             URL = URL.replace("photos_stream?tab=photos_stream", "");
             URL = URL.replace("photos_stream?tab=photos_albums", "");
             URL = URL.replace("photos_stream?tab=photos", "");
 
 
             // determine if real fb link
-            if(URL.contains("/?type") && URL.contains(("&theater"))){
+            if (URL.contains("/?type") && URL.contains(("&theater"))) {
                 FacebookDownloader fb = new FacebookDownloader(URL);
                 String[] urls = fb.GetDownloadLinks();
                 for (int i = 0; i < urls.length; i++) {
                     AddToTableModel(window, urls[i], window.tlDownloadDomain.getSelectedItem().toString(),
-                            0, window.settingsManager.GetRemoveGEMA(), window.settingsManager.GetRemoveVidFiles(),
+                            0, window.settingsManager.GetRemoveGEMA(), window.settingsManager.GetRemoveMP4(),
                             window.settingsManager.GetStandardSavePath(), window.settingsManager.GetConvertToMP3());
                 }
-            }
-            else if(URL.contains("facebook")) {
+            } else if (URL.contains("facebook")) {
                 FacebookDownloader fb = new FacebookDownloader(URL);
                 String[] pic = fb.GetDownloadLinks();
 
                 for (int i = 0; i < pic.length; i++) {
                     AddToTableModel(window, pic[i], window.tlDownloadDomain.getSelectedItem().toString(),
-                            0, window.settingsManager.GetRemoveGEMA(), window.settingsManager.GetRemoveVidFiles(),
+                            0, window.settingsManager.GetRemoveGEMA(), window.settingsManager.GetRemoveMP4(),
                             window.settingsManager.GetStandardSavePath(), window.settingsManager.GetConvertToMP3());
                 }
-            }
-            else {
+            } else {
                 JOptionPane.showMessageDialog(null, "No facebook link", "FacebookDownloader - Not a valid link", JOptionPane.ERROR_MESSAGE);
             }
-        }
-        else if(hoster.toLowerCase().equals("instagram")) {
+        } else if (hoster.toLowerCase().equals("instagram")) {
             // Single Picture
-            if(URL.contains("/p/") || URL.contains("?taken-by=")){
+            if (URL.contains("/p/") || URL.contains("?taken-by=")) {
                 InstagramDownloader ig = new InstagramDownloader(URL, window.settingsManager.GetStandardSavePath(),
                         false);
                 String url = ig.GetURLsAndPreview();
                 AddToTableModel(window, url, window.tlDownloadDomain.getSelectedItem().toString(),
-                        0, window.settingsManager.GetRemoveGEMA(), window.settingsManager.GetRemoveVidFiles(),
+                        0, window.settingsManager.GetRemoveGEMA(), window.settingsManager.GetRemoveMP4(),
                         window.settingsManager.GetStandardSavePath(), window.settingsManager.GetConvertToMP3());
             } else {
                 // Crawl Profile
@@ -69,34 +65,33 @@ public class LinkHandler {
                 String[] urls = insta.fetchAllImageURLs(userID, "");
                 for (int i = 0; i < urls.length; i++) {
                     AddToTableModel(window, urls[i], window.tlDownloadDomain.getSelectedItem().toString(),
-                            0, window.settingsManager.GetRemoveGEMA(), window.settingsManager.GetRemoveVidFiles(),
-                            window.settingsManager.GetStandardSavePath() + seperator + userID, window.settingsManager.GetConvertToMP3());
+                            0, window.settingsManager.GetRemoveGEMA(), window.settingsManager.GetRemoveMP4(),
+                            window.settingsManager.GetStandardSavePath() + CGlobals.PATH_SEPARATOR + userID,
+                            window.settingsManager.GetConvertToMP3());
                 }
             }
-        }
-        else if(hoster.toLowerCase().equals("mixcloud") || hoster.toLowerCase().equals("nowvideo")
+        } else if (hoster.toLowerCase().equals("mixcloud") || hoster.toLowerCase().equals("nowvideo")
                 || hoster.toLowerCase().equals("sharedsx") || hoster.toLowerCase().equals("soundcloud")
                 || hoster.toLowerCase().equals("streamcloud") || hoster.toLowerCase().equals("vimeo")) {
 
             AddToTableModel(window, URL, window.tlDownloadDomain.getSelectedItem().toString(),
-                    0, window.settingsManager.GetRemoveGEMA(), window.settingsManager.GetRemoveVidFiles(),
-                    window.settingsManager.GetStandardSavePath() + seperator, window.settingsManager.GetConvertToMP3());
+                    0, window.settingsManager.GetRemoveGEMA(), window.settingsManager.GetRemoveMP4(),
+                    window.settingsManager.GetStandardSavePath() + CGlobals.PATH_SEPARATOR,
+                    window.settingsManager.GetConvertToMP3());
 
-        }
-        else if(hoster.toLowerCase().equals("vine")){
+        } else if (hoster.toLowerCase().equals("vine")) {
             VineDownloader vine = new VineDownloader(URL);
             String[] list = vine.GetVines();
             for (int i = 0; i < list.length; i++) {
                 AddToTableModel(window, list[i], window.tlDownloadDomain.getSelectedItem().toString(),
-                        0, window.settingsManager.GetRemoveGEMA(), window.settingsManager.GetRemoveVidFiles(),
-                        window.settingsManager.GetStandardSavePath() + seperator + vine.GetUID() + seperator, window.settingsManager.GetConvertToMP3());
+                        0, window.settingsManager.GetRemoveGEMA(), window.settingsManager.GetRemoveMP4(),
+                        window.settingsManager.GetStandardSavePath() + CGlobals.PATH_SEPARATOR +
+                                vine.GetUID() + CGlobals.PATH_SEPARATOR, window.settingsManager.GetConvertToMP3());
             }
-        }
-        else if(hoster.toLowerCase().equals("youtube")) {
+        } else if (hoster.toLowerCase().equals("youtube")) {
             // if not a correct youtube name assume that text is a youtube username
-            if(URL.contains("youtube.com/") && !URL.contains("youtube.com/watch?v=")
-                    || URL.contains("youtube.com/user/"))
-            {
+            if (URL.contains("youtube.com/") && !URL.contains("youtube.com/watch?v=")
+                    || URL.contains("youtube.com/user/")) {
                 // now add all videos from a channel if it is a channel
                 String username = URL.replace("youtube.com/", "")
                         .replace("https://", "").replace("http://", "").replace("www.", "")
@@ -105,47 +100,43 @@ public class LinkHandler {
                 YouTubeGetChannelVideos channelVideos = new YouTubeGetChannelVideos(username);
                 String[] list = channelVideos.GetVideoList();
 
-                if(list.length <= 0) {
+                if (list.length <= 0) {
                     JOptionPane.showMessageDialog(null, "No YouTube User matching your criteria",
                             "YouTubeDownloaderEngine - No user found!", JOptionPane.ERROR_MESSAGE);
-                }
-                else{
+                } else {
                     for (int i = 0; i < list.length; i++) {
                         AddToTableModel(window, "https://youtube.com/watch?v=" + list[i],
                                 window.tlDownloadDomain.getSelectedItem().toString(),
-                            0, window.settingsManager.GetRemoveGEMA(), window.settingsManager.GetRemoveVidFiles(),
-                            window.settingsManager.GetStandardSavePath(), window.settingsManager.GetConvertToMP3());
+                                0, window.settingsManager.GetRemoveGEMA(), window.settingsManager.GetRemoveMP4(),
+                                window.settingsManager.GetStandardSavePath(), window.settingsManager.GetConvertToMP3());
                     }
                     JOptionPane.showMessageDialog(window,
                             "Added " + list.length + " videos recording to your download request: " +
-                            username, "MediaDownloader - Added all channel videos", JOptionPane.INFORMATION_MESSAGE);
+                                    username, "MediaDownloader - Added all channel videos", JOptionPane.INFORMATION_MESSAGE);
                 }
-            }
-            else if(URL.contains("list=")){
+            } else if (URL.contains("list=")) {
                 YouTubeRetrievePlaylist retrievePlaylist = new YouTubeRetrievePlaylist(URL);
                 String[] elements = retrievePlaylist.getAllVideosFromPlaylist("");
                 for (int i = 0; i < elements.length; i++) {
 
                     AddToTableModel(window, elements[i], window.tlDownloadDomain.getSelectedItem().toString(),
-                            0, window.settingsManager.GetRemoveGEMA(), window.settingsManager.GetRemoveVidFiles(),
-                            window.settingsManager.GetStandardSavePath() + seperator +
+                            0, window.settingsManager.GetRemoveGEMA(), window.settingsManager.GetRemoveMP4(),
+                            window.settingsManager.GetStandardSavePath() + CGlobals.PATH_SEPARATOR +
                                     retrievePlaylist.getPlayListTitle(), window.settingsManager.GetConvertToMP3());
 
                 }
 
                 JOptionPane.showMessageDialog(null, "Added " + elements.length + " links to the downloader"
                         , "MediaDownloader - Added all playlist videos", JOptionPane.INFORMATION_MESSAGE);
-            }
-            else if(URL.contains("youtube.com/"))
+            } else if (URL.contains("youtube.com/"))
                 AddToTableModel(window, URL, window.tlDownloadDomain.getSelectedItem().toString(),
-                        0, window.settingsManager.GetRemoveGEMA(), window.settingsManager.GetRemoveVidFiles(),
+                        0, window.settingsManager.GetRemoveGEMA(), window.settingsManager.GetRemoveMP4(),
                         window.settingsManager.GetStandardSavePath(), window.settingsManager.GetConvertToMP3());
-            else{
+            else {
                 JOptionPane.showMessageDialog(null, "No youtube link", "YouTubeDownloaderEngine - Not a valid link",
                         JOptionPane.ERROR_MESSAGE);
             }
-        }
-        else
+        } else
             return; // nothing i can do here cuz unknown host! should never happen (handled earlier in code)
     }
 
@@ -195,7 +186,7 @@ public class LinkHandler {
                             int size = nwDownloader.getDownloadSize(url);
 
                             nwDownloader.DownloadFile(url, window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount()
-                                    - 1).toString() + seperator
+                                    - 1).toString() + CGlobals.PATH_SEPARATOR
                                     + "video_" + System.currentTimeMillis() + ".mp4", size, i, window.dTableModel);
                         } else if (hoster == DownloadPage.SharedSX) {
                             SharedSXDownloader sxDownloader = new SharedSXDownloader(window.dTableModel.
@@ -203,7 +194,7 @@ public class LinkHandler {
 
                             String filename;
 
-                            if (System.getProperty("os.name").contains("Windows"))
+                            if (CGlobals.CURRENT_OS == OS.Windows)
                                 filename = window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 1)
                                         .toString() + "\\" + sxDownloader.getFilename();
                             else
@@ -230,7 +221,7 @@ public class LinkHandler {
 
                             String filename;
 
-                            if (System.getProperty("os.name").contains("Windows"))
+                            if (CGlobals.CURRENT_OS == OS.Windows)
                                 filename = window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 1)
                                         .toString() + "\\" + sceDownloader.getFilename();
                             else
@@ -249,7 +240,7 @@ public class LinkHandler {
                             int size = vinDL.getDownloadSize(vineURL);
                             vinDL.DownloadFile(savePath, vineURL, i, size, window.dTableModel);
 
-                        }else if (hoster == DownloadPage.Vimeo) {
+                        } else if (hoster == DownloadPage.Vimeo) {
                             String vimURL = window.dTableModel.getValueAt(i, 0).toString();
                             String savePath = window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 1).toString();
                             VimeoDownloader vimDL = new VimeoDownloader(vimURL, savePath);
@@ -265,7 +256,7 @@ public class LinkHandler {
                             boolean shallRemoved = Boolean.valueOf(window.dTableModel.getValueAt(i,
                                     window.dTableModel.getColumnCount() - 3).toString());
 
-                            if (System.getProperty("os.name").contains("Windows")) {
+                            if (CGlobals.CURRENT_OS == OS.Windows) {
                                 if (shallRemoved) {
                                     String line;
                                     String pidInfo = "";
@@ -308,7 +299,7 @@ public class LinkHandler {
                                                 "VimeoDownloaderEngine - Error", JOptionPane.ERROR_MESSAGE);
                                     }
                                 }
-                            } else if (System.getProperty("os.name").contains("nux")) {
+                            } else if (CGlobals.CURRENT_OS == OS.Linux) {
                                 if (shallRemoved) {
                                     String lines = "";
                                     try {
@@ -376,7 +367,7 @@ public class LinkHandler {
                             boolean shallRemoved = Boolean.valueOf(window.dTableModel.getValueAt(i,
                                     window.dTableModel.getColumnCount() - 3).toString());
 
-                            if (System.getProperty("os.name").contains("Windows")) {
+                            if (CGlobals.CURRENT_OS == OS.Windows) {
                                 if (shallRemoved) {
                                     String line;
                                     String pidInfo = "";
@@ -419,7 +410,7 @@ public class LinkHandler {
                                                 "YouTubeDownloaderEngine - Error", JOptionPane.ERROR_MESSAGE);
                                     }
                                 }
-                            } else if (System.getProperty("os.name").contains("nux")) {
+                            } else if (CGlobals.CURRENT_OS == OS.Linux) {
                                 if (shallRemoved) {
                                     String lines = "";
                                     try {
@@ -480,12 +471,12 @@ public class LinkHandler {
                     for (int j = window.dTableModel.getRowCount() - 1; j > -1; j--) {
                         window.dTableModel.removeRow(j);
                     }
-                }catch (Exception ex){
+                } catch (Exception ex) {
                     // Job failed due to a reconnect
-                    try{
+                    try {
                         for (int i = 0; i < 4; i++) {
-                            Thread.sleep(10*1000);
-                            if(netIsAvailable() && i <= 3){
+                            Thread.sleep(10 * 1000);
+                            if (netIsAvailable() && i <= 3) {
                                 StartDownloading(window);
                             }
                         }
@@ -496,7 +487,7 @@ public class LinkHandler {
                                         "I tried to continue the download for myself,\nbut your internet connection was " +
                                         "longer away than 40 seconds so please hit 'Continue download' and continue",
                                 "MediaDownloader - Internet connection failure", JOptionPane.ERROR_MESSAGE);
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.getMessage();
                     }
                 }
@@ -519,7 +510,7 @@ public class LinkHandler {
     }
 
     private static void AddToTableModel(FreshUI window, Object url, Object hoster, Object progress,
-                                        Object removeGema, Object removeVideo, Object SavePath, Object convertAudio){
+                                        Object removeGema, Object removeVideo, Object SavePath, Object convertAudio) {
         window.dTableModel.addRow(new Object[]{
                 url,
                 hoster, progress,

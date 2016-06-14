@@ -20,19 +20,19 @@ import java.nio.file.Paths;
 public abstract class Downloader {
 
     // Methods any Downloader need
-    public boolean isFileExisting(File fileToCheck){
+    public boolean isFileExisting(File fileToCheck) {
         try {
             if (fileToCheck.exists())
                 return true;
             else
                 return false;
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             return false;
         }
     }
 
-    public int getDownloadSize(String urls){
+    public int getDownloadSize(String urls) {
         URLConnection hUrl;
         try {
             hUrl = new URL(urls).openConnection();
@@ -46,7 +46,7 @@ public abstract class Downloader {
     }
 
     public String CheckSavePath(String pathToCheck) {
-        if(System.getProperty("os.name").contains("Windows")) {
+        if (CGlobals.CURRENT_OS == OS.Windows) {
             if (!pathToCheck.endsWith("\\")) {
                 pathToCheck = pathToCheck + "\\";
             }
@@ -60,56 +60,54 @@ public abstract class Downloader {
             }
 
             return pathToCheck;
-        }
-        else if(System.getProperty("os.name").contains("nux")){
-            if(!pathToCheck.endsWith("/"))
+        } else if (CGlobals.CURRENT_OS == OS.Linux) {
+            if (!pathToCheck.endsWith("/"))
                 pathToCheck = pathToCheck + "/";
 
-            if(!Files.isDirectory(Paths.get(pathToCheck))){
-                try{
+            if (!Files.isDirectory(Paths.get(pathToCheck))) {
+                try {
                     Files.createDirectory(Paths.get(pathToCheck));
-                }catch (Exception ex){
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }
             return pathToCheck;
-        }
-        else
+        } else
             return pathToCheck;
     }
 
-    public String validateFileName(String name){
-        if(name.contains("|"))
+    public String validateFileName(String name) {
+        if (name.contains("|"))
             name = name.replace("|", "_");
 
-        if(name.contains(">"))
+        if (name.contains(">"))
             name = name.replace(">", "_");
 
-        if(name.contains("<"))
+        if (name.contains("<"))
             name = name.replace("<", "_");
 
-        if(name.contains("\""))
+        if (name.contains("\""))
             name = name.replace("\"", "_");
 
-        if(name.contains("?"))
+        if (name.contains("?"))
             name = name.replace("?", "_");
 
-        if(name.contains("*"))
+        if (name.contains("*"))
             name = name.replace("*", "_");
 
-        if(name.contains(":"))
+        if (name.contains(":"))
             name = name.replace(":", "_");
 
-        if(name.contains("\\\\"))
+        if (name.contains("\\\\"))
             name = name.replace("\\\\", "_");
 
-        if(name.contains("/"))
+        if (name.contains("/"))
             name = name.replace("/", "_");
 
         return name;
     }
 
-    public String decodeJScriptURL(String toDecode){
+    public String decodeJScriptURL(String toDecode) {
         try {
             ScriptEngineManager factory = new ScriptEngineManager();
             ScriptEngine engine = factory.getEngineByName("JavaScript");
@@ -125,12 +123,12 @@ public abstract class Downloader {
             BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
             String jsonText = readAll(rd);
             return new JSONObject(jsonText);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
 
-    public JSONObject readJSONFromVine(String url) throws  JSONException {
+    public JSONObject readJSONFromVine(String url) throws JSONException {
 
 
         try {
@@ -142,7 +140,7 @@ public abstract class Downloader {
             BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
             String jsonText = readAll(rd);
             return new JSONObject(jsonText);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
@@ -185,9 +183,9 @@ public abstract class Downloader {
         }
     } */
 
-    public void DownloadFile(String dlUrl, String filename, int downloadSize, int i, DefaultTableModel dTableModel) throws Exception{
+    public void DownloadFile(String dlUrl, String filename, int downloadSize, int i, DefaultTableModel dTableModel) throws Exception {
         try {
-            HttpURLConnection connection = (HttpURLConnection)new URL(dlUrl).openConnection();
+            HttpURLConnection connection = (HttpURLConnection) new URL(dlUrl).openConnection();
             File outputFileCache = new File(filename);
             long downloadedSize = 0;
             long fileLength = 0;
@@ -207,11 +205,9 @@ public abstract class Downloader {
             if (connection.getResponseCode() == 416) {
                 System.out.println("Response Code 416");
                 dTableModel.setValueAt("100%", i, 2);
-            }
-            else if (connection.getResponseCode() / 100 != 2) {
+            } else if (connection.getResponseCode() / 100 != 2) {
                 System.err.println("Unknown response code!");
-            }
-            else { // Continue with download
+            } else { // Continue with download
                 String connectionField = connection.getHeaderField("content-range");
 
                 if (connectionField != null) {
@@ -237,21 +233,21 @@ public abstract class Downloader {
                     output.write(data, 0, count);
                     __progress = (int) ((downloadedSize * 100) / fileLength);
 
-                    if(dTableModel != null)
+                    if (dTableModel != null)
                         dTableModel.setValueAt(__progress + "%", i, 2);
                 }
 
                 output.close();
                 input.close();
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             System.err.println(ex.getMessage() + " Error occured while downloading!");
         }
     }
 
     public void DownloadFile(URLConnection con, String filename, int downloadSize, int i, DefaultTableModel dTableModel) {
         try {
-            HttpURLConnection connection = (HttpURLConnection)con;
+            HttpURLConnection connection = (HttpURLConnection) con;
             File outputFileCache = new File(filename);
             long downloadedSize = 0;
             long fileLength = 0;
@@ -301,7 +297,7 @@ public abstract class Downloader {
                 output.close();
                 input.close();
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             System.err.println(ex.getMessage() + " Error occured while downloading!");
         }
     }

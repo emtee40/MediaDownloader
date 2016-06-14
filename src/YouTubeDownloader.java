@@ -18,7 +18,7 @@ public class YouTubeDownloader extends Downloader {
     private boolean isGemaUnblockerChecked;
     private SettingsManager settingsManager;
 
-    public YouTubeDownloader(String ytLink, String savePath, boolean isGema){
+    public YouTubeDownloader(String ytLink, String savePath, boolean isGema) {
         super();
         settingsManager = new SettingsManager();
         try {
@@ -27,18 +27,17 @@ public class YouTubeDownloader extends Downloader {
 
             // get link
             this.vidUrl = ytLink;
-            if(!ytLink.contains("youtu.be"))
+            if (!ytLink.contains("youtu.be"))
                 this.vidID = (ytLink.split("="))[1]; // first splitted is the vid id for sure
-            else{
+            else {
                 // found smth like youtu.be/
                 String[] id = ytLink.split("/");
                 this.vidID = id[id.length - 1]; // last item is the id
             }
-            if(!isGemaUnblockerChecked) {
+            if (!isGemaUnblockerChecked) {
                 webObj = new JSoupAnalyze(vidUrl);
                 vidTitle = webObj.AnalyzeWithTag("meta[property=og:title]").get(0).attr("content");
-            }
-            else {
+            } else {
                 webObj = new JSoupAnalyze("http://video.genyoutube.com/" + vidID,
                         "Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0");
                 vidTitle = webObj.AnalyzeWithTag("title").get(0).text().replace("Download ", "").replace(" - GenYoutube.com", "");
@@ -49,21 +48,21 @@ public class YouTubeDownloader extends Downloader {
 
             // check if save path is correct otherwise fix it
             this.savePath = CheckSavePath(savePath);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             System.err.println("Crashed constructor!");
             System.err.println(vidTitle);
             ex.printStackTrace();
         }
     }
 
-    public String getVideoURL(){
+    public String getVideoURL() {
         // if no gema unblocker is checked analyze with my technique
-        if(!isGemaUnblockerChecked){
+        if (!isGemaUnblockerChecked) {
             Elements allScriptTags = webObj.AnalyzeWithTag("script");
             String scriptTag = "";
 
             for (int i = 0; i < allScriptTags.size(); i++) {
-                if(allScriptTags.get(i).outerHtml().contains("var ytplayer"))
+                if (allScriptTags.get(i).outerHtml().contains("var ytplayer"))
                     scriptTag = allScriptTags.get(i).outerHtml();
             }
 
@@ -71,13 +70,13 @@ public class YouTubeDownloader extends Downloader {
             String videoFileLink = null;
 
             for (int i = 0; i < splitted.length; i++) {
-                if(splitted[i].contains("\"url_encoded_fmt_stream_map\":")) {
+                if (splitted[i].contains("\"url_encoded_fmt_stream_map\":")) {
                     videoFileLink = splitted[i].replace("\"url_encoded_fmt_stream_map\":", "");
                     break;
                 }
             }
 
-            if(videoFileLink != null) {
+            if (videoFileLink != null) {
                 String[] links = videoFileLink.split("=");
                 String[] test = null;
                 for (int i = 0; i < links.length; i++) {
@@ -85,21 +84,19 @@ public class YouTubeDownloader extends Downloader {
                         test = links[i].split("\\\\");
                 }
                 return decodeJScriptURL(test[0]);
-            }
-            else
+            } else
                 return "";
 
-        }
-        else {
+        } else {
             // 720p vids - always try to get the highest resolution to download for better quality!!
             Elements vidSources = webObj.AnalyzeWithTag("a[data-itag=22]");
-            if(vidSources.size() == 0) {
+            if (vidSources.size() == 0) {
                 // 360p vids
                 vidSources = webObj.AnalyzeWithTag("a[data-itag=18]");
             }
             String url = vidSources.get(0).attr("href");
             // check if url is correct
-            if(url.contains("http"))
+            if (url.contains("http"))
                 return url;
             else
                 return "";
@@ -112,11 +109,11 @@ public class YouTubeDownloader extends Downloader {
 
         ProcessBuilder pb;
         try {
-            if (System.getProperty("os.name").contains("Windows")) {
+            if (CGlobals.CURRENT_OS == OS.Windows) {
                 pb = new ProcessBuilder(settingsManager.GetFFMPEGDir().replace("{wd}",
                         System.getProperty("user.dir")) + "\\ffmpeg.exe", "-i",
                         file, "-vn", "-ab", "360k", "-acodec", "libmp3lame", outputfile); //or other command....
-            } else if (System.getProperty("os.name").contains("nux")) {
+            } else if (CGlobals.CURRENT_OS == OS.Linux) {
                 pb = new ProcessBuilder("ffmpeg", "-i", file, "-vn", "-ab", "360k",
                         "-acodec", "libmp3lame", outputfile);
             } else
@@ -134,8 +131,8 @@ public class YouTubeDownloader extends Downloader {
         }
     }
 
-    public void DownloadFile(String urls, int fileSize, int element, DefaultTableModel guiElements) throws Exception{
-        if(guiElements != null)
+    public void DownloadFile(String urls, int fileSize, int element, DefaultTableModel guiElements) throws Exception {
+        if (guiElements != null)
             LinkHandler.AddMp4ToList(savePath + vidTitle + ".mp4");
 
         super.DownloadFile(urls, savePath + vidTitle + ".mp4", fileSize, element, guiElements);

@@ -25,12 +25,12 @@ import java.awt.event.WindowEvent;
 public class YouTubeVideoPreview {
     private String youtubeURL;
     private MediaPlayer mediaPlayer;
-    private JFrame frame;
+    private MainFrameBase frame;
 
     public void initAndShowGUI(String url) {
         // This method is invoked on the EDT thread
         youtubeURL = url;
-        frame = new JFrame("R3DST0RMs YouTube Preview Player");
+        frame = new MainFrameBase("R3DST0RMs YouTube Preview Player");
         final JFXPanel fxPanel = new JFXPanel();
         frame.add(fxPanel, BorderLayout.CENTER);
         frame.add(ControlPanel(), BorderLayout.SOUTH);
@@ -56,7 +56,7 @@ public class YouTubeVideoPreview {
         });
     }
 
-    private JPanel ControlPanel(){
+    private JPanel ControlPanel() {
         JButton btnPlay = new JButton("Play");
         JButton btnPause = new JButton("Pause");
         JButton btnStop = new JButton("Stop");
@@ -68,8 +68,8 @@ public class YouTubeVideoPreview {
         volumeSlider.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                double slider = (double)volumeSlider.getValue();
-                mediaPlayer.setVolume((slider/100));
+                double slider = (double) volumeSlider.getValue();
+                mediaPlayer.setVolume((slider / 100));
             }
         });
 

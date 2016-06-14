@@ -20,7 +20,7 @@ public class SharedSXDownloader extends Downloader {
     private String dataname = "";
     private Map<String, String> cookies;
 
-    public SharedSXDownloader(String sharedURL){
+    public SharedSXDownloader(String sharedURL) {
 
         // fill with input type to send a post request
         try {
@@ -30,14 +30,13 @@ public class SharedSXDownloader extends Downloader {
             cookies = prep.cookies();
 
 
-
             Elements inputhidden = preparePost.select("input[type=hidden]");
             for (int i = 0; i < inputhidden.size(); i++) {
-                if(inputhidden.get(i).attr("name").equals("hash"))
+                if (inputhidden.get(i).attr("name").equals("hash"))
                     hash = inputhidden.get(i).attr("value");
-                if(inputhidden.get(i).attr("name").equals("expires"))
+                if (inputhidden.get(i).attr("name").equals("expires"))
                     expires = inputhidden.get(i).attr("value");
-                if(inputhidden.get(i).attr("name").equals("timestamp"))
+                if (inputhidden.get(i).attr("name").equals("timestamp"))
                     timestamp = inputhidden.get(i).attr("value");
             }
 
@@ -61,15 +60,15 @@ public class SharedSXDownloader extends Downloader {
         }
     }
 
-    public String getStreamURL(){
+    public String getStreamURL() {
         return this.streamURL;
     }
 
-    public String getFilename(){
+    public String getFilename() {
         return this.dataname;
     }
 
-    public void DownloadFile(String dlUrl, String filename, int downloadSize, int i, DefaultTableModel dTableModel) throws Exception{
+    public void DownloadFile(String dlUrl, String filename, int downloadSize, int i, DefaultTableModel dTableModel) throws Exception {
         try {
             URL url = new URL(dlUrl);
             URLConnection hc = url.openConnection();
@@ -79,7 +78,7 @@ public class SharedSXDownloader extends Downloader {
             hc.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");
 
             super.DownloadFile(hc, filename, downloadSize, i, dTableModel);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             System.err.println("Error while parsing download link from SharedSXDownloader to Engine!");
         }
     }

@@ -1,5 +1,6 @@
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,27 +19,27 @@ public class YouTubeRetrievePlaylist extends Downloader {
     private List<String> videoIdList = new ArrayList<>();
     private String playListTitle = "";
 
-    public YouTubeRetrievePlaylist(String playlistLink){
-        if(playlistLink.contains("&list")) {
+    public YouTubeRetrievePlaylist(String playlistLink) {
+        if (playlistLink.contains("&list")) {
             String[] splitted = playlistLink.split("&");
             for (int i = 0; i < splitted.length; i++) {
                 if (splitted[i].contains("list="))
                     playlistId = splitted[i].replace("list=", "");
             }
-        }else if(playlistLink.contains("?list")){
+        } else if (playlistLink.contains("?list")) {
             String[] splitted = playlistLink.split("\\?");
             for (int i = 0; i < splitted.length; i++) {
                 if (splitted[i].contains("list="))
                     playlistId = splitted[i].replace("list=", "");
             }
-        }else{
+        } else {
             System.err.println("No playlist found!");
         }
     }
 
-    public String[] getAllVideosFromPlaylist(String token){
+    public String[] getAllVideosFromPlaylist(String token) {
         String request;
-        if(token.equals(""))
+        if (token.equals(""))
             request = baseRequest + baseAddOn + playlistId + key;
         else
             request = baseRequest + baseAddOn + playlistId + pageToken + token + key;
@@ -52,11 +53,11 @@ public class YouTubeRetrievePlaylist extends Downloader {
                 System.err.println("No next page!");
             }
 
-            try{
+            try {
                 playListTitle = readJsonFromUrl("https://www.googleapis.com/youtube/v3/playlists?part=snippet&id="
                         + playlistId + key)
                         .getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("title");
-            }catch (Exception ex){
+            } catch (Exception ex) {
                 System.err.println("No title!");
             }
 
@@ -70,19 +71,19 @@ public class YouTubeRetrievePlaylist extends Downloader {
             }
             videoIdList.clear();
 
-            if(nextPage.equals(""))
+            if (nextPage.equals(""))
                 return items;
             else
                 return Stream.concat(Arrays.stream(items), Arrays.stream(getAllVideosFromPlaylist(nextPage)))
                         .toArray(String[]::new);
 
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             return null;
         }
     }
 
-    public String getPlayListTitle(){
+    public String getPlayListTitle() {
         return validateFileName(playListTitle);
     }
 }

@@ -19,39 +19,38 @@ public class VineDownloader extends Downloader {
 
     private String baseURL = "https://vine.co/api/timelines/users/";
 
-    public VineDownloader(String vineLink){
+    public VineDownloader(String vineLink) {
         super();
 
-        if(vineLink.contains("/u/")) {
+        if (vineLink.contains("/u/")) {
             this.isUser = true;
             String[] userID = vineLink.split("/");
             this.vineUserID = userID[userID.length - 1];
-        }
-        else
+        } else
             this.isUser = false;
 
         this.vineLink = vineLink;
     }
 
-    public String[] GetVines(){
+    public String[] GetVines() {
         vineList = URLsFromJSON("", 1); // 1 because page counter doesn't start from 0
         return vineList;
     }
 
-    private String[] URLsFromJSON(String anchor, int i){
-        try{
+    private String[] URLsFromJSON(String anchor, int i) {
+        try {
             String url;
 
-            if(anchor == "")
+            if (anchor == "")
                 url = baseURL + vineUserID;
             else
                 url = baseURL + vineUserID + "?page=" + i + "&anchor=" + anchor + "&size=10";
 
             JSONObject obj = readJSONFromVine(url);
             String nextPage = "";
-            try{
+            try {
                 nextPage = obj.getJSONObject("data").getString("anchorStr");
-            }catch (Exception ex){
+            } catch (Exception ex) {
                 System.err.println("No next page");
             }
 
@@ -61,8 +60,7 @@ public class VineDownloader extends Downloader {
             for (int j = 0; j < arr.length(); j++) {
                 try {
                     itemlist.add(arr.getJSONObject(j).getJSONArray("videoUrls").getJSONObject(0).getString("videoUrl"));
-                }
-                catch (Exception ex){
+                } catch (Exception ex) {
                     // ignore this case
                 }
             }
@@ -73,18 +71,18 @@ public class VineDownloader extends Downloader {
             }
 
             i++; // increment page counter
-            if(nextPage.equals(""))
+            if (nextPage.equals(""))
                 return items;
             else
                 return Stream.concat(Arrays.stream(items), Arrays.stream(URLsFromJSON(nextPage, i)))
                         .toArray(String[]::new);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             return null;
         }
     }
 
-    public void DownloadFile(String savePath, String urls, int element, int fileSize, DefaultTableModel guiElements) throws Exception{
+    public void DownloadFile(String savePath, String urls, int element, int fileSize, DefaultTableModel guiElements) throws Exception {
         savePath = CheckSavePath(savePath);
         String[] URL_split = urls.split("/");
         String filename = (URL_split[URL_split.length - 1].split("\\?"))[0];
@@ -92,7 +90,7 @@ public class VineDownloader extends Downloader {
     }
 
     public String GetUID() {
-        if(this.isUser)
+        if (this.isUser)
             return this.vineUserID;
         else
             return "";

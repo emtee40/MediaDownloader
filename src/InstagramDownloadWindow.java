@@ -17,7 +17,7 @@ public class InstagramDownloadWindow extends JDialog {
     private JProgressBar progressBar;
     private String[] urls;
 
-    public InstagramDownloadWindow(String[] urls){
+    public InstagramDownloadWindow(String[] urls) {
         setTitle("InstagramDownloader - Download Progress");
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         this.urls = urls;
@@ -39,7 +39,7 @@ public class InstagramDownloadWindow extends JDialog {
 
             @Override
             public void windowClosing(WindowEvent e) {
-                if(listModel.get(listModel.size() -1 ).toString().contains("100%"))
+                if (listModel.get(listModel.size() - 1).toString().contains("100%"))
                     return;
 
                 int confirm = JOptionPane.showOptionDialog(InstagramDownloadWindow.this,
@@ -71,10 +71,10 @@ public class InstagramDownloadWindow extends JDialog {
         String model = listModel.getElementAt(element).toString();
         String nListString;
 
-        if(model.contains("|")) {
+        if (model.contains("|")) {
             String[] arr = listModel.getElementAt(element).toString().split("\\|");
             nListString = arr[arr.length - 1].trim();
-        }else
+        } else
             nListString = model;
 
         listModel.setElementAt(s + " | " + nListString, element);
@@ -82,12 +82,12 @@ public class InstagramDownloadWindow extends JDialog {
         progressBar.setValue(element + 1);
     }
 
-    public void SetOverallProgress(String s){
+    public void SetOverallProgress(String s) {
         String rootTitle = " - InstagramDownloader - Download Progress";
         setTitle(s + rootTitle);
     }
 
-    public boolean isClosed(){
+    public boolean isClosed() {
         return isClosed;
     }
 }

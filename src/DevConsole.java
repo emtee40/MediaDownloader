@@ -7,12 +7,12 @@ import java.io.OutputStream;
  * Creation time: 17:48
  * Created by Dominik on 13.04.2016.
  */
-public class DevConsole extends JFrame {
+public class DevConsole extends MainFrameBase {
     private FreshUI freshUI;
     private JTextArea txtDev;
     private JScrollPane paneDev;
 
-    public DevConsole(FreshUI freshUI){
+    public DevConsole(FreshUI freshUI) {
         this.freshUI = freshUI;
 
         InitGUI();
@@ -26,24 +26,25 @@ public class DevConsole extends JFrame {
         getContentPane().add(paneDev, BorderLayout.CENTER);
 
         setTitle("MediaDownloader - Development Console");
-        setSize(400,200);
+        setSize(400, 200);
         setLocationRelativeTo(freshUI);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
         //setVisible(true);
     }
 
-    public CustomOutputStream getStream(){
+    public CustomOutputStream getStream() {
         return new CustomOutputStream(txtDev);
     }
 
-    public void showConsole(){
+    public void showConsole() {
         setVisible(true);
     }
 }
+
 /**
  * This class extends from OutputStream to redirect output to a JTextArrea
- * @author www.codejava.net
  *
+ * @author www.codejava.net
  */
 class CustomOutputStream extends OutputStream {
     private JTextArea textArea;
@@ -55,7 +56,7 @@ class CustomOutputStream extends OutputStream {
     @Override
     public void write(int b) throws IOException {
         // redirects data to the text area
-        textArea.append(String.valueOf((char)b));
+        textArea.append(String.valueOf((char) b));
         // scrolls the text area to the end of data
         textArea.setCaretPosition(textArea.getDocument().getLength());
     }

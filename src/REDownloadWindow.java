@@ -16,7 +16,7 @@ public class REDownloadWindow extends JDialog {
     private JTextArea txtLine;
     private String savePath;
 
-    public REDownloadWindow(String text, String save){
+    public REDownloadWindow(String text, String save) {
         savePath = save;
         labelHowTo = new JLabel("Please edit your line so that it is a valid URL, after that" +
                 " you can hit the download button.");
@@ -25,20 +25,19 @@ public class REDownloadWindow extends JDialog {
         btnDownload.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try{
+                try {
                     URL url = new URL(txtLine.getText().replace("&amp;", "&")); // DIRTY - Need to decode url right and encode it correctly again!
                     System.out.println("[DOWNLOADING]: " + txtLine.getText());
                     String[] filename = txtLine.getText().toString().split("/");
                     InputStream in = new BufferedInputStream(url.openStream());
-                    OutputStream out = new BufferedOutputStream(new FileOutputStream(savePath + filename[filename.length-1]));
+                    OutputStream out = new BufferedOutputStream(new FileOutputStream(savePath + filename[filename.length - 1]));
 
-                    for ( int j; (j = in.read()) != -1; ) {
+                    for (int j; (j = in.read()) != -1; ) {
                         out.write(j);
                     }
                     in.close();
                     out.close();
-                }
-                catch (Exception ex){
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }

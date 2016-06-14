@@ -13,7 +13,7 @@ import java.util.List;
  * Creation time: 23:14
  * Created by Dominik on 05.08.2015.
  */
-public class REExplorer extends JFrame {
+public class REExplorer extends MainFrameBase {
     private REExplorerActionListener guiActionListener;
 
     private JTextField txtURLLine;
@@ -60,7 +60,7 @@ public class REExplorer extends JFrame {
         InitGUI();
     }
 
-    public REExplorer(SettingsManager manager, String url){
+    public REExplorer(SettingsManager manager, String url) {
         man = manager;
         guiActionListener = new REExplorerActionListener(this);
 
@@ -72,8 +72,8 @@ public class REExplorer extends JFrame {
         txtURLLine.setText(url);
     }
 
-    private void InitBottomContainer(){
-        JPanel bottomPanel = new JPanel(new GridLayout(0,2));
+    private void InitBottomContainer() {
+        JPanel bottomPanel = new JPanel(new GridLayout(0, 2));
         txtSavePath = new JTextField(man.GetStandardSavePath());
         btnDownloadFiles = new JButton("Download all!");
         btnDownloadFiles.addActionListener(guiActionListener);
@@ -92,7 +92,7 @@ public class REExplorer extends JFrame {
         list.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if(e.getClickCount() == 2){
+                if (e.getClickCount() == 2) {
                     int index = list.locationToIndex(e.getPoint());
                     ListModel dlm = list.getModel();
                     Object item = dlm.getElementAt(index);
@@ -130,17 +130,17 @@ public class REExplorer extends JFrame {
         getContentPane().add(middlePanel, BorderLayout.CENTER);
     }
 
-    private void InitGUI(){
+    private void InitGUI() {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setDefaultLookAndFeelDecorated(true);
-        setSize(new Dimension(800,600));
+        setSize(new Dimension(800, 600));
         setLocationRelativeTo(null);
         setTitle("MediaDownloader - REExplorer (c) R3DST0RM 2015");
         setVisible(true);
     }
 
-    private void InitTopContainer(){
-        JPanel topPanel = new JPanel(new GridLayout(0,3));
+    private void InitTopContainer() {
+        JPanel topPanel = new JPanel(new GridLayout(0, 3));
         topPanel.setBorder(BorderFactory.createTitledBorder("URL to analyze"));
         //topPanel.add(new JLabel("URL to analyze:"));
         txtURLLine = new JTextField("http://example.com");
@@ -170,7 +170,7 @@ public class REExplorer extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     man.WriteRegexToFile(patternCombo.getSelectedItem().toString());
-                }catch (Exception ex){
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }
@@ -187,15 +187,15 @@ public class REExplorer extends JFrame {
         getContentPane().add(topPanel, BorderLayout.NORTH);
     }
 
-    public String getURL(){
+    public String getURL() {
         return txtURLLine.getText();
     }
 
-    public String getSelectedPattern(){
+    public String getSelectedPattern() {
         return patternCombo.getSelectedItem().toString();
     }
 
-    public void setResultURLs(List<String> resultURLs){
+    public void setResultURLs(List<String> resultURLs) {
         listOfFoundItems.clear();
 
         objects = new String[resultURLs.size()];
@@ -215,9 +215,9 @@ public class REExplorer extends JFrame {
                 //System.out.println("[DOWNLOADING]: " + listOfFoundItems.get(i));
                 String[] filename = listOfFoundItems.get(i).toString().split("/");
                 InputStream in = new BufferedInputStream(url.openStream());
-                OutputStream out = new BufferedOutputStream(new FileOutputStream(txtSavePath.getText() + filename[filename.length-1]));
+                OutputStream out = new BufferedOutputStream(new FileOutputStream(txtSavePath.getText() + filename[filename.length - 1]));
 
-                for ( int j; (j = in.read()) != -1; ) {
+                for (int j; (j = in.read()) != -1; ) {
                     out.write(j);
                 }
                 in.close();
@@ -226,8 +226,7 @@ public class REExplorer extends JFrame {
 
             JOptionPane.showMessageDialog(this, "Finished downloading!",
                     "MediaDownloader - REExplorer - Finished Downloading", JOptionPane.INFORMATION_MESSAGE);
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
@@ -243,13 +242,13 @@ public class REExplorer extends JFrame {
                 String userpass = username + ":" + password;
                 String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes());
 
-                connection.setRequestProperty ("Authorization", basicAuth);
+                connection.setRequestProperty("Authorization", basicAuth);
                 String[] filename = listOfFoundItems.get(i).toString().split("/");
 
                 InputStream in = new BufferedInputStream(connection.getInputStream());
-                OutputStream out = new BufferedOutputStream(new FileOutputStream(txtSavePath.getText() + filename[filename.length-1]));
+                OutputStream out = new BufferedOutputStream(new FileOutputStream(txtSavePath.getText() + filename[filename.length - 1]));
 
-                for ( int j; (j = in.read()) != -1; ) {
+                for (int j; (j = in.read()) != -1; ) {
                     out.write(j);
                 }
                 in.close();
@@ -259,13 +258,13 @@ public class REExplorer extends JFrame {
             JOptionPane.showMessageDialog(this, "Finished downloading!",
                     "MediaDownloader - REExplorer - Finished Downloading", JOptionPane.INFORMATION_MESSAGE);
 
-        } catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
     public void removeFromList() {
-        if(list.getSelectedIndex() >= 0)
+        if (list.getSelectedIndex() >= 0)
             listOfFoundItems.removeElementAt(list.getSelectedIndex());
         else {
             JOptionPane.showMessageDialog(this, "There is currently no item in your list.",
@@ -277,11 +276,11 @@ public class REExplorer extends JFrame {
         return man;
     }
 
-    public String getUsername(){
+    public String getUsername() {
         return txtUsername.getText();
     }
 
-    public char[] getPassword(){
+    public char[] getPassword() {
         return txtPassword.getPassword();
     }
 }

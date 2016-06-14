@@ -17,13 +17,13 @@ public class REExplorerActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        if(e.getSource() == currGUI.btnAnalyzeURL){
+        if (e.getSource() == currGUI.btnAnalyzeURL) {
             analyzeURL = currGUI.getURL();
             REWebsiteConnection webHTML = new REWebsiteConnection(analyzeURL);
 
-            if(currGUI.getUsername().equals("")) {
+            if (currGUI.getUsername().equals("")) {
                 webHTML.CreateConnection();
-            }else {
+            } else {
                 char[] password = currGUI.getPassword();
                 webHTML.CreateConnection(currGUI.getUsername(), String.valueOf(password));
             }
@@ -32,26 +32,26 @@ public class REExplorerActionListener implements ActionListener {
             currGUI.setResultURLs(regEx.GetMatches());
         }
 
-        if(e.getSource() == currGUI.btnDownloadFiles){
-            if(currGUI.getUsername().equals("")) {
+        if (e.getSource() == currGUI.btnDownloadFiles) {
+            if (currGUI.getUsername().equals("")) {
                 currGUI.downloadAllFiles();
-            }else {
+            } else {
                 char[] password = currGUI.getPassword();
                 currGUI.downloadAllFiles(currGUI.getUsername(), String.valueOf(password));
             }
         }
 
-        if(e.getSource() == currGUI.btnRemoveFromList){
+        if (e.getSource() == currGUI.btnRemoveFromList) {
             currGUI.removeFromList();
         }
 
-        if(e.getSource() == currGUI.btnGetWebsiteSource){
+        if (e.getSource() == currGUI.btnGetWebsiteSource) {
             String website = currGUI.getURL();
             REWebsiteConnection webHTML = new REWebsiteConnection(website);
 
-            if(currGUI.getUsername().equals("")) {
+            if (currGUI.getUsername().equals("")) {
                 webHTML.CreateConnection();
-            }else {
+            } else {
                 char[] password = currGUI.getPassword();
                 webHTML.CreateConnection(currGUI.getUsername(), String.valueOf(password));
             }

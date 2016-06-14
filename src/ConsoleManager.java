@@ -23,9 +23,9 @@ public class ConsoleManager {
         this.params = params;
         this.noOutput = noOutput;
 
-        if(!this.noOutput)
+        if (!this.noOutput)
             printGreeting();
-        else{ // create string cmd
+        else { // create string cmd
             for (int i = 0; i < params.length; i++) {
                 command += params[i] + " ";
             }
@@ -65,33 +65,33 @@ public class ConsoleManager {
         String[] cmdParams = command.split(" ");
 
         for (int i = 0; i < cmdParams.length; i++) {
-            if(cmdParams[i].contains("-h"))
-                hoster = cmdParams[i+1];
-            if(cmdParams[i].contains("-l"))
-                dlUrl = cmdParams[i+1];
-            if(cmdParams[i].contains("-p"))
-                filePath = cmdParams[i+1];
-            if(cmdParams[i].contains("-c"))
+            if (cmdParams[i].contains("-h"))
+                hoster = cmdParams[i + 1];
+            if (cmdParams[i].contains("-l"))
+                dlUrl = cmdParams[i + 1];
+            if (cmdParams[i].contains("-p"))
+                filePath = cmdParams[i + 1];
+            if (cmdParams[i].contains("-c"))
                 convertToMp3 = true;
-            if(cmdParams[i].contains("-d"))
+            if (cmdParams[i].contains("-d"))
                 deleteMp4 = true;
-            if(cmdParams[i].contains("-cp"))
+            if (cmdParams[i].contains("-cp"))
                 crawlProfile = true;
         }
 
         // force turn off if convert mp3 is not given
-        if(!convertToMp3)
+        if (!convertToMp3)
             deleteMp4 = false;
 
-        if(hoster.toLowerCase().contains("yt") || hoster.toLowerCase().contains("youtube"))
+        if (hoster.toLowerCase().contains("yt") || hoster.toLowerCase().contains("youtube"))
             StartYouTube();
-        if(hoster.toLowerCase().contains("sc") || hoster.toLowerCase().contains("soundcloud"))
+        if (hoster.toLowerCase().contains("sc") || hoster.toLowerCase().contains("soundcloud"))
             StartSoundCloud();
-        if(hoster.toLowerCase().contains("ig") || hoster.toLowerCase().contains("instagram"))
+        if (hoster.toLowerCase().contains("ig") || hoster.toLowerCase().contains("instagram"))
             StartInstagram();
-        if(hoster.toLowerCase().contains("fb") || hoster.toLowerCase().contains("facebook"))
+        if (hoster.toLowerCase().contains("fb") || hoster.toLowerCase().contains("facebook"))
             StartFacebook();
-        if(hoster.toLowerCase().contains("vim") || hoster.toLowerCase().contains("vimeo"))
+        if (hoster.toLowerCase().contains("vim") || hoster.toLowerCase().contains("vimeo"))
             StartVimeo();
     }
 
@@ -121,7 +121,7 @@ public class ConsoleManager {
         TaskCompleted();
     }
 
-    private void TaskCompleted(){
+    private void TaskCompleted() {
         System.out.println("Task completed - exiting ...");
     }
 }

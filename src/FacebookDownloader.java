@@ -25,25 +25,23 @@ public class FacebookDownloader extends Downloader {
     private boolean isSingleURL;
     private String url;
 
-    public FacebookDownloader(String fbLink){
+    public FacebookDownloader(String fbLink) {
         super();
         // determine if link is a album link
         // or complete profile (like: facebook.com/whatsapp)
 
-        if(fbLink.contains("/media/")) {
+        if (fbLink.contains("/media/")) {
             // id needed for processing json
             String[] URLArr = fbLink.split("/");
             String[] IDArr = URLArr[URLArr.length - 1].split("\\.");
 
             this.fbID = (IDArr[1].split("&"))[0];
             isAlbum = true;
-        }
-        else if(fbLink.contains("/?type") && fbLink.contains(("&theater"))){
+        } else if (fbLink.contains("/?type") && fbLink.contains(("&theater"))) {
             // single url
             this.isSingleURL = true;
             this.url = fbLink;
-        }
-        else {
+        } else {
             String[] URLArr = fbLink.split("/");
 
             this.fbID = URLArr[URLArr.length - 1];
@@ -54,24 +52,24 @@ public class FacebookDownloader extends Downloader {
         this.url = fbLink;
     }
 
-    public FacebookDownloader(){
+    public FacebookDownloader() {
         super();
     }
 
-    public void DownloadFile(String urls, long fileSize, int element, DefaultTableModel guiElements, String savePath) throws Exception{
+    public void DownloadFile(String urls, long fileSize, int element, DefaultTableModel guiElements, String savePath) throws Exception {
         savePath = CheckSavePath(savePath);
         String[] URL_split = urls.split("/");
 
-        if(!URL_split[URL_split.length -1].contains("?"))
-            super.DownloadFile(urls, savePath + URL_split[URL_split.length - 1], (int)fileSize, element, guiElements);
+        if (!URL_split[URL_split.length - 1].contains("?"))
+            super.DownloadFile(urls, savePath + URL_split[URL_split.length - 1], (int) fileSize, element, guiElements);
         else {
             String[] URL_further = (URL_split[URL_split.length - 1]).split("\\?");
-            super.DownloadFile(urls, savePath + URL_further[0], (int)fileSize, element, guiElements);
+            super.DownloadFile(urls, savePath + URL_further[0], (int) fileSize, element, guiElements);
         }
     }
 
-    public String[] GetDownloadLinks(){
-        if(isSingleURL){
+    public String[] GetDownloadLinks() {
+        if (isSingleURL) {
             JSoupAnalyze analyze = new JSoupAnalyze(url);
             Elements el = analyze.AnalyzeWithTag("img[class=fbPhotoImage img]");
             String[] urls = new String[el.size()];
@@ -84,16 +82,17 @@ public class FacebookDownloader extends Downloader {
         /*if(isAlbum && isVideo){
             return GetLinksFromAlbum("https://graph.facebook.com/v1.0/" + fbID + "/videos?fields=source");
         }
-        else */if(isAlbum){
+        else */
+        if (isAlbum) {
             String[] allPictures = GetLinksFromAlbum("https://graph.facebook.com/v1.0/" + fbID + "/photos?access_token=CAAT0ftuZAxBABAINQnxJoqFmvzuMlpUmfKZB0dawalmb3f5XmL9U2zmi6LeIZB1x822JLs4Fq7BuX7B8RRghQMr9ZAElGAaQg27OPUFmiTDVVFzjpRNuKWM49QNWWxZCZAr76ljf2Okix74LU9YMQxMZC9b0uz6JdliBlFRkVKmQcM0RkODPETRbI8BbQILiQ4SkT7MPZBbciZB50VjaCefDr&fields=source");
             try {
                 String[] videos = GetLinksFromAlbum("https://graph.facebook.com/v1.0/" + fbID + "/videos?access_token=CAAT0ftuZAxBABAINQnxJoqFmvzuMlpUmfKZB0dawalmb3f5XmL9U2zmi6LeIZB1x822JLs4Fq7BuX7B8RRghQMr9ZAElGAaQg27OPUFmiTDVVFzjpRNuKWM49QNWWxZCZAr76ljf2Okix74LU9YMQxMZC9b0uz6JdliBlFRkVKmQcM0RkODPETRbI8BbQILiQ4SkT7MPZBbciZB50VjaCefDr&fields=source");
                 return Stream.concat(Arrays.stream(allPictures), Arrays.stream(videos))
                         .toArray(String[]::new);
-            }catch (Exception ex){
+            } catch (Exception ex) {
                 return allPictures;
             }
-        }else if(url.contains("/videos/")){
+        } else if (url.contains("/videos/")) {
             JSoupAnalyze webObj = new JSoupAnalyze(url);
 
             // pattern
@@ -104,7 +103,7 @@ public class FacebookDownloader extends Downloader {
 
             List<String> result = new ArrayList<String>();
 
-            while(matcher.find()){
+            while (matcher.find()) {
                 result.add(matcher.group());
             }
 
@@ -114,7 +113,7 @@ public class FacebookDownloader extends Downloader {
             try {
                 ScriptEngineManager factory = new ScriptEngineManager();
                 ScriptEngine engine = factory.getEngineByName("JavaScript");
-                url =  (String) engine.eval("unescape('" + url + "');");
+                url = (String) engine.eval("unescape('" + url + "');");
             } catch (ScriptException e) {
                 e.printStackTrace();
                 return null;
@@ -122,8 +121,7 @@ public class FacebookDownloader extends Downloader {
 
             highest_res[0] = url.replace("\\", "").replace("\"", "");
             return highest_res;
-        }
-        else if(!isAlbum){
+        } else if (!isAlbum) {
             String[] album_id = GetAlbumsFromProfile("https://graph.facebook.com/" + fbID + "/albums?access_token=CAAT0ftuZAxBABAINQnxJoqFmvzuMlpUmfKZB0dawalmb3f5XmL9U2zmi6LeIZB1x822JLs4Fq7BuX7B8RRghQMr9ZAElGAaQg27OPUFmiTDVVFzjpRNuKWM49QNWWxZCZAr76ljf2Okix74LU9YMQxMZC9b0uz6JdliBlFRkVKmQcM0RkODPETRbI8BbQILiQ4SkT7MPZBbciZB50VjaCefDr&fields=id");
             List<String> links = new ArrayList<>();
 
@@ -145,21 +143,20 @@ public class FacebookDownloader extends Downloader {
                         "&fields=source");
                 return Stream.concat(Arrays.stream(allPictures), Arrays.stream(videos))
                         .toArray(String[]::new);
-            }catch (Exception ex){
+            } catch (Exception ex) {
                 return allPictures;
             }
-        }
-        else
+        } else
             return null;
     }
 
-    private String[] GetAlbumsFromProfile(String url){
+    private String[] GetAlbumsFromProfile(String url) {
         try {
             JSONObject obj = readJsonFromUrl(url);
             String nextPage;
             try {
                 nextPage = obj.getJSONObject("paging").getString("next");
-            }catch (Exception ex){
+            } catch (Exception ex) {
                 nextPage = "";
             }
 
@@ -169,8 +166,7 @@ public class FacebookDownloader extends Downloader {
             for (int i = 0; i < arr.length(); i++) {
                 try {
                     itemlist.add(arr.getJSONObject(i).getString("id"));
-                }
-                catch (Exception ex){
+                } catch (Exception ex) {
                     // ignore because if no video id is found move on
                 }
             }
@@ -180,18 +176,18 @@ public class FacebookDownloader extends Downloader {
                 items[i] = itemlist.get(i);
             }
 
-            if(nextPage.equals(""))
+            if (nextPage.equals(""))
                 return items;
             else
                 return Stream.concat(Arrays.stream(items), Arrays.stream(GetLinksFromAlbum(nextPage)))
                         .toArray(String[]::new);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             return null;
         }
     }
 
-    private String[] GetLinksFromAlbum(String url){
+    private String[] GetLinksFromAlbum(String url) {
         String requestURL = url;
 
         try {
@@ -199,7 +195,7 @@ public class FacebookDownloader extends Downloader {
             String nextPage;
             try {
                 nextPage = obj.getJSONObject("paging").getString("next");
-            }catch (Exception ex){
+            } catch (Exception ex) {
                 nextPage = "";
             }
 
@@ -209,8 +205,7 @@ public class FacebookDownloader extends Downloader {
             for (int i = 0; i < arr.length(); i++) {
                 try {
                     itemlist.add(arr.getJSONObject(i).getString("source"));
-                }
-                catch (Exception ex){
+                } catch (Exception ex) {
                     // ignore because if no video id is found move on
                 }
             }
@@ -220,12 +215,12 @@ public class FacebookDownloader extends Downloader {
                 items[i] = itemlist.get(i);
             }
 
-            if(nextPage.equals(""))
+            if (nextPage.equals(""))
                 return items;
             else
                 return Stream.concat(Arrays.stream(items), Arrays.stream(GetLinksFromAlbum(nextPage)))
                         .toArray(String[]::new);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             System.err.println("No links found or private album!");
             return null;
         }

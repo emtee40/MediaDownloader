@@ -16,7 +16,7 @@ public class VimeoDownloader extends Downloader {
 
     private JSoupAnalyze webObj;
 
-    public VimeoDownloader(String vimeoUrl, String savePath){
+    public VimeoDownloader(String vimeoUrl, String savePath) {
         super();
         settingsManager = new SettingsManager();
         this.vimeoUrl = vimeoUrl;
@@ -28,22 +28,22 @@ public class VimeoDownloader extends Downloader {
         this.videoFileUrl = webObj.AnalyzeWithTag("div[class*=player js-player]").attr("data-config-url");
     }
 
-    public String getFileUrl(){
+    public String getFileUrl() {
         JSONObject obj = null;
-        try{
+        try {
             obj = readJsonFromUrl(this.videoFileUrl);
             return obj.getJSONObject("request").getJSONObject("files")
-                        .getJSONObject("h264").getJSONObject("hd").getString("url");
-        }catch (Exception ex){
-            if(obj != null)
+                    .getJSONObject("h264").getJSONObject("hd").getString("url");
+        } catch (Exception ex) {
+            if (obj != null)
                 return obj.getJSONObject("request").getJSONObject("files").getJSONObject("h264").getJSONObject("sd").getString("url");
             else
                 return "null";
         }
     }
 
-    public void DownloadFile(String urls, int fileSize, int element, DefaultTableModel guiElements) throws Exception{
-        if(guiElements != null)
+    public void DownloadFile(String urls, int fileSize, int element, DefaultTableModel guiElements) throws Exception {
+        if (guiElements != null)
             LinkHandler.AddMp4ToList(savePath + this.fileTitle + ".mp4");
         super.DownloadFile(urls, savePath + this.fileTitle + ".mp4", fileSize, element, guiElements);
     }
@@ -54,9 +54,9 @@ public class VimeoDownloader extends Downloader {
 
         ProcessBuilder pb;
         try {
-            if (System.getProperty("os.name").contains("Windows")) {
+            if (CGlobals.CURRENT_OS == OS.Windows) {
                 pb = new ProcessBuilder(settingsManager.GetFFMPEGDir().replace("{wd}", System.getProperty("user.dir")) + "\\ffmpeg.exe", "-i", file, "-vn", "-ab", "360k", "-acodec", "libmp3lame", outputfile); //or other command....
-            } else if (System.getProperty("os.name").contains("nux")) {
+            } else if (CGlobals.CURRENT_OS == OS.Linux) {
                 pb = new ProcessBuilder("ffmpeg", "-i", file, "-vn", "-ab", "360k", "-acodec", "libmp3lame", outputfile);
             } else
                 pb = null;
@@ -68,7 +68,7 @@ public class VimeoDownloader extends Downloader {
         } catch (Exception ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Couldn't start FFMPEG (please check FFMPEG path in the options " +
-                    "[for Windows users] / please install FFMPEG for Linux users]",
+                            "[for Windows users] / please install FFMPEG for Linux users]",
                     "Error while starting converter - VimeoDownloader", JOptionPane.ERROR_MESSAGE);
         }
     }

@@ -15,12 +15,12 @@ public class MixCloudDownloader extends Downloader {
 
     private JSoupAnalyze webObj;
 
-    public MixCloudDownloader(String url, String path){
+    public MixCloudDownloader(String url, String path) {
         this.mixcloudURL = url;
         this.savePath = path;
     }
 
-    public String GetMediaURL(){
+    public String GetMediaURL() {
         webObj = new JSoupAnalyze(this.mixcloudURL, "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
         previewURL = webObj.AnalyzeWithTag("span[class=play-button play-button-cloudcast-page]")
                 .attr("m-preview");
@@ -29,7 +29,7 @@ public class MixCloudDownloader extends Downloader {
                 .replace("audiocdn", replaceAudioCDN);
     }
 
-    public void DownloadFile(String urls, int fileSize, int element, DefaultTableModel guiElements) throws Exception{
+    public void DownloadFile(String urls, int fileSize, int element, DefaultTableModel guiElements) throws Exception {
         webObj = new JSoupAnalyze(this.mixcloudURL, "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
         fileName = this.CheckSavePath(webObj.AnalyzeWithTag("meta[property=og:title]").attr("content") + ".m4a");
         super.DownloadFile(urls, savePath + fileName, fileSize, element, guiElements);

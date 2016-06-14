@@ -10,12 +10,12 @@ public class JSoupAnalyze {
     private Document site;
     private boolean isFacebookLink;
 
-    public JSoupAnalyze(String webURL){
+    public JSoupAnalyze(String webURL) {
         try {
             // set to infinite time out ... may be its better
             site = Jsoup.connect(webURL).timeout(0).get();
 
-            if(!webURL.contains("facebook"))
+            if (!webURL.contains("facebook"))
                 return;
 
             // Notify the user we got a facebook link here and need proceed a bit different
@@ -33,19 +33,19 @@ public class JSoupAnalyze {
         }
     }
 
-    public JSoupAnalyze(String webURL, String userAgent){
-        try{
+    public JSoupAnalyze(String webURL, String userAgent) {
+        try {
             site = Jsoup.connect(webURL).timeout(0).userAgent(userAgent).get();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public String GetSiteText(){
+    public String GetSiteText() {
         return site.html();
     }
 
-    public Elements AnalyzeWithTag(String analyzeTag){
+    public Elements AnalyzeWithTag(String analyzeTag) {
         return site.select(analyzeTag);
     }
 

@@ -1,17 +1,17 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.io.PrintStream;
+import java.awt.event.*;
+import java.awt.font.OpenType;
 import java.net.URL;
+import java.net.UnknownHostException;
+import javax.imageio.ImageIO;
 
 /**
  * Creation time: 00:36
  * Created by Dominik on 04.08.2015.
  */
-public class FreshUI extends JFrame implements ActionListener {
+public class FreshUI extends MainFrameBase implements ActionListener {
     private JTable downloadTable;
     public DefaultTableModel dTableModel;
     public JComboBox<DownloadPage> tlDownloadDomain;
@@ -21,12 +21,9 @@ public class FreshUI extends JFrame implements ActionListener {
     public SettingsManager settingsManager;
     private DLCManager dlcManager;
     private CrawlerFrame cwFrame;
-    private DevConsole devConsole;
 
-    private final String VERSION_STRING = "1.1b";
-
-    private final String[] tableHeader = { "Download URL", "Hoster", "Progress (in %)",
-            "Remove GEMA", "Remove MP4", "Convert to MP3", "Local Path" };
+    private final String[] tableHeader = {"Download URL", "Hoster", "Progress (in %)",
+            "Remove GEMA", "Remove MP4", "Convert to MP3", "Local Path"};
 
     private JMenuBar menuBar;
     private JMenu menuMenu;
@@ -37,39 +34,47 @@ public class FreshUI extends JFrame implements ActionListener {
     private JMenuItem menuItemImport;
     private JMenuItem menuItemExit;
     private JMenuItem menuItemCrawler;
-    private JMenuItem menuItemDevConsole;
     private JMenuItem menuItemSettingsWindow;
     private JMenuItem menuItemHelp;
     private JMenuItem menuItemAbout;
 
-    public FreshUI(){
-        CheckForUpdate();
+    public FreshUI() {
+        CGlobals.init();
+        try {
+            CheckForUpdate();
+        }
+        // Nullpointer means JSoup wasn't initialized correctly
+        catch (NullPointerException ex) {
+            JOptionPane.showMessageDialog(this,
+                    "Attention: Networkconnection might be down.", "Networkerror",
+                    JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
         InitGUIComponents();
         InitActionListeners();
         InitWindowStandards();
 
-        if(!settingsManager.GetMinimumSize())
+        if (!settingsManager.GetMinimumSize())
             setMinimumSize(getSize());
-
-        // init dev console but do not show it
-        devConsole = new DevConsole(this);
     }
 
-    private void CheckForUpdate() {
+    private void CheckForUpdate() throws NullPointerException {
         JSoupAnalyze webObj = new JSoupAnalyze("http://download.r3d-soft.de");
         String version = webObj.AnalyzeWithTag("a[class=btn btn-lg btn-outline]").text();
         version = version.replace("Download MediaDownloader v", "");
         String versionNumber = (version.split(" "))[0];
-        if(versionNumber != VERSION_STRING){
+        if (versionNumber != CGlobals.VERSION_STRING) {
             // Update available!
             String msg = "<html>" +
+                    CGlobals.STANDARD_HTML_STYLETAG_OPEN +
                     "A new software version is available at <a href='http://download.r3d-soft.de'>download.r3d-soft.de</a><br />" +
                     "Please download the new update to ensure every downloader works correctly<br />" +
                     "New version: " + versionNumber + "<br />" +
-                    "Your version: " + VERSION_STRING + "<br />" +
+                    "Your version: " + CGlobals.VERSION_STRING + "<br />" +
+                    CGlobals.STANDARD_HTML_STYLETAG_CLOSE +
                     "</html>";
 
-            JOptionPane.showMessageDialog(this, new JLabel(msg), "Update available", JOptionPane.INFORMATION_MESSAGE);
+            JHtmlOptionPane.showMessageDialog(this, msg, "Update available", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
@@ -84,38 +89,47 @@ public class FreshUI extends JFrame implements ActionListener {
         });
         menuItemExit.addActionListener(e -> System.exit(0));
         menuItemHelp.addActionListener(e -> {
-            String msg = "<html>This tool allows you to download various files from many social/video platforms (eg. YouTube)." +
+            String msg = "<html> " + CGlobals.STANDARD_HTML_STYLETAG_OPEN + "This tool allows you to download various files " +
+                    "from many social/video platforms (eg. YouTube)." +
                     "<br />For the YouTube Downloader following terms are supported:" +
                     "<ul>" +
                     "<li>user:<i>USERNAME</i> (Add all videos from a channel)</li>" +
                     "<li>https://wwww.youtube.com/watch?v=<i>VIDEOID</i> (Just adds this video to the download list)</li>" +
                     "<li>https://www.youtube.com/user/<i>USERNAME</i> (Also add all videos from a channel)</li>" +
-                    "</ul>" +
+                    "</ul>" + CGlobals.STANDARD_HTML_STYLETAG_OPEN +
                     "<b>For more information visit: <a href='http://r3d-soft.de/'>http://r3d-soft.de</a></b>" +
+                    CGlobals.STANDARD_HTML_STYLETAG_CLOSE +
+                    CGlobals.STANDARD_HTML_STYLETAG_CLOSE +
                     "</html>";
 
-            JOptionPane.showMessageDialog(this, new JLabel(msg), "Help", JOptionPane.INFORMATION_MESSAGE);
+            JHtmlOptionPane.showMessageDialog(this, msg, "Help", JOptionPane.INFORMATION_MESSAGE);
         });
         menuItemAbout.addActionListener(e -> {
-            String msg = "<html>" +
-                    "Thanks for using <b>MediaDownloader v" + VERSION_STRING + "</b> - written by R3DST0RM.<br />" +
+            String msg = "<html>" + CGlobals.STANDARD_HTML_STYLETAG_OPEN +
+                    "Thanks for using <b>MediaDownloader v" + CGlobals.VERSION_STRING + "</b> - written by R3DST0RM.<br />" +
                     "This software uses ffmpeg as MP3 converter all licenses can be found here: bin/licenses/<br /><br />" +
                     "This software is free software (GNU General Public License v2) - Source Code available at request:<br /><br />" +
-                    "E-Mail: <b>admin@r3d-soft.de</b><br />" +
-                    "Website: <b>http://r3d-soft.de</b>" +
+                    "E-Mail: <a href=\"mailto:admin@r3d-soft.de\"><b>admin@r3d-soft.de</b></a><br />" +
+                    "Website: <a href=\"http://r3d-soft.de\"><b>http://r3d-soft.de</b></a>" +
+                    CGlobals.STANDARD_HTML_STYLETAG_CLOSE +
                     "</html>";
 
-            JOptionPane.showMessageDialog(this, new JLabel(msg), "Help", JOptionPane.INFORMATION_MESSAGE);
+            JHtmlOptionPane.showMessageDialog(this, msg, "Help", JOptionPane.INFORMATION_MESSAGE);
         });
         menuItemSettingsWindow.addActionListener(e -> settingsManager.ShowSettingsWindow(this));
         menuItemCrawler.addActionListener(e -> {
             cwFrame = new CrawlerFrame(this);
             cwFrame.showWindow();
         });
-        menuItemDevConsole.addActionListener(e -> {
-            System.setOut(new PrintStream(devConsole.getStream()));
-            System.setErr(new PrintStream(devConsole.getStream()));
-            devConsole.showConsole();
+
+        // Write settings to ini file on disk on application exit
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (settingsManager != null)
+                    settingsManager.saveSettings();
+                super.windowClosing(e);
+            }
         });
     }
 
@@ -123,7 +137,7 @@ public class FreshUI extends JFrame implements ActionListener {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         pack();
         setLocationRelativeTo(null);
-        setTitle("MediaDownloader v" + VERSION_STRING + "(Fresh-UI)");
+        setTitle("MediaDownloader v" + CGlobals.VERSION_STRING + "(Fresh-UI)");
         setVisible(true);
     }
 
@@ -139,7 +153,6 @@ public class FreshUI extends JFrame implements ActionListener {
         menuItemImport = new JMenuItem("Import from DLC");
         menuItemExit = new JMenuItem("Exit");
         menuItemCrawler = new JMenuItem("Crawler");
-        menuItemDevConsole = new JMenuItem("Dev Console");
         menuItemSettingsWindow = new JMenuItem("Settings");
         menuItemHelp = new JMenuItem("Help - Usage");
         menuItemAbout = new JMenuItem("? - About this tool");
@@ -148,7 +161,6 @@ public class FreshUI extends JFrame implements ActionListener {
         menuMenu.add(menuItemExport);
         menuMenu.add(menuItemExit);
         menuSpecial.add(menuItemCrawler);
-        menuSpecial.add(menuItemDevConsole);
         menuSettings.add(menuItemSettingsWindow);
         menuHelp.add(menuItemHelp);
         menuHelp.add(menuItemAbout);
@@ -177,7 +189,7 @@ public class FreshUI extends JFrame implements ActionListener {
 
         // panel top
         JPanel topPanel = new JPanel(new BorderLayout());
-        JPanel midTop = new JPanel(new GridLayout(0,6));
+        JPanel midTop = new JPanel(new GridLayout(0, 6));
         midTop.add(new JLabel("Download URL: "));
         midTop.add(txtDownloadURL);
         midTop.add(new JLabel("Hoster (automatically set)"));
@@ -214,17 +226,17 @@ public class FreshUI extends JFrame implements ActionListener {
 
     public static void main(String[] args) {
         try {
-            if(args.length <= 0) {
+            if (args.length <= 0) {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                 new FreshUI(); // get a fancy window
-            }else{
+            } else {
                 ConsoleManager manager = new ConsoleManager(args, true);
                 manager.run();
             }
         } catch (UnsupportedLookAndFeelException | ClassNotFoundException | IllegalAccessException | InstantiationException e) {
             // handle exception - start with java native ui
             new FreshUI();
-        } catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
@@ -232,9 +244,9 @@ public class FreshUI extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        if(e.getSource() == btnAddToList){
+        if (e.getSource() == btnAddToList) {
             txtDownloadURL.setEditable(false);
-            if(tlDownloadDomain.getSelectedItem().toString().equals("Auto_Detect")){
+            if (tlDownloadDomain.getSelectedItem().toString().equals("Auto_Detect")) {
                 System.out.println("Auto-Detect URL Host");
                 try {
                     URL detectDomain = new URL(txtDownloadURL.getText());
@@ -254,7 +266,7 @@ public class FreshUI extends JFrame implements ActionListener {
                         new REExplorer(settingsManager, txtDownloadURL.getText());
                         txtDownloadURL.setText("");
                     }
-                }catch (Exception ex){
+                } catch (Exception ex) {
                     System.err.println("Malformed url try again");
                     JOptionPane.showMessageDialog(FreshUI.this, "Malformed URL detected. " +
                             "Please check the URL and try again.", "Error - Malformed URL", JOptionPane.ERROR_MESSAGE);
@@ -268,9 +280,9 @@ public class FreshUI extends JFrame implements ActionListener {
             txtDownloadURL.setEditable(true);
         }
 
-        if(e.getSource() == btnDownload){
+        if (e.getSource() == btnDownload) {
             // echo error cause no links are found
-            if(dTableModel.getRowCount() == 0) {
+            if (dTableModel.getRowCount() == 0) {
                 JOptionPane.showMessageDialog(FreshUI.this, "No links provided. " +
                                 "Please add links to the crawler (using the 'Add to list' button). " +
                                 "If this error persists please contact admin@r3d-soft.de", "Error - No links provided",
@@ -283,7 +295,7 @@ public class FreshUI extends JFrame implements ActionListener {
         }
     }
 
-    public int getDownloadPage(String toDetect){
+    public int getDownloadPage(String toDetect) {
         DownloadPage[] pages = DownloadPage.values();
 
         for (int i = 0; i < pages.length; i++) {

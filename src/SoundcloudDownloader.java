@@ -6,7 +6,7 @@ import javax.swing.table.DefaultTableModel;
  * Creation time: 03:05
  * Created by Dominik on 31.05.2015.
  */
-public class SoundcloudDownloader extends Downloader{
+public class SoundcloudDownloader extends Downloader {
     private JSoupAnalyze webObj;
     private SettingsManager settingsManager;
 
@@ -18,10 +18,10 @@ public class SoundcloudDownloader extends Downloader{
     private String audioName;
     private String soundcloud_url;
 
-    public SoundcloudDownloader(String soundcloud_url, String savePath){
+    public SoundcloudDownloader(String soundcloud_url, String savePath) {
         super();
         settingsManager = new SettingsManager();
-        try{
+        try {
             this.soundcloud_url = soundcloud_url;
             this.savePath = CheckSavePath(savePath);
 
@@ -31,12 +31,12 @@ public class SoundcloudDownloader extends Downloader{
             String[] track = (webObj.AnalyzeWithTag("meta[property=twitter:app:url:googleplay]").
                     get(0).attr("content")).split(":");
             this.trackID = track[track.length - 1];
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    public String getAudioURL(){
+    public String getAudioURL() {
         try {
             // Outdated version to get SoundCloud Songs Fixed
             //Connection.Response res = Jsoup.
@@ -50,13 +50,13 @@ public class SoundcloudDownloader extends Downloader{
             JSONObject obj = readJsonFromUrl(baseURI + trackID + "/streams?client_id=" + clientID);
             return obj.getString("http_mp3_128_url");
 
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             return "null";
         }
     }
 
-    public void DownloadFile(String urls, int fileSize, int element, DefaultTableModel guiElements) throws Exception{
+    public void DownloadFile(String urls, int fileSize, int element, DefaultTableModel guiElements) throws Exception {
         super.DownloadFile(urls, savePath + this.audioName + ".mp3", fileSize, element, guiElements);
     }
 }

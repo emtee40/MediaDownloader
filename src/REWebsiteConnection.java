@@ -13,11 +13,11 @@ public class REWebsiteConnection {
 
     private StringBuilder content;
 
-    public REWebsiteConnection(String URLs){
+    public REWebsiteConnection(String URLs) {
         this.URLs = URLs;
     }
 
-    public void CreateConnection(){
+    public void CreateConnection() {
         try {
             URL site = new URL(URLs);
             URLConnection connection = site.openConnection();
@@ -41,15 +41,14 @@ public class REWebsiteConnection {
             String inputLine;
             content = new StringBuilder();
 
-            while((inputLine = source.readLine()) != null){
+            while ((inputLine = source.readLine()) != null) {
                 content.append(inputLine);
             }
 
             source.close(); // close the reader to clean up resources
-        }
-        catch (Exception msg){
+        } catch (Exception msg) {
             System.err.println(msg.getMessage());
-            if(msg.getMessage().contains("401 for URL")){
+            if (msg.getMessage().contains("401 for URL")) {
                 JOptionPane.showMessageDialog(null, "401 - Unauthorized please provide username and password",
                         "401 - Unauthorized", JOptionPane.ERROR_MESSAGE);
             }
@@ -58,38 +57,37 @@ public class REWebsiteConnection {
 
     // Create Connection overloaded
     public void CreateConnection(String username, String password) {
-        try{
+        try {
 
             URL site = new URL(URLs);
             URLConnection connection = site.openConnection();
             String userpass = username + ":" + password;
             String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes());
-            connection.setRequestProperty ("Authorization", basicAuth);
+            connection.setRequestProperty("Authorization", basicAuth);
 
             BufferedReader source = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
 
             String inputLine;
             content = new StringBuilder();
 
-            while((inputLine = source.readLine()) != null){
+            while ((inputLine = source.readLine()) != null) {
                 content.append(inputLine);
             }
 
             source.close(); // close the reader to clean up resources
-        }
-        catch (Exception msg){
+        } catch (Exception msg) {
             System.err.println(msg.getMessage());
-            if(msg.getMessage().contains("401 for URL")){
+            if (msg.getMessage().contains("401 for URL")) {
                 JOptionPane.showMessageDialog(null, "401 - Unauthorized please provide username and password",
                         "401 - Unauthorized", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
 
-    public String GetContent(){
+    public String GetContent() {
         try {
             return this.content.toString();
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             System.err.println("No data available");
             return "";
         }

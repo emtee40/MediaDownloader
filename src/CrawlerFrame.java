@@ -5,7 +5,7 @@ import java.awt.*;
  * Creation time: 20:17
  * Created by Dominik on 09.04.2016.
  */
-public class CrawlerFrame extends JFrame {
+public class CrawlerFrame extends MainFrameBase {
     private Crawler crawlerLogic;
     private FreshUI freshUIMain;
 
@@ -14,7 +14,7 @@ public class CrawlerFrame extends JFrame {
     private JPasswordField txtPassword;
     private JButton btnCrawl;
 
-    public CrawlerFrame(FreshUI freshUIMain){
+    public CrawlerFrame(FreshUI freshUIMain) {
         this.freshUIMain = freshUIMain;
 
         InitGUI();
@@ -38,7 +38,7 @@ public class CrawlerFrame extends JFrame {
 
         //
         // Top Panel
-        JPanel topPanel = new JPanel(new GridLayout(0,2));
+        JPanel topPanel = new JPanel(new GridLayout(0, 2));
         topPanel.add(new JLabel("URL:"));
         topPanel.add(txtURL);
         topPanel.add(new JLabel("Username:"));

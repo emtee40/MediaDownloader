@@ -29,7 +29,9 @@ public class SettingsManagerPanel extends JPanel {
     private JLabel lblCheckMinSize;
     private JCheckBox checkMinimumSize;
 
-    public SettingsManagerPanel(SettingsManager man, FreshUI win){
+    // TODO: Use this panel also in SettingsManagerWindow for codereduction ! ! !
+
+    public SettingsManagerPanel(SettingsManager man, FreshUI win) {
         //lblSavePath = new JLabel("Standard save path:");
         lblUpdated = new JLabel("");
         btnSelectStandardSave = new JButton("Select standard save path:");
@@ -45,7 +47,7 @@ public class SettingsManagerPanel extends JPanel {
             if (dirChooser.showOpenDialog(win) == JFileChooser.APPROVE_OPTION)
                 path = dirChooser.getSelectedFile().getAbsolutePath();
 
-            if (System.getProperty("os.name").contains("Windows"))
+            if (CGlobals.CURRENT_OS == OS.Windows)
                 path = path.replace("\\", "\\\\");
 
             txtSavePath.setText(path);
@@ -56,7 +58,7 @@ public class SettingsManagerPanel extends JPanel {
         checkConvertToMp3 = new JCheckBox("", man.GetConvertToMP3());
         checkConvertToMp3.addActionListener(e -> btnSave.doClick());
         lblRemoveMp4 = new JLabel("Remove video files after mp3 created");
-        checkRemoveMp4 = new JCheckBox("", man.GetRemoveVidFiles());
+        checkRemoveMp4 = new JCheckBox("", man.GetRemoveMP4());
         checkRemoveMp4.addActionListener(e -> btnSave.doClick());
         lblRemoveGEMA = new JLabel("Remove GEMA");
         checkRemoveGEMA = new JCheckBox("", man.GetRemoveGEMA());
@@ -78,7 +80,7 @@ public class SettingsManagerPanel extends JPanel {
             if (dirChooser.showOpenDialog(win) == JFileChooser.APPROVE_OPTION)
                 path = dirChooser.getSelectedFile().getAbsolutePath();
 
-            if (System.getProperty("os.name").contains("Windows"))
+            if (CGlobals.CURRENT_OS == OS.Windows)
                 path = path.replace("\\", "\\\\");
 
             txtFFMPEG.setText(path);
@@ -94,16 +96,14 @@ public class SettingsManagerPanel extends JPanel {
         btnSave = new JButton("Save");
         btnSave.addActionListener(e -> {
             try {
-                File settings = new File(settingsFile);
-                PrintWriter out = new PrintWriter(settings);
-                out.println("savepath:" + txtSavePath.getText());
-                out.println("converttomp3:" + checkConvertToMp3.isSelected());
-                out.println("removegema:" + checkRemoveGEMA.isSelected());
-                out.println("ffmpeg:" + txtFFMPEG.getText().replace(System.getProperty("user.dir"), "{wd}"));
-                out.println("removeMp4:" + checkRemoveMp4.isSelected());
-                out.println("minSize:" + checkMinimumSize.isSelected());
-                out.close();
-                //JOptionPane.showMessageDialog(win, "Successfully updated settings!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                // Values are stored to SettingsManager - object
+                // and written to disk on application exit
+                man.setSavePath(txtSavePath.getText());
+                man.setConvertToMP3(checkConvertToMp3.isSelected());
+                man.setRemoveGema(checkRemoveGEMA.isSelected());
+                man.setFFMPEGPath(txtFFMPEG.getText().replace(System.getProperty("user.dir"), "{wd}"));
+                man.setRemoveMP4(checkRemoveMp4.isSelected());
+                man.setMinSize(checkMinimumSize.isSelected());
 
                 lblUpdated.setText("Updated settings! Last change: " + new SimpleDateFormat("HH:mm:ss").format(new Date()));
             } catch (Exception ex) {
@@ -111,7 +111,7 @@ public class SettingsManagerPanel extends JPanel {
             }
         });
 
-        panel = new JPanel(new GridLayout(0,2));
+        panel = new JPanel(new GridLayout(0, 2));
         //panel.add(lblSavePath);
         panel.add(btnSelectStandardSave);
         panel.add(txtSavePath);
@@ -133,7 +133,7 @@ public class SettingsManagerPanel extends JPanel {
         settingsFile = man.GetSettingsFile();
     }
 
-    public JPanel getPanel(){
+    public JPanel getPanel() {
         panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         return panel;
     }
