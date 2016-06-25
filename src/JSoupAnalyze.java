@@ -3,6 +3,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 /**
+ * @deprecated This class is deprecated. Better use - HTTPAnalyzer
  * Creation time: 03:05
  * Created by Dominik on 20.04.2015.
  */
