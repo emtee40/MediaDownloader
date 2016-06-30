@@ -42,6 +42,7 @@ public class JSoupAnalyze {
         }
     }
 
+
     public String GetSiteText() {
         return site.html();
     }

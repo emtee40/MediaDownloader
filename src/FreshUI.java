@@ -39,6 +39,9 @@ public class FreshUI extends MainFrameBase implements ActionListener {
     private JMenuItem menuItemAbout;
 
     public FreshUI() {
+        // DEBUG stuff
+        //try{new IndexOfDownloader().test();}catch (Exception e){}
+
         CGlobals.init();
         try {
             CheckForUpdate();
@@ -48,7 +51,6 @@ public class FreshUI extends MainFrameBase implements ActionListener {
             JOptionPane.showMessageDialog(this,
                     "Attention: Networkconnection might be down.", "Networkerror",
                     JOptionPane.ERROR_MESSAGE);
-            ex.printStackTrace();
         }
         InitGUIComponents();
         InitActionListeners();
@@ -69,12 +71,12 @@ public class FreshUI extends MainFrameBase implements ActionListener {
         if (versionNumber != CGlobals.VERSION_STRING) {
             // Update available!
             String msg = "<html>" +
-                    CGlobals.STANDARD_HTML_STYLETAG_OPEN +
+                    JHtmlOptionPane.STANDARD_HTML_STYLETAG_OPEN +
                     "A new software version is available at <a href='http://download.r3d-soft.de'>download.r3d-soft.de</a><br />" +
                     "Please download the new update to ensure every downloader works correctly<br />" +
                     "New version: " + versionNumber + "<br />" +
                     "Your version: " + CGlobals.VERSION_STRING + "<br />" +
-                    CGlobals.STANDARD_HTML_STYLETAG_CLOSE +
+                    JHtmlOptionPane.STANDARD_HTML_STYLETAG_CLOSE +
                     "</html>";
 
             JHtmlOptionPane.showMessageDialog(this, msg, "Update available", JOptionPane.INFORMATION_MESSAGE);
@@ -92,29 +94,29 @@ public class FreshUI extends MainFrameBase implements ActionListener {
         });
         menuItemExit.addActionListener(e -> System.exit(0));
         menuItemHelp.addActionListener(e -> {
-            String msg = "<html> " + CGlobals.STANDARD_HTML_STYLETAG_OPEN + "This tool allows you to download various files " +
+            String msg = "<html> " + JHtmlOptionPane.STANDARD_HTML_STYLETAG_OPEN + "This tool allows you to download various files " +
                     "from many social/video platforms (eg. YouTube)." +
                     "<br />For the YouTube Downloader following terms are supported:" +
                     "<ul>" +
                     "<li>user:<i>USERNAME</i> (Add all videos from a channel)</li>" +
                     "<li>https://wwww.youtube.com/watch?v=<i>VIDEOID</i> (Just adds this video to the download list)</li>" +
                     "<li>https://www.youtube.com/user/<i>USERNAME</i> (Also add all videos from a channel)</li>" +
-                    "</ul>" + CGlobals.STANDARD_HTML_STYLETAG_OPEN +
+                    "</ul>" + JHtmlOptionPane.STANDARD_HTML_STYLETAG_OPEN +
                     "<b>For more information visit: <a href='http://r3d-soft.de/'>http://r3d-soft.de</a></b>" +
-                    CGlobals.STANDARD_HTML_STYLETAG_CLOSE +
-                    CGlobals.STANDARD_HTML_STYLETAG_CLOSE +
+                    JHtmlOptionPane.STANDARD_HTML_STYLETAG_CLOSE +
+                    JHtmlOptionPane.STANDARD_HTML_STYLETAG_CLOSE +
                     "</html>";
 
             JHtmlOptionPane.showMessageDialog(this, msg, "Help", JOptionPane.INFORMATION_MESSAGE);
         });
         menuItemAbout.addActionListener(e -> {
-            String msg = "<html>" + CGlobals.STANDARD_HTML_STYLETAG_OPEN +
+            String msg = "<html>" + JHtmlOptionPane.STANDARD_HTML_STYLETAG_OPEN +
                     "Thanks for using <b>MediaDownloader v" + CGlobals.VERSION_STRING + "</b> - written by R3DST0RM.<br />" +
                     "This software uses ffmpeg as MP3 converter all licenses can be found here: bin/licenses/<br /><br />" +
                     "This software is free software (GNU General Public License v2) - Source Code available at request:<br /><br />" +
                     "E-Mail: <a href=\"mailto:admin@r3d-soft.de\"><b>admin@r3d-soft.de</b></a><br />" +
                     "Website: <a href=\"http://r3d-soft.de\"><b>http://r3d-soft.de</b></a>" +
-                    CGlobals.STANDARD_HTML_STYLETAG_CLOSE +
+                    JHtmlOptionPane.STANDARD_HTML_STYLETAG_CLOSE +
                     "</html>";
 
             JHtmlOptionPane.showMessageDialog(this, msg, "Help", JOptionPane.INFORMATION_MESSAGE);

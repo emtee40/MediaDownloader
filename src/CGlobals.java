@@ -6,10 +6,8 @@
 public class CGlobals {
 
     public static final String VERSION_STRING = "1.1b";
-    public static OS CURRENT_OS;
+    public static OS CURRENT_OS = OS.Undefined;
     public static String PATH_SEPARATOR;
-    public static final String STANDARD_HTML_STYLETAG_OPEN = "<p style='font-family: sans-serif; font: 9px;'>";
-    public static final String STANDARD_HTML_STYLETAG_CLOSE = "</p>";
 
     public static void init() {
         // Get OS

@@ -7,7 +7,10 @@ import java.awt.*;
  * <p>
  * Wrapper Class for Html-Optionpane with clickable links etc.
  */
+
 public class JHtmlOptionPane {
+    public static final String STANDARD_HTML_STYLETAG_OPEN = "<p style='font-family: sans-serif; font: 9px;'>";
+    public static final String STANDARD_HTML_STYLETAG_CLOSE = "</p>";
 
     public static void showMessageDialog(Component parentComponent,
                                          String htmlMessage, String title, int messageType) {
