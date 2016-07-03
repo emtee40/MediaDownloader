@@ -11,12 +11,167 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
 
 /**
- * Creation time: 03:04
  * Created by Dominik on 01.06.2015.
+ *
+ * Downloader Class is a abstract class to define the general downloader.
+ * This class should be inherited by every sub-type of downloader
  */
+abstract class Downloaderv2 {
+
+    // Public Methods
+
+    /**
+     * This method determines if a given file exists or not
+     * @param f File to check
+     * @return True if file exists; False if file doesn't exist.
+     */
+    public boolean isFileExisting(File f) {
+        try {
+            if (f.exists())
+                return true;
+            else
+                return false;
+        } catch (SecurityException ex){
+            // maybe log the error here
+            return true;
+        }
+    }
+
+    /**
+     * This method determines the download size in bytes for a specified URL/File
+     * @param url URL as String to determine the download size
+     * @return Returns the download size of a given url. (Returns -1 if an IOException occured!)
+     */
+    public int getDownloadSize(String url){
+        try {
+            URLConnection hUrl = new URL(url).openConnection();
+            return hUrl.getContentLength();
+        } catch(IOException e) {
+            return -1;
+        }
+    }
+
+    /**
+     * This method normalizes a given String which represents a file path on any OS
+     * @deprecated Better to use isDirectoryExisting()
+     * @param pathToCheck String which needs to be checked
+     * @return Normalized Path String
+     */
+    public String CheckSavePath(String pathToCheck){
+        if (CGlobals.CURRENT_OS == OS.Windows) {
+            if (!pathToCheck.endsWith("\\")) {
+                pathToCheck = pathToCheck + "\\";
+            }
+
+            if (!Files.isDirectory(Paths.get(pathToCheck))) {
+                try {
+                    Files.createDirectory(Paths.get(pathToCheck));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            return pathToCheck;
+        } else if (CGlobals.CURRENT_OS == OS.Linux) {
+            if (!pathToCheck.endsWith("/"))
+                pathToCheck = pathToCheck + "/";
+
+            if (!Files.isDirectory(Paths.get(pathToCheck))) {
+                try {
+                    Files.createDirectory(Paths.get(pathToCheck));
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+            return pathToCheck;
+        } else
+            return pathToCheck;
+    }
+
+    /**
+     * Checks whether or not a directory exists.
+     * @param path Path to check
+     * @return  Returns True if is existing | False if directory doesn't exist
+     * @throws InvalidPathException
+     */
+    public boolean isDirectoryExisting(String path) throws InvalidPathException {
+        try{
+            if(Files.exists(Paths.get(path))){
+                return true;
+            } else {
+                return false;
+            }
+        } catch (InvalidPathException e){
+            throw e;
+        } catch (SecurityException e){
+            return true;
+        }
+    }
+
+    /**
+     * This method creates a directory if it doesn't exist already
+     * @param path Path to the folder to create
+     * @return Return true on success
+     * @throws InvalidPathException
+     * @throws IOException
+     */
+    public boolean createDirectory(String path) throws InvalidPathException, IOException {
+        try {
+            if(isDirectoryExisting(path))
+                return true;
+            else {
+                Files.createDirectory(Paths.get(path));
+                return true;
+            }
+        } catch (InvalidPathException e) {
+            throw e;
+        } catch (IOException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * This method validates the filename for Windows, Unix and Android systems
+     * All unsafe characters are replaced by an underscore "_"
+     * @param sFileName
+     * @return Returns the modified filename
+     */
+    public String validateFileName(String sFileName){
+        if (sFileName.contains("|"))
+            sFileName = sFileName.replace("|", "_");
+
+        if (sFileName.contains(">"))
+            sFileName = sFileName.replace(">", "_");
+
+        if (sFileName.contains("<"))
+            sFileName = sFileName.replace("<", "_");
+
+        if (sFileName.contains("\""))
+            sFileName = sFileName.replace("\"", "_");
+
+        if (sFileName.contains("?"))
+            sFileName = sFileName.replace("?", "_");
+
+        if (sFileName.contains("*"))
+            sFileName = sFileName.replace("*", "_");
+
+        if (sFileName.contains(":"))
+            sFileName = sFileName.replace(":", "_");
+
+        if (sFileName.contains("\\\\"))
+            sFileName = sFileName.replace("\\\\", "_");
+
+        if (sFileName.contains("/"))
+            sFileName = sFileName.replace("/", "_");
+
+        return sFileName;
+    }
+}
+
 public abstract class Downloader {
 
     // Methods any Downloader need

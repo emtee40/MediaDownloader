@@ -8,6 +8,7 @@ public class HTTPAnalyzerException extends Exception {
     public HTTPAnalyzerException(String sMessage){
         super(sMessage);
     }
+
     public HTTPAnalyzerException(String sMessage, Throwable tCause){
         super(sMessage, tCause);
     }

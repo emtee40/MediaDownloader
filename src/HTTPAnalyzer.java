@@ -43,27 +43,25 @@ public class HTTPAnalyzer {
                 site = EstablishConnection(this._URLPackage.getURL(),false);
             else
                 site = EstablishConnection(this._URLPackage.getURL(),true);
+
+            if(site != null)
+                return new HTTPAnalyzerCode(200, "OK", true);
+            else
+                throw new HTTPAnalyzerException("Empty set", new Throwable("Parsing error"));
         }
         catch (HttpStatusException ex){
             int statusCode =  ex.getStatusCode();
 
             // Unauthorized
             if(statusCode == 401){
-                // Could do sth here
+                throw new HTTPAnalyzerException("401 Unauthorized", new Throwable("No or wrong credentials provided"));
             }
 
-            //return statusCode;
-            return new HTTPAnalyzerCode(statusCode);
+            throw new HTTPAnalyzerException(statusCode + " " + ex.getMessage());
         }
-        catch (Exception ex){
-            ex.printStackTrace();
-            // 0 -> Error
-            //return 0;
-            return new HTTPAnalyzerCode(0, "Error!", false);
+        catch (IOException ex){
+            throw new HTTPAnalyzerException(ex.getMessage());
         }
-        // 200 -> OK
-        //return 200;
-        return new HTTPAnalyzerCode(200, "OK", true);
     }
 
     // Public Methods

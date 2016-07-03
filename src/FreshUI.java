@@ -39,9 +39,6 @@ public class FreshUI extends MainFrameBase implements ActionListener {
     private JMenuItem menuItemAbout;
 
     public FreshUI() {
-        // DEBUG stuff
-        //try{new IndexOfDownloader().test();}catch (Exception e){}
-
         CGlobals.init();
         try {
             CheckForUpdate();
@@ -49,7 +46,7 @@ public class FreshUI extends MainFrameBase implements ActionListener {
         // Nullpointer means JSoup wasn't initialized correctly
         catch (NullPointerException ex) {
             JOptionPane.showMessageDialog(this,
-                    "Attention: Networkconnection might be down.", "Networkerror",
+                    "Attention: Network Connection might be down.", "Network Error",
                     JOptionPane.ERROR_MESSAGE);
         }
         InitGUIComponents();
