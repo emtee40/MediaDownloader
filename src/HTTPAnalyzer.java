@@ -37,7 +37,7 @@ public class HTTPAnalyzer {
         credentials = cred;
     }
 
-    public int parse(){
+    public HTTPAnalyzerCode parse() throws HTTPAnalyzerException {
         try{
             if(credentials == null)
                 site = EstablishConnection(this._URLPackage.getURL(),false);
@@ -52,21 +52,19 @@ public class HTTPAnalyzer {
                 // Could do sth here
             }
 
-            return statusCode;
+            //return statusCode;
+            return new HTTPAnalyzerCode(statusCode);
         }
         catch (Exception ex){
             ex.printStackTrace();
             // 0 -> Error
-            return 0;
+            //return 0;
+            return new HTTPAnalyzerCode(0, "Error!", false);
         }
         // 200 -> OK
-        return 200;
+        //return 200;
+        return new HTTPAnalyzerCode(200, "OK", true);
     }
-
-//    private int parseWithCredentials(){
-//        if(credentials == null)
-//            return 0;
-//    }
 
     // Public Methods
     public String getSiteHtml(){
@@ -77,12 +75,14 @@ public class HTTPAnalyzer {
         return site;
     }
 
+    public HTTPCredentials getCredentials() { return credentials; }
+
     public void setSite(Document doc){
         this.site = doc;
     }
 
     // Public static Methods
-    public static Document doFakeSubmit(Document site, String userAgent, Map<String, String> data){
+    public static Document doFakeSubmit(Document site, String userAgent, Map<String, String> data, boolean useCredentials){
         Document fake = site;
 
 
@@ -92,8 +92,6 @@ public class HTTPAnalyzer {
 
     // Helper Methods
     private Document EstablishConnection(String webURL, boolean useCredentials) throws IOException {
-        //try {
-
         /*
             Establish connection without credentials
          */
@@ -126,40 +124,78 @@ public class HTTPAnalyzer {
                         .get();
             }
         }
-        //}
-/*        catch (Exception e){
-            // print a fancy message
-            e.printStackTrace();
-            return null;
-        }*/
     }
 
-    private Document EstablishConnection(String webURL, String userAgent){
-        try {
+    private Document EstablishConnection(String webURL, String userAgent, boolean useCredentials) throws IOException {
+        /*
+            Establish connection without credentials
+         */
+        if(!useCredentials) {
             // Needed since Android is a bit bitchy with creating jsoup connections
             if (CGlobals.CURRENT_OS == OS.Android) {
                 return Jsoup.connect(webURL).userAgent(userAgent).get();
             } else { // Every other OS like Windows, Linux and Mac
                 return Jsoup.connect(webURL).timeout(0).userAgent(userAgent).get();
             }
-        } catch (Exception e){
-            // print a fancy message
-            e.printStackTrace();
-            return null;
+        }
+
+        /*
+            Establish connection with credentials
+        */
+        else {
+            if(credentials == null)
+                return null; // maybe return custom error here
+
+            if(CGlobals.CURRENT_OS == OS.Android) {
+                return Jsoup
+                        .connect(webURL)
+                        .userAgent(userAgent)
+                        .header("Authorization", "Basic " + credentials.getBase64())
+                        .get();
+            } else {
+                return Jsoup
+                    .connect(webURL)
+                    .userAgent(userAgent)
+                    .timeout(0)
+                    .header("Authorization", "Basic " + credentials.getBase64())
+                    .get();
+            }
         }
     }
-    private Document EstablishConnection(String webURL, Map<String, String> data, String userAgent){
-        try {
+
+    private Document EstablishConnection(String webURL, Map<String, String> data, String userAgent, boolean useCredentials) throws IOException {
+        /*
+            Establish connection without credentials
+         */
+        if (!useCredentials) {
             // Needed since Android is a bit bitchy with creating jsoup connections
             if (CGlobals.CURRENT_OS == OS.Android) {
                 return Jsoup.connect(webURL).userAgent(userAgent).data(data).post();
             } else { // Every other OS like Windows, Linux and Mac
                 return Jsoup.connect(webURL).timeout(0).userAgent(userAgent).data(data).post();
             }
-        } catch (Exception e){
-            // print a fancy message
-            e.printStackTrace();
-            return null;
+        }
+
+        /*
+            Establish connection with credentials
+         */
+        else {
+            if (CGlobals.CURRENT_OS == OS.Android) {
+                return Jsoup
+                        .connect(webURL)
+                        .userAgent(userAgent)
+                        .data(data)
+                        .header("Authorization", "Basic " + credentials.getBase64())
+                        .post();
+            } else { // Every other OS like Windows, Linux and Mac
+                return Jsoup
+                        .connect(webURL)
+                        .timeout(0)
+                        .userAgent(userAgent)
+                        .data(data)
+                        .header("Authorization", "Basic " + credentials.getBase64())
+                        .post();
+            }
         }
     }
 }
