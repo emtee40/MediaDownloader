@@ -170,6 +170,65 @@ abstract class Downloaderv2 {
 
         return sFileName;
     }
+
+    /**
+     * This method decodes a given URL using a JavaScript-Engine
+     * @param toDecode String URL which needs to be decoded
+     * @return Returns the decoded URL as String
+     */
+    public String decodeJScriptURL(String toDecode) {
+        try{
+            ScriptEngineManager factory = new ScriptEngineManager();
+            return (String) factory.getEngineByName("JavaScript").eval("unescape('" + toDecode + "')");
+        } catch (ScriptException e) {
+            return "";
+        }
+    }
+
+    /**
+     * This methods interprets the website response as JSON and returns the result in a JSON format
+     * @param url String which contains the url
+     * @return Returns a JSON Object
+     * @throws JSONException Thrown if response is a non proper JSON format
+     */
+    public JSONObject readJSON(String url) throws JSONException {
+        try {
+            HTTPAnalyzer httpAnalyzer = new HTTPAnalyzer(url);
+            HTTPAnalyzerCode httpCode = httpAnalyzer.parse();
+
+            if(httpCode.getCode() == 200) {
+                return new JSONObject(httpAnalyzer.getBody());
+            } else {
+                throw new HTTPAnalyzerException(httpCode.getCode() + " Execution failed");
+            }
+        } catch (HTTPAnalyzerException e) {
+            // just return an empty json object maybe encode, that an error occured
+            return new JSONObject("{}");
+        }
+    }
+
+    /**
+     * This methods interprets the website response as JSON and returns the result in a JSON format
+     * @param url String which contains the url
+     * @param requestProperties Specific data attached as Request Property (used for eg. VINE)
+     * @return Returns a JSON Object
+     * @throws JSONException Thrown if response is a non proper JSON format
+     */
+    public JSONObject readJSON(String url, String[][] requestProperties) throws JSONException {
+        try {
+            HTTPAnalyzer httpAnalyzer = new HTTPAnalyzer(url, requestProperties);
+            HTTPAnalyzerCode httpCode = httpAnalyzer.parse();
+
+            if(httpCode.getCode() == 200) {
+                return new JSONObject(httpAnalyzer.getBody());
+            } else {
+                throw new HTTPAnalyzerException(httpCode.getCode() + " Execution failed");
+            }
+        } catch (HTTPAnalyzerException e) {
+            // return an empty json object maybe encode, that an error occured
+            return new JSONObject("{}");
+        }
+    }
 }
 
 public abstract class Downloader {

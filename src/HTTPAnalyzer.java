@@ -18,7 +18,9 @@ public class HTTPAnalyzer {
     private URLPackage _URLPackage;
     private HTTPCredentials credentials;
     private Document site;
+    private String[][] requestProperties;
 
+    // Constructors
     public HTTPAnalyzer(URLPackage url){
         this._URLPackage = url;
     }
@@ -37,12 +39,22 @@ public class HTTPAnalyzer {
         credentials = cred;
     }
 
+    public HTTPAnalyzer(String url, String[][] requestProperties){
+        this(url);
+        this.requestProperties = requestProperties;
+    }
+
+    // Public Methods
     public HTTPAnalyzerCode parse() throws HTTPAnalyzerException {
         try{
-            if(credentials == null)
+            if(credentials == null && requestProperties == null)
                 site = EstablishConnection(this._URLPackage.getURL(),false);
-            else
+            else if(credentials != null && requestProperties == null)
                 site = EstablishConnection(this._URLPackage.getURL(),true);
+            else if(credentials == null && requestProperties != null)
+                site = EstablishConnection(this._URLPackage.getURL(), this.requestProperties, false);
+            else if(credentials != null && requestProperties != null)
+                site = EstablishConnection(this._URLPackage.getURL(), this.requestProperties, true);
 
             if(site != null)
                 return new HTTPAnalyzerCode(200, "OK", true);
@@ -64,9 +76,12 @@ public class HTTPAnalyzer {
         }
     }
 
-    // Public Methods
     public String getSiteHtml(){
         return site.html();
+    }
+
+    public String getBody() {
+        return site.body().data();
     }
 
     public Document getDocument(){
@@ -96,9 +111,9 @@ public class HTTPAnalyzer {
         if(!useCredentials){
             // Needed since Android is a bit bitchy with creating jsoup connections
             if (CGlobals.CURRENT_OS == OS.Android) {
-                return Jsoup.connect(webURL).get();
+                return Jsoup.connect(webURL).ignoreContentType(true).get();
             } else { // Every other OS like Windows, Linux and Mac
-                return Jsoup.connect(webURL).timeout(0).get();
+                return Jsoup.connect(webURL).ignoreContentType(true).timeout(0).get();
             }
         }
 
@@ -113,11 +128,13 @@ public class HTTPAnalyzer {
                 return Jsoup
                         .connect(webURL)
                         .header("Authorization", "Basic " + credentials.getBase64())
+                        .ignoreContentType(true)
                         .get();
             } else { // Every other OS like Windows, Linux and Mac
                 return Jsoup
                         .connect(webURL)
                         .header("Authorization", "Basic " + credentials.getBase64())
+                        .ignoreContentType(true)
                         .timeout(0)
                         .get();
             }
@@ -131,9 +148,9 @@ public class HTTPAnalyzer {
         if(!useCredentials) {
             // Needed since Android is a bit bitchy with creating jsoup connections
             if (CGlobals.CURRENT_OS == OS.Android) {
-                return Jsoup.connect(webURL).userAgent(userAgent).get();
+                return Jsoup.connect(webURL).ignoreContentType(true).userAgent(userAgent).get();
             } else { // Every other OS like Windows, Linux and Mac
-                return Jsoup.connect(webURL).timeout(0).userAgent(userAgent).get();
+                return Jsoup.connect(webURL).ignoreContentType(true).timeout(0).userAgent(userAgent).get();
             }
         }
 
@@ -148,6 +165,7 @@ public class HTTPAnalyzer {
                 return Jsoup
                         .connect(webURL)
                         .userAgent(userAgent)
+                        .ignoreContentType(true)
                         .header("Authorization", "Basic " + credentials.getBase64())
                         .get();
             } else {
@@ -155,6 +173,7 @@ public class HTTPAnalyzer {
                     .connect(webURL)
                     .userAgent(userAgent)
                     .timeout(0)
+                    .ignoreContentType(true)
                     .header("Authorization", "Basic " + credentials.getBase64())
                     .get();
             }
@@ -168,9 +187,9 @@ public class HTTPAnalyzer {
         if (!useCredentials) {
             // Needed since Android is a bit bitchy with creating jsoup connections
             if (CGlobals.CURRENT_OS == OS.Android) {
-                return Jsoup.connect(webURL).userAgent(userAgent).data(data).post();
+                return Jsoup.connect(webURL).ignoreContentType(true).userAgent(userAgent).data(data).post();
             } else { // Every other OS like Windows, Linux and Mac
-                return Jsoup.connect(webURL).timeout(0).userAgent(userAgent).data(data).post();
+                return Jsoup.connect(webURL).ignoreContentType(true).timeout(0).userAgent(userAgent).data(data).post();
             }
         }
 
@@ -183,6 +202,7 @@ public class HTTPAnalyzer {
                         .connect(webURL)
                         .userAgent(userAgent)
                         .data(data)
+                        .ignoreContentType(true)
                         .header("Authorization", "Basic " + credentials.getBase64())
                         .post();
             } else { // Every other OS like Windows, Linux and Mac
@@ -191,8 +211,48 @@ public class HTTPAnalyzer {
                         .timeout(0)
                         .userAgent(userAgent)
                         .data(data)
+                        .ignoreContentType(true)
                         .header("Authorization", "Basic " + credentials.getBase64())
                         .post();
+            }
+        }
+    }
+
+    private Document EstablishConnection(String webURL, String[][] requestProperties, boolean useCredentials) throws IOException {
+        /*
+            Establish connection without credentials
+         */
+        if(!useCredentials){
+            // Needed since Android is a bit bitchy with creating jsoup connections
+            if (CGlobals.CURRENT_OS == OS.Android) {
+                return Jsoup.connect(webURL).ignoreContentType(true).header(requestProperties[0][0], requestProperties[0][1]).get();
+            } else { // Every other OS like Windows, Linux and Mac
+                return Jsoup.connect(webURL).ignoreContentType(true).header(requestProperties[0][0], requestProperties[0][1]).timeout(0).get();
+            }
+        }
+
+        /*
+            Establish connection with credentials
+         */
+        else {
+            if(credentials == null)
+                return null;
+            // Needed since Android is a bit bitchy with creating jsoup connections
+            if (CGlobals.CURRENT_OS == OS.Android) {
+                return Jsoup
+                        .connect(webURL)
+                        .header("Authorization", "Basic " + credentials.getBase64())
+                        .header(requestProperties[0][0], requestProperties[0][1])
+                        .ignoreContentType(true)
+                        .get();
+            } else { // Every other OS like Windows, Linux and Mac
+                return Jsoup
+                        .connect(webURL)
+                        .header("Authorization", "Basic " + credentials.getBase64())
+                        .header(requestProperties[0][0], requestProperties[0][1])
+                        .ignoreContentType(true)
+                        .timeout(0)
+                        .get();
             }
         }
     }
