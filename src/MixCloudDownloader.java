@@ -2,8 +2,9 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  * Created by Dominik on 12.07.2015.
+ * @deprecated
  */
-public class MixCloudDownloader extends Downloader {
+public class MixCloudDownloader extends Downloaderv2 {
     private String mixcloudURL;
     private String previewURL;
     private String savePath;

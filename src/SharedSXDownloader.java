@@ -11,8 +11,9 @@ import java.util.Map;
 
 /**
  * Created by Dominik on 05.06.2015.
+ * @deprecated
  */
-public class SharedSXDownloader extends Downloader {
+public class SharedSXDownloader extends Downloaderv2 {
     private String hash = "";
     private String expires = "";
     private String timestamp = "";

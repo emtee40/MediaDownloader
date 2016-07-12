@@ -6,8 +6,9 @@ import javax.swing.table.DefaultTableModel;
 /**
  * Creation time: 03:05
  * Created by Dominik on 01.06.2015.
+ * @deprecated
  */
-public class VimeoDownloader extends Downloader {
+public class VimeoDownloader extends Downloaderv2 {
     private SettingsManager settingsManager;
     private String vimeoUrl;
     private String savePath;

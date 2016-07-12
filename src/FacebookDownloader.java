@@ -18,7 +18,7 @@ import java.util.stream.Stream;
  * Creation time: 03:04
  * Created by Dominik on 23.04.2015.
  */
-public class FacebookDownloader extends Downloader {
+public class FacebookDownloader extends Downloaderv2 {
     private String fbLink;
     private String fbID;
     private boolean isAlbum;

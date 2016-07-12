@@ -7,12 +7,15 @@ import javax.script.ScriptException;
 import javax.swing.table.DefaultTableModel;
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Dominik on 01.06.2015.
@@ -20,7 +23,8 @@ import java.nio.file.Paths;
  * Downloader Class is a abstract class to define the general downloader.
  * This class should be inherited by every sub-type of downloader
  */
-abstract class Downloaderv2 {
+public abstract class Downloader {
+    private List<DownloadProgressListener> listener = new ArrayList<DownloadProgressListener>();
 
     // Public Methods
 
@@ -197,7 +201,8 @@ abstract class Downloaderv2 {
             HTTPAnalyzerCode httpCode = httpAnalyzer.parse();
 
             if(httpCode.getCode() == 200) {
-                return new JSONObject(httpAnalyzer.getBody());
+                String obj = httpAnalyzer.getBody();
+                return new JSONObject(obj);
             } else {
                 throw new HTTPAnalyzerException(httpCode.getCode() + " Execution failed");
             }
@@ -229,9 +234,91 @@ abstract class Downloaderv2 {
             return new JSONObject("{}");
         }
     }
+
+    /**
+     * A download method in order to download a given file
+     * @param pURL
+     * @param strFileName
+     */
+    public void Download(URLPackage pURL, String strFileName) {
+        try {
+            HttpURLConnection urlConnection = (HttpURLConnection) new URL(pURL.getURL()).openConnection();
+            File outputCacheFile = new File(strFileName);
+
+            long downloadedSize = 0;
+            long fileLength = 0;
+            BufferedInputStream inputStream = null;
+            RandomAccessFile outputFile = null;
+
+            if(outputCacheFile.exists()) {
+                urlConnection.setAllowUserInteraction(true);
+                urlConnection.setRequestProperty("Range", "bytes=" + outputCacheFile.length() + "-");
+            }
+
+            urlConnection.setConnectTimeout(14000);
+            urlConnection.setReadTimeout(20000);
+            urlConnection.connect();
+
+            // If reponse code is 416 download is most likely finished
+            if(urlConnection.getResponseCode() == 416) {
+                System.out.println("Response 416 - finished");
+            } else if (urlConnection.getResponseCode() / 100 != 2) {
+                System.err.println("Unkown Reponse code error");
+            } else {
+                String connectionField = urlConnection.getHeaderField("content-range");
+
+                if (connectionField != null) {
+                    String[] connectionRanges = connectionField.substring("bytes=".length()).split("-");
+                    downloadedSize = Long.valueOf(connectionRanges[0]);
+                }
+
+                if (connectionField == null && outputCacheFile.exists())
+                    outputCacheFile.delete();
+
+                fileLength = urlConnection.getContentLength() + downloadedSize;
+                inputStream = new BufferedInputStream(urlConnection.getInputStream());
+                outputFile = new RandomAccessFile(outputCacheFile, "rw");
+                outputFile.seek(downloadedSize);
+
+                byte data[] = new byte[1024];
+                int count = 0;
+                int __progress = 0;
+
+                while ((count = inputStream.read(data, 0, 1024)) != -1
+                        && __progress != 100) {
+                    downloadedSize += count;
+                    outputFile.write(data, 0, count);
+
+
+                    __progress = (int) ((downloadedSize * 100) / fileLength);
+                    downloadProgressChanged(__progress);
+                }
+
+                outputFile.close();
+                inputStream.close();
+            }
+        } catch (MalformedURLException e){
+            System.err.println("Malformed URL");
+        } catch (IOException e) {
+            System.err.println("I/O Error");
+        }
+    }
+
+    public void addListener(DownloadProgressListener downloadProgressListener){
+        listener.add(downloadProgressListener);
+    }
+
+    private void downloadProgressChanged(int progress){
+        for (DownloadProgressListener elements : listener)
+            elements.downloadProgressChange(progress);
+    }
 }
 
-public abstract class Downloader {
+interface DownloadProgressListener {
+    void downloadProgressChange(int e);
+}
+
+abstract class Downloaderv2 {
 
     // Methods any Downloader need
     public boolean isFileExisting(File fileToCheck) {
@@ -368,35 +455,6 @@ public abstract class Downloader {
         return sb.toString();
     }
 
-    /* Old code block
-    public void DownloadFile(String dlUrl, String filename, int downloadSize, int i, DefaultTableModel dTableModel) {
-        try {
-            URL url = new URL(dlUrl);
-            InputStream in = new BufferedInputStream(url.openStream());
-            OutputStream out = new BufferedOutputStream(new FileOutputStream(filename + ".mp4"));
-
-            double sum = 0;
-            int count;
-            byte data[] = new byte[1024];
-            // added a quick fix for downloading >= 0 instead of != -1
-            while ((count = in.read(data, 0, 1024)) >= 0) {
-                out.write(data, 0, count);
-                sum += count;
-
-                if (downloadSize > 0 && dTableModel != null) {
-                    dTableModel.setValueAt(((int)(sum / downloadSize * 100)) + "%", i, 2);
-                }
-            }
-
-
-            in.close();
-            out.close();
-        }
-        catch (Exception ex){
-            ex.printStackTrace();
-        }
-    } */
-
     public void DownloadFile(String dlUrl, String filename, int downloadSize, int i, DefaultTableModel dTableModel) throws Exception {
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL(dlUrl).openConnection();
@@ -515,4 +573,37 @@ public abstract class Downloader {
             System.err.println(ex.getMessage() + " Error occured while downloading!");
         }
     }
+
+
+
+        /* Old code block
+    public void DownloadFile(String dlUrl, String filename, int downloadSize, int i, DefaultTableModel dTableModel) {
+        try {
+            URL url = new URL(dlUrl);
+            InputStream in = new BufferedInputStream(url.openStream());
+            OutputStream out = new BufferedOutputStream(new FileOutputStream(filename + ".mp4"));
+
+            double sum = 0;
+            int count;
+            byte data[] = new byte[1024];
+            // added a quick fix for downloading >= 0 instead of != -1
+            while ((count = in.read(data, 0, 1024)) >= 0) {
+                out.write(data, 0, count);
+                sum += count;
+
+                if (downloadSize > 0 && dTableModel != null) {
+                    dTableModel.setValueAt(((int)(sum / downloadSize * 100)) + "%", i, 2);
+                }
+            }
+
+
+            in.close();
+            out.close();
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
+    } */
+
+
 }

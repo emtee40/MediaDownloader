@@ -81,7 +81,7 @@ public class HTTPAnalyzer {
     }
 
     public String getBody() {
-        return site.body().data();
+        return site.body().text();
     }
 
     public Document getDocument(){

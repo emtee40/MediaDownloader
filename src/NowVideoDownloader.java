@@ -5,8 +5,9 @@ import org.jsoup.select.Elements;
 /**
  * Creation time: 15:16
  * Created by Dominik on 04.06.2015.
+ * @deprecated
  */
-public class NowVideoDownloader extends Downloader {
+public class NowVideoDownloader extends Downloaderv2 {
     private String nowVideoURL;
     private String keyPartToFind = "var fkzd=";
     private String key = "";

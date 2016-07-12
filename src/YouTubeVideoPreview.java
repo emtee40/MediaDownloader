@@ -8,7 +8,6 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -21,6 +20,7 @@ import java.awt.event.WindowEvent;
 /**
  * Creation time: 19:12
  * Created by Dominik on 08.07.2015.
+ * @deprecated
  */
 public class YouTubeVideoPreview {
     private String youtubeURL;

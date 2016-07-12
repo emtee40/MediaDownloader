@@ -208,12 +208,17 @@ public class LinkHandler {
 
                         } else if (hoster == DownloadPage.SoundCloud) {
                             String url = window.dTableModel.getValueAt(i, 0).toString();
-                            SoundcloudDownloader scDownloader = new SoundcloudDownloader(url,
+                            /*SoundcloudDownloader scDownloader = new SoundcloudDownloader(url,
                                     window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 1).toString());
 
                             String toDL = scDownloader.getAudioURL();
                             int size = scDownloader.getDownloadSize(toDL);
-                            scDownloader.DownloadFile(toDL, size, i, window.dTableModel);
+                            scDownloader.DownloadFile(toDL, size, i, window.dTableModel); */
+
+                            SoundCloudDownloader soundCloudDownloader = new SoundCloudDownloader(new URLPackage(url),
+                                    window.dTableModel.getValueAt(i, window.dTableModel.getColumnCount() - 1).toString());
+                            soundCloudDownloader.addListener(soundCloudDownloader);
+                            soundCloudDownloader.Download();
 
                         } else if (hoster == DownloadPage.StreamCloud) {
                             StreamCloudEUDownloader sceDownloader = new StreamCloudEUDownloader(window.dTableModel.

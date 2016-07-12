@@ -6,8 +6,9 @@ import javax.swing.table.DefaultTableModel;
 /**
  * Creation time: 03:05
  * Created by Dominik on 20.04.2015.
+ * @deprecated
  */
-public class YouTubeDownloader extends Downloader {
+public class YouTubeDownloader extends Downloaderv2 {
     private JSoupAnalyze webObj;
 
     private String vidUrl;

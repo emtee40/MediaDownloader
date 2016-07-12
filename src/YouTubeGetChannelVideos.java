@@ -1,7 +1,6 @@
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -10,8 +9,9 @@ import java.util.stream.Stream;
 /**
  * Creation time: 03:05
  * Created by Dominik on 19.04.2015.
+ * @deprecated
  */
-public class YouTubeGetChannelVideos extends Downloader {
+public class YouTubeGetChannelVideos extends Downloaderv2 {
     private String username;
 
     public YouTubeGetChannelVideos(String username) {

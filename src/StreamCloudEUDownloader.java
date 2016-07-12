@@ -10,8 +10,9 @@ import java.net.URLConnection;
 
 /**
  * Created by Dominik on 06.06.2015.
+ * @deprecated
  */
-public class StreamCloudEUDownloader extends Downloader {
+public class StreamCloudEUDownloader extends Downloaderv2 {
     private String filename;
     private String streamURL;
 

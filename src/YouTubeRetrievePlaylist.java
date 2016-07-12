@@ -9,8 +9,9 @@ import java.util.stream.Stream;
 /**
  * Creation time: 03:05
  * Created by Dominik on 03.06.2015.
+ * @deprecated
  */
-public class YouTubeRetrievePlaylist extends Downloader {
+public class YouTubeRetrievePlaylist extends Downloaderv2 {
     private String baseRequest = "https://www.googleapis.com/youtube/v3/playlistItems";
     private String baseAddOn = "?part=contentDetails&maxResults=50&playlistId=";
     private String pageToken = "&pageToken=";

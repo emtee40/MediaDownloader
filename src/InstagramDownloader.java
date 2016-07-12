@@ -14,8 +14,9 @@ import java.util.stream.Stream;
 /**
  * Creation time: 03:05
  * Created by Dominik on 22.04.2015.
+ * @deprecated
  */
-public class InstagramDownloader extends Downloader {
+public class InstagramDownloader extends Downloaderv2 {
     private String igLink;
     private String savePath;
     private String img_Title;

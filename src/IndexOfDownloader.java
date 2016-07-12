@@ -1,9 +1,7 @@
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -66,7 +64,7 @@ public class IndexOfDownloader extends Downloader {
             webObj = new HTTPAnalyzer(sCurrentUrl, credentials);
 
         // TODO: May throw ex if retCode was sth. unlike 200
-        int retCode = webObj.parse();
+        //int retCode = webObj.parse();
         Elements elemImg = webObj.getDocument().select("img");
         for(Element elem : elemImg){
 

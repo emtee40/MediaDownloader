@@ -10,8 +10,9 @@ import java.util.stream.Stream;
 /**
  * Creation time: 15:27
  * Created by Dominik on 24.11.2015.
+ * @deprecated
  */
-public class VineDownloader extends Downloader {
+public class VineDownloader extends Downloaderv2 {
     private String vineLink;
     private String vineUserID;
     private boolean isUser;
