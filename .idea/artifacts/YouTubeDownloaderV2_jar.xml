@@ -3,8 +3,7 @@
     <output-path>$USER_HOME$/Desktop/YouTubeDownloader_public</output-path>
     <root id="archive" name="YouTubeDownloader.jar">
       <element id="module-output" name="MediaDownloaderBeta" />
-      <element id="extracted-dir" path="$USER_HOME$/Downloads/json-20141113.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="J:/Downloads/Firefox/jsoup-1.8.1.jar" path-in-jar="/" />
+      <element id="library" level="project" name="json-20151123" />
     </root>
   </artifact>
 </component>
