@@ -1,0 +1,12 @@
+Package: mediadownloader
+Version: 1.0.0
+Maintainer: Dominik Schwarzbauer <admin@r3d-soft.de>
+Section: java
+Homepage: http://r3d-soft.de
+Architecture: all
+Priority: optional
+Depends: openjdk-8 (>=8.0.0)
+Description: Download your favourite media files from everywhere
+ This tool allows you to download media files from YouTube, Facebook, Instragram, SoundCloud, MixCloud, StreamCloud and much more.
+ There are also a online version available: http://downloader.r3d-soft.de
+ This tool is written in Java using JDK & JRE 8
