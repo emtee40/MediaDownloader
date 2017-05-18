@@ -1,9 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="YouTubeDownloaderV2:jar">
-    <output-path>$USER_HOME$/Desktop/YouTubeDownloader_public</output-path>
-    <root id="archive" name="YouTubeDownloader.jar">
-      <element id="module-output" name="MediaDownloaderBeta" />
-      <element id="library" level="project" name="json-20151123" />
-    </root>
-  </artifact>
-</component>
