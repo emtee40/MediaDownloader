@@ -6,12 +6,12 @@ import javax.swing.table.DefaultTableModel;
  * Creation time: 03:05
  * Created by Dominik on 31.05.2015.
  */
-public class SoundcloudDownloader extends Downloader {
+public class SoundcloudDownloader extends Downloaderv2 {
     private JSoupAnalyze webObj;
     private SettingsManager settingsManager;
 
     private String baseURI = "https://api.soundcloud.com/i1/tracks/";
-    private String clientID = "02gUJC0hH2ct1EGOcYXQIzRFU91c72Ea";
+    private String clientID = "2t9loNQH90kzJcsFCODdigxfp325aq4z";
     private String trackID;
 
     private String savePath;
