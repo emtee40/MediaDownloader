@@ -65,7 +65,7 @@ public class FreshUI extends MainFrameBase implements ActionListener {
         String version = webObj.AnalyzeWithTag("a[class=btn btn-lg btn-outline]").text();
         version = version.replace("Download MediaDownloader v", "");
         String versionNumber = (version.split(" "))[0];
-        if (versionNumber != CGlobals.VERSION_STRING) {
+        if (!versionNumber.equals(CGlobals.VERSION_STRING)) {
             // Update available!
             String msg = "<html>" +
                     JHtmlOptionPane.STANDARD_HTML_STYLETAG_OPEN +
